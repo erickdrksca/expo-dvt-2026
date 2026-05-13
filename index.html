@@ -6,20 +6,60 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#f4f6f8;--card:#fff;--text:#172033;--muted:#667085;--line:#d9dee7;--dark:#111827;--accent:#0f766e;--danger:#b42318;--blue:#2563eb;--shadow:0 12px 28px rgba(17,24,39,.08)}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}header{background:white;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}.wrap{max-width:1320px;margin:0 auto;padding:18px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:16px;background:var(--dark);color:white;display:grid;place-items:center;font-size:24px}h1{margin:0;font-size:24px}h2{margin:0 0 16px;font-size:18px}p{margin:0}.muted{color:var(--muted);font-size:13px}.login{min-height:100vh;display:grid;place-items:center;padding:20px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:18px}.login .card{width:100%;max-width:430px}label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}input,select,textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px;background:white;outline:none}textarea{min-height:70px;resize:vertical}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.grid{display:grid;grid-template-columns:2fr 1fr;gap:18px;align-items:start}.adminGrid{display:grid;grid-template-columns:1fr;gap:18px}.btn{border:0;background:var(--dark);color:white;padding:10px 14px;border-radius:12px;font-weight:700;cursor:pointer}.btn.secondary{background:white;color:var(--dark);border:1px solid var(--line)}.btn.accent{background:var(--accent)}.btn.danger{background:var(--danger)}.btn.blue{background:var(--blue)}.btn:disabled{opacity:.45;cursor:not-allowed}.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}.stat{background:#f1f5f9;border-radius:16px;padding:14px}.stat b{font-size:22px;display:block;margin-top:4px}.products{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-height:430px;overflow:auto;padding-right:4px}.product{border:1px solid var(--line);border-radius:16px;padding:12px;background:white;display:flex;justify-content:space-between;gap:10px}.product strong{display:block;font-size:14px}.product small{color:var(--muted)}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:10px 8px;border-bottom:1px solid #eef2f7;text-align:left;vertical-align:middle}th{color:#475467;font-size:12px;text-transform:uppercase}.right{text-align:right}.qty{width:82px}.empty{border:1px dashed #cbd5e1;border-radius:16px;padding:28px;text-align:center;color:var(--muted)}.notice{padding:12px 14px;border-radius:14px;margin-bottom:14px;display:none}.notice.ok{background:#ecfdf3;color:#027a48;border:1px solid #abefc6}.notice.err{background:#fef3f2;color:#b42318;border:1px solid #fecdca}.history{display:flex;flex-direction:column;gap:10px;max-height:500px;overflow:auto}.hist{border:1px solid var(--line);border-radius:16px;padding:12px;background:white}.pill{display:inline-block;border-radius:999px;background:#eef2ff;color:#3538cd;padding:4px 9px;font-size:12px;font-weight:700}.hidden{display:none!important}.section{margin-bottom:18px}@media(max-width:950px){.grid,.formgrid{grid-template-columns:1fr}.products{grid-template-columns:1fr}}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}header{background:white;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}.wrap{max-width:1320px;margin:0 auto;padding:18px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:16px;background:var(--dark);color:white;display:grid;place-items:center;font-size:24px}h1{margin:0;font-size:24px}h2{margin:0 0 16px;font-size:18px}p{margin:0}.muted{color:var(--muted);font-size:13px}.login{min-height:100vh;display:grid;place-items:center;padding:20px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:18px}.login .card{width:100%;max-width:430px}label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}input,select,textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px;background:white;outline:none}textarea{min-height:70px;resize:vertical}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.grid{display:grid;grid-template-columns:2fr 1fr;gap:18px;align-items:start}.adminGrid{display:grid;grid-template-columns:1fr;gap:18px}.btn{border:0;background:var(--dark);color:white;padding:10px 14px;border-radius:12px;font-weight:700;cursor:pointer}.btn.secondary{background:white;color:var(--dark);border:1px solid var(--line)}.btn.accent{background:var(--accent)}.btn.danger{background:var(--danger)}.btn.blue{background:var(--blue)}.btn:disabled{opacity:.45;cursor:not-allowed}.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}.stat{background:#f1f5f9;border-radius:16px;padding:14px}.stat b{font-size:22px;display:block;margin-top:4px}.products{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-height:430px;overflow:auto;padding-right:4px}.product{border:1px solid var(--line);border-radius:16px;padding:12px;background:white;display:flex;justify-content:space-between;gap:10px}.product strong{display:block;font-size:14px}.product small{color:var(--muted)}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:10px 8px;border-bottom:1px solid #eef2f7;text-align:left;vertical-align:middle}th{color:#475467;font-size:12px;text-transform:uppercase}.right{text-align:right}.qty{width:82px}.empty{border:1px dashed #cbd5e1;border-radius:16px;padding:28px;text-align:center;color:var(--muted)}.notice{padding:12px 14px;border-radius:14px;margin-bottom:14px;display:none}.notice.ok{background:#ecfdf3;color:#027a48;border:1px solid #abefc6}.notice.err{background:#fef3f2;color:#b42318;border:1px solid #fecdca}.history{display:flex;flex-direction:column;gap:10px;max-height:500px;overflow:auto}.hist{border:1px solid var(--line);border-radius:16px;padding:12px;background:white}.pill{display:inline-block;border-radius:999px;background:#eef2ff;color:#3538cd;padding:4px 9px;font-size:12px;font-weight:700}.hidden{display:none!important}.section{margin-bottom:18px}.modalBackdrop{position:fixed;inset:0;background:rgba(15,23,42,.55);display:flex;align-items:center;justify-content:center;z-index:99;padding:18px}.modal{background:white;border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.25);width:min(1100px,96vw);max-height:86vh;overflow:auto;padding:18px}.modalHead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:12px}.modalActions{display:flex;gap:10px;flex-wrap:wrap}.detailTotal{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0}.detailTotal div{background:#f1f5f9;border-radius:14px;padding:12px}@media(max-width:950px){.grid,.formgrid{grid-template-columns:1fr}.products{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div id="loginScreen" class="login"><div class="card"><div style="text-align:center;margin-bottom:20px"><div class="logo" style="margin:0 auto 12px">🛒</div><h1>EXPO DVT 2026</h1><p class="muted">Portal formal conectado a Supabase</p></div><div id="loginNotice" class="notice err"></div><form id="loginForm"><div class="section"><label>Usuario</label><input id="loginUser" placeholder="Ej. COLGATE / COMPRAS / ADMIN"></div><div class="section"><label>Contraseña</label><input id="loginPass" type="password" placeholder="Contraseña"></div><button class="btn" id="loginBtn" style="width:100%" type="submit">Entrar</button></form></div></div>
 <div id="appScreen" class="hidden"><header><div class="wrap top"><div class="brand"><div class="logo">🛒</div><div><h1>EXPO DVT 2026</h1><p class="muted" id="sessionText"></p></div></div><div class="toolbar"><button class="btn secondary" onclick="reloadData()">Actualizar</button><button class="btn danger" onclick="logout()">Cerrar sesión</button></div></div></header><main class="wrap"><div id="appNotice" class="notice ok"></div>
 <div id="providerView" class="grid hidden"><section><div class="card section"><h2>1. Datos del pedido</h2><div class="formgrid"><div><label>Cliente *</label><input id="clientSearch" list="clientList" placeholder="Busca por cliente, ID o población"><datalist id="clientList"></datalist></div><div><label>Vendedor *</label><select id="vendorSelect"></select></div><div><label>Destino / comentario corto</label><input id="destination" placeholder="CEDIS, tienda, ruta, etc."></div><div style="grid-column:1/-1"><label>Observaciones</label><textarea id="notes" placeholder="Promoción, condiciones, comentarios..."></textarea></div></div></div><div class="card section"><div class="top" style="margin-bottom:12px"><h2>2. Catálogo autorizado</h2><input id="productSearch" style="max-width:340px" placeholder="Buscar SKU, producto o unidad"></div><div class="products" id="productGrid"></div></div><div class="card section"><h2>3. Pedido capturado</h2><div id="cartEmpty" class="empty">Agrega productos del catálogo para iniciar el pedido.</div><div id="cartTableWrap" class="hidden"><table><thead><tr><th>SKU</th><th>Producto</th><th>Unidad</th><th class="right">Precio neto base</th><th class="right">Cantidad</th><th class="right">Desc. extra %</th><th class="right">Precio final</th><th class="right">Importe final</th><th></th></tr></thead><tbody id="cartBody"></tbody></table></div></div></section><aside><div class="card section"><h2>Resumen</h2><div class="stats"><div class="stat"><span class="muted">Productos</span><b id="statProducts">0</b></div><div class="stat"><span class="muted">Unidades</span><b id="statUnits">0</b></div><div class="stat" style="grid-column:1/-1"><span class="muted">Subtotal con descuento precargado</span><b id="statSubtotal">$0.00</b></div><div class="stat" style="grid-column:1/-1"><span class="muted">Descuento extra por producto</span><b id="statExtraDiscount">$0.00</b></div><div class="stat" style="grid-column:1/-1;background:#ecfdf3"><span class="muted">Total final</span><b id="statTotal">$0.00</b></div></div><button class="btn accent" id="saveOrderBtn" style="width:100%;margin-top:14px" onclick="saveOrder()" disabled>Guardar pedido</button></div><div class="card section"><h2>Mis pedidos</h2><div id="history" class="history"></div></div></aside></div>
-<div id="adminView" class="adminGrid hidden"><div class="card section"><div class="top"><h2>Panel Compras / Admin</h2><div class="toolbar"><input id="adminSearch" style="width:320px" placeholder="Filtrar proveedor, cliente, folio..."><button class="btn blue" onclick="exportDynamics()">Exportar Dynamics CSV</button></div></div><div class="stats" style="margin-bottom:14px"><div class="stat"><span class="muted">Pedidos</span><b id="adminPedidos">0</b></div><div class="stat"><span class="muted">Total</span><b id="adminTotal">$0.00</b></div></div><div style="overflow:auto"><table><thead><tr><th>Folio</th><th>Fecha</th><th>Proveedor</th><th>Grupo</th><th>Cliente</th><th>Vendedor</th><th class="right">Total</th><th>Estatus</th><th></th></tr></thead><tbody id="adminOrdersBody"></tbody></table></div></div></div>
+<div id="adminView" class="adminGrid hidden"><div class="card section"><div class="top"><h2>Panel Compras / Admin</h2><div class="toolbar"><input id="adminSearch" style="width:320px" placeholder="Filtrar proveedor, cliente, folio..."><button class="btn blue" onclick="exportDynamics()">Exportar Dynamics CSV</button></div></div><div class="stats" style="margin-bottom:14px"><div class="stat"><span class="muted">Pedidos</span><b id="adminPedidos">0</b></div><div class="stat"><span class="muted">Total</span><b id="adminTotal">$0.00</b></div></div><div style="overflow:auto"><table><thead><tr><th>Folio</th><th>Fecha</th><th>Proveedor</th><th>Grupo</th><th>Cliente</th><th>Vendedor</th><th class="right">Total</th><th>Estatus</th><th>Detalle</th><th></th></tr></thead><tbody id="adminOrdersBody"></tbody></table></div></div></div>
 </main></div>
+
+<div id="detailModal" class="modalBackdrop hidden">
+  <div class="modal">
+    <div class="modalHead">
+      <div>
+        <h2 id="detailTitle">Detalle del pedido</h2>
+        <p class="muted" id="detailSubtitle"></p>
+      </div>
+      <div class="modalActions">
+        <button class="btn secondary" onclick="exportCurrentDetail()">Exportar detalle CSV</button>
+        <button class="btn danger" onclick="closeDetail()">Cerrar</button>
+      </div>
+    </div>
+    <div class="detailTotal">
+      <div><span class="muted">Subtotal</span><b id="detailSubtotal">$0.00</b></div>
+      <div><span class="muted">Desc. extra</span><b id="detailDiscount">$0.00</b></div>
+      <div><span class="muted">Total</span><b id="detailTotal">$0.00</b></div>
+    </div>
+    <div style="overflow:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>SKU</th>
+            <th>Producto</th>
+            <th>Unidad</th>
+            <th class="right">Cantidad</th>
+            <th class="right">Precio lista</th>
+            <th class="right">Desc. precargado</th>
+            <th class="right">Precio neto base</th>
+            <th class="right">Desc. extra</th>
+            <th class="right">Precio final</th>
+            <th class="right">Importe final</th>
+          </tr>
+        </thead>
+        <tbody id="detailBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 <script>
 const SUPABASE_URL = "https://uuiyscicaanxxpzyqggh.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1aXlzY2ljYWFueHhwenlxZ2doIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2ODc0MjAsImV4cCI6MjA5NDI2MzQyMH0.aVUNwnZ3vhiXlGJj9VxWTUrMXAa2ALwDIJtskdah42I";
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-let currentUser=null,currentProvider=null,catalog=[],clients=[],vendors=[],orders=[],cart=[],adminOrders=[];
+let currentUser=null,currentProvider=null,catalog=[],clients=[],vendors=[],orders=[],cart=[],adminOrders=[],currentDetailOrder=null,currentDetailItems=[];
 const $=id=>document.getElementById(id);
 const money=v=>Number(v||0).toLocaleString('es-MX',{style:'currency',currency:'MXN'});
 const norm=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
@@ -40,9 +80,76 @@ function totals(){return cart.reduce((a,i)=>{const qty=Number(i.cantidad||0),bas
 function renderCart(){const t=totals();$('statProducts').textContent=t.products;$('statUnits').textContent=t.units;$('statSubtotal').textContent=money(t.subtotal);$('statExtraDiscount').textContent=money(t.extraAmount);$('statTotal').textContent=money(t.total);$('cartEmpty').classList.toggle('hidden',cart.length>0);$('cartTableWrap').classList.toggle('hidden',cart.length===0);const body=$('cartBody');body.innerHTML='';cart.forEach(i=>{const qty=Number(i.cantidad||0),pct=Number(i.descuento_extra_pct||0),base=Number(i.precio_neto||0),final=base*(1-pct/100),importe=qty*final;const tr=document.createElement('tr');tr.innerHTML=`<td>${i.sku}</td><td><b>${i.descripcion}</b><br><span class="muted">${i.id_producto_app}</span></td><td>${i.unidad}</td><td class="right">${money(base)}</td><td class="right"><input class="qty qty-cantidad" type="number" min="1" value="${i.cantidad}"></td><td class="right"><input class="qty qty-descuento" type="number" min="0" max="100" step="0.01" value="${pct}"></td><td class="right"><b>${money(final)}</b></td><td class="right"><b>${money(importe)}</b></td><td class="right"><button class="btn secondary" type="button">Quitar</button></td>`;tr.querySelector('.qty-cantidad').oninput=e=>updateQty(i.id_producto_app,e.target.value);tr.querySelector('.qty-descuento').oninput=e=>updateExtraDiscount(i.id_producto_app,e.target.value);tr.querySelector('button').onclick=()=>removeProduct(i.id_producto_app);body.appendChild(tr);});updateSaveState();}
 function updateSaveState(){$('saveOrderBtn').disabled=!(currentUser&&cart.length&&$('clientSearch').value.trim()&&$('vendorSelect').value)}
 async function saveOrder(){const t=totals(),vendorOpt=$('vendorSelect').selectedOptions[0];const now=new Date();const folio='EXPO-'+currentProvider.id_proveedor+'-'+now.toISOString().replace(/[-:.TZ]/g,'').slice(0,14);const pedido={folio,fecha_hora:now.toISOString(),id_acceso_proveedor:currentUser.id_acceso_proveedor,id_proveedor:currentProvider.id_proveedor,proveedor:currentProvider.proveedor,grupo_catalogo:currentProvider.grupo_catalogo,usuario:currentUser.usuario,cliente:$('clientSearch').value.trim(),id_vendedor:$('vendorSelect').value,vendedor:vendorOpt?vendorOpt.dataset.name||vendorOpt.textContent:'',destino:$('destination').value.trim(),observaciones:$('notes').value.trim(),subtotal:t.subtotal,descuento_extra_productos_importe:t.extraAmount,total:t.total,estatus:'CAPTURADO'};const detalle=cart.map(i=>{const qty=Number(i.cantidad||0),base=Number(i.precio_neto||0),pct=Number(i.descuento_extra_pct||0),final=base*(1-pct/100);return{folio,fecha_hora:now.toISOString(),id_proveedor:currentProvider.id_proveedor,proveedor:currentProvider.proveedor,grupo_catalogo:currentProvider.grupo_catalogo,cliente:pedido.cliente,id_vendedor:pedido.id_vendedor,vendedor:pedido.vendedor,sku:i.sku,producto:i.descripcion,unidad:i.unidad,cantidad:qty,precio_lista:Number(i.precio_lista||0),descuento_precargado_pct:Number(i.descuento_pct||0),precio_neto_base:base,descuento_extra_pct:pct,precio_final:final,importe_base:qty*base,importe_final:qty*final}});$('saveOrderBtn').disabled=true;$('saveOrderBtn').textContent='Guardando...';try{const a=await sb.from('pedidos').insert([pedido]);if(a.error)throw a.error;const b=await sb.from('pedido_detalle').insert(detalle);if(b.error)throw b.error;await sb.from('bitacora').insert([{usuario:currentUser.usuario,rol:currentUser.rol,accion:'CREAR_PEDIDO',folio,detalle:'Pedido capturado por proveedor'}]);cart=[];$('notes').value='';showNotice('appNotice',`Pedido ${folio} guardado.`);await loadData();}catch(err){showNotice('appNotice',err.message,'err')}finally{$('saveOrderBtn').textContent='Guardar pedido';updateSaveState()}}
-function renderHistory(){const box=$('history');box.innerHTML='';if(!orders.length){box.innerHTML='<p class="muted">Aún no hay pedidos guardados.</p>';return}orders.forEach(o=>{const div=document.createElement('div');div.className='hist';div.innerHTML=`<div class="top"><div><b>${o.folio}</b><p class="muted">${new Date(o.fecha_hora).toLocaleString('es-MX')} · ${o.cliente}</p></div><span class="pill">${money(o.total)}</span></div><p class="muted" style="margin-top:6px">Estatus: ${o.estatus}</p><div class="toolbar" style="margin-top:10px"><button class="btn danger" type="button">Eliminar</button></div>`;div.querySelector('button').onclick=()=>deleteOrder(o.folio);box.appendChild(div);});}
+function renderHistory(){const box=$('history');box.innerHTML='';if(!orders.length){box.innerHTML='<p class="muted">Aún no hay pedidos guardados.</p>';return}orders.forEach(o=>{const div=document.createElement('div');div.className='hist';div.innerHTML=`<div class="top"><div><b>${o.folio}</b><p class="muted">${new Date(o.fecha_hora).toLocaleString('es-MX')} · ${o.cliente}</p></div><span class="pill">${money(o.total)}</span></div><p class="muted" style="margin-top:6px">Estatus: ${o.estatus}</p><div class="toolbar" style="margin-top:10px"><button class="btn secondary" type="button">Ver detalle</button><button class="btn danger" type="button">Eliminar</button></div>`;div.querySelectorAll('button')[0].onclick=()=>showOrderDetail(o);div.querySelectorAll('button')[1].onclick=()=>deleteOrder(o.folio);box.appendChild(div);});}
 async function deleteOrder(folio){if(!confirm(`¿Seguro que quieres eliminar el pedido ${folio}?`))return;try{const r=await sb.from('pedidos').update({estatus:'ELIMINADO'}).eq('folio',folio).eq('id_acceso_proveedor',currentUser.id_acceso_proveedor);if(r.error)throw r.error;await sb.from('bitacora').insert([{usuario:currentUser.usuario,rol:currentUser.rol,accion:'ELIMINAR_PEDIDO',folio,detalle:'Eliminado por proveedor'}]);showNotice('appNotice',`Pedido ${folio} eliminado.`);await loadData();}catch(err){showNotice('appNotice',err.message,'err')}}
-function renderAdminOrders(){const q=norm($('adminSearch').value);const list=adminOrders.filter(o=>!q||[o.folio,o.proveedor,o.grupo_catalogo,o.cliente,o.vendedor,o.estatus].some(x=>norm(x).includes(q)));$('adminPedidos').textContent=list.length;$('adminTotal').textContent=money(list.reduce((a,o)=>a+Number(o.total||0),0));const body=$('adminOrdersBody');body.innerHTML='';list.forEach(o=>{const tr=document.createElement('tr');tr.innerHTML=`<td><b>${o.folio}</b></td><td>${new Date(o.fecha_hora).toLocaleString('es-MX')}</td><td>${o.proveedor}</td><td>${o.grupo_catalogo}</td><td>${o.cliente}</td><td>${o.vendedor}</td><td class="right"><b>${money(o.total)}</b></td><td>${o.estatus}</td><td><button class="btn danger" type="button">Cancelar</button></td>`;tr.querySelector('button').onclick=()=>cancelAdminOrder(o.folio);body.appendChild(tr);});}
+function renderAdminOrders(){const q=norm($('adminSearch').value);const list=adminOrders.filter(o=>!q||[o.folio,o.proveedor,o.grupo_catalogo,o.cliente,o.vendedor,o.estatus].some(x=>norm(x).includes(q)));$('adminPedidos').textContent=list.length;$('adminTotal').textContent=money(list.reduce((a,o)=>a+Number(o.total||0),0));const body=$('adminOrdersBody');body.innerHTML='';list.forEach(o=>{const tr=document.createElement('tr');tr.innerHTML=`<td><b>${o.folio}</b></td><td>${new Date(o.fecha_hora).toLocaleString('es-MX')}</td><td>${o.proveedor}</td><td>${o.grupo_catalogo}</td><td>${o.cliente}</td><td>${o.vendedor}</td><td class="right"><b>${money(o.total)}</b></td><td>${o.estatus}</td><td><button class="btn secondary" type="button">Ver detalle</button></td><td><button class="btn danger" type="button">Cancelar</button></td>`;tr.querySelectorAll('button')[0].onclick=()=>showOrderDetail(o);tr.querySelectorAll('button')[1].onclick=()=>cancelAdminOrder(o.folio);body.appendChild(tr);});}
+
+async function showOrderDetail(order){
+  try{
+    currentDetailOrder = order;
+    const {data,error}=await sb.from('pedido_detalle').select('*').eq('folio',order.folio).order('id',{ascending:true});
+    if(error) throw error;
+    currentDetailItems = data || [];
+
+    $('detailTitle').textContent = 'Detalle ' + order.folio;
+    $('detailSubtitle').textContent = `${order.proveedor || ''} · ${order.grupo_catalogo || ''} · ${order.cliente || ''}`;
+
+    const subtotal = currentDetailItems.reduce((a,i)=>a+Number(i.importe_base||0),0);
+    const total = currentDetailItems.reduce((a,i)=>a+Number(i.importe_final||0),0);
+    const discount = subtotal - total;
+
+    $('detailSubtotal').textContent = money(subtotal);
+    $('detailDiscount').textContent = money(discount);
+    $('detailTotal').textContent = money(total);
+
+    const body = $('detailBody');
+    body.innerHTML = '';
+    if(!currentDetailItems.length){
+      body.innerHTML = '<tr><td colspan="10" class="muted">No hay productos en este pedido.</td></tr>';
+    } else {
+      currentDetailItems.forEach(i=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML = `<td>${i.sku}</td><td><b>${i.producto}</b></td><td>${i.unidad}</td><td class="right">${Number(i.cantidad||0)}</td><td class="right">${money(i.precio_lista)}</td><td class="right">${Number(i.descuento_precargado_pct||0).toFixed(2)}%</td><td class="right">${money(i.precio_neto_base)}</td><td class="right">${Number(i.descuento_extra_pct||0).toFixed(2)}%</td><td class="right">${money(i.precio_final)}</td><td class="right"><b>${money(i.importe_final)}</b></td>`;
+        body.appendChild(tr);
+      });
+    }
+    $('detailModal').classList.remove('hidden');
+  }catch(err){
+    showNotice('appNotice',err.message,'err');
+  }
+}
+
+function closeDetail(){
+  $('detailModal').classList.add('hidden');
+  currentDetailOrder = null;
+  currentDetailItems = [];
+}
+
+function exportCurrentDetail(){
+  if(!currentDetailOrder) return;
+  const rows=[['Folio','Fecha','Proveedor','GrupoCatalogo','Cliente','Vendedor','SKU','Producto','Unidad','Cantidad','PrecioLista','DescuentoPrecargadoPct','PrecioNetoBase','DescuentoExtraPct','PrecioFinal','ImporteBase','ImporteFinal']];
+  currentDetailItems.forEach(i=>rows.push([
+    i.folio,
+    i.fecha_hora,
+    i.proveedor,
+    i.grupo_catalogo,
+    i.cliente,
+    i.vendedor,
+    i.sku,
+    i.producto,
+    i.unidad,
+    i.cantidad,
+    i.precio_lista,
+    i.descuento_precargado_pct,
+    i.precio_neto_base,
+    i.descuento_extra_pct,
+    i.precio_final,
+    i.importe_base,
+    i.importe_final
+  ]));
+  downloadCSV(`${currentDetailOrder.folio}_detalle.csv`,rows);
+}
+
 async function cancelAdminOrder(folio){if(!confirm(`¿Cancelar pedido ${folio}?`))return;try{const r=await sb.from('pedidos').update({estatus:'CANCELADO'}).eq('folio',folio);if(r.error)throw r.error;await sb.from('bitacora').insert([{usuario:currentUser.usuario,rol:currentUser.rol,accion:'CANCELAR_PEDIDO',folio,detalle:'Cancelado por compras/admin'}]);showNotice('appNotice',`Pedido ${folio} cancelado.`);await loadData();}catch(err){showNotice('appNotice',err.message,'err')}}
 function downloadCSV(filename,rows){const csv=rows.map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(',')).join('\\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;a.click();URL.revokeObjectURL(a.href)}
 async function exportDynamics(){try{const {data,error}=await sb.from('export_dynamics').select('*');if(error)throw error;const rows=[['Folio','Cliente','Vendedor','IDProveedor','SKU','Unidad','Cantidad','PrecioNetoBase','DescExtraPct','PrecioFinal','ImporteFinal']];(data||[]).forEach(i=>rows.push([i.folio,i.cliente,i.vendedor,i.id_proveedor,i.sku,i.unidad,i.cantidad,i.precio_neto_base,i.desc_extra_pct,i.precio_final,i.importe_final]));downloadCSV('export_dynamics_expo_dvt_2026.csv',rows);}catch(err){showNotice('appNotice',err.message,'err')}}
