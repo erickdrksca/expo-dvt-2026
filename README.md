@@ -1,3 +1,3 @@
-# EXPO DVT 2026 V5.3
+# EXPO DVT 2026 V5.4
 
-Corrección final descuento extra: aplica al salir del campo o presionar Enter.
+Después de guardar pedido limpia cliente, vendedor, sucursal, observaciones, buscador y carrito.
