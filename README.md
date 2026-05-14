@@ -1,3 +1,3 @@
-# EXPO DVT 2026 V5.2
+# EXPO DVT 2026 V5.3
 
-Corrige captura de descuento extra para que permita escribir 10, 15, etc. sin perder el cursor.
+Corrección final descuento extra: aplica al salir del campo o presionar Enter.
