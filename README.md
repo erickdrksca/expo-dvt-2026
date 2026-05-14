@@ -1,3 +1,3 @@
-# EXPO DVT 2026 V4
+# EXPO DVT 2026 V5
 
-Incluye dashboard de ventas por proveedor, vendedor, cliente y estatus de captura.
+Incluye comprobante imprimible / guardar como PDF.
