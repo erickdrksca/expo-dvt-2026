@@ -1,3 +1,3 @@
-# EXPO DVT 2026 V2
+# EXPO DVT 2026 V3
 
-Incluye vista de detalle de pedido.
+Incluye captura por vendedores y seguimiento Dynamics.

@@ -13,7 +13,28 @@
 <div id="loginScreen" class="login"><div class="card"><div style="text-align:center;margin-bottom:20px"><div class="logo" style="margin:0 auto 12px">🛒</div><h1>EXPO DVT 2026</h1><p class="muted">Portal formal conectado a Supabase</p></div><div id="loginNotice" class="notice err"></div><form id="loginForm"><div class="section"><label>Usuario</label><input id="loginUser" placeholder="Ej. COLGATE / COMPRAS / ADMIN"></div><div class="section"><label>Contraseña</label><input id="loginPass" type="password" placeholder="Contraseña"></div><button class="btn" id="loginBtn" style="width:100%" type="submit">Entrar</button></form></div></div>
 <div id="appScreen" class="hidden"><header><div class="wrap top"><div class="brand"><div class="logo">🛒</div><div><h1>EXPO DVT 2026</h1><p class="muted" id="sessionText"></p></div></div><div class="toolbar"><button class="btn secondary" onclick="reloadData()">Actualizar</button><button class="btn danger" onclick="logout()">Cerrar sesión</button></div></div></header><main class="wrap"><div id="appNotice" class="notice ok"></div>
 <div id="providerView" class="grid hidden"><section><div class="card section"><h2>1. Datos del pedido</h2><div class="formgrid"><div><label>Cliente *</label><input id="clientSearch" list="clientList" placeholder="Busca por cliente, ID o población"><datalist id="clientList"></datalist></div><div><label>Vendedor *</label><select id="vendorSelect"></select></div><div><label>Destino / comentario corto</label><input id="destination" placeholder="CEDIS, tienda, ruta, etc."></div><div style="grid-column:1/-1"><label>Observaciones</label><textarea id="notes" placeholder="Promoción, condiciones, comentarios..."></textarea></div></div></div><div class="card section"><div class="top" style="margin-bottom:12px"><h2>2. Catálogo autorizado</h2><input id="productSearch" style="max-width:340px" placeholder="Buscar SKU, producto o unidad"></div><div class="products" id="productGrid"></div></div><div class="card section"><h2>3. Pedido capturado</h2><div id="cartEmpty" class="empty">Agrega productos del catálogo para iniciar el pedido.</div><div id="cartTableWrap" class="hidden"><table><thead><tr><th>SKU</th><th>Producto</th><th>Unidad</th><th class="right">Precio neto base</th><th class="right">Cantidad</th><th class="right">Desc. extra %</th><th class="right">Precio final</th><th class="right">Importe final</th><th></th></tr></thead><tbody id="cartBody"></tbody></table></div></div></section><aside><div class="card section"><h2>Resumen</h2><div class="stats"><div class="stat"><span class="muted">Productos</span><b id="statProducts">0</b></div><div class="stat"><span class="muted">Unidades</span><b id="statUnits">0</b></div><div class="stat" style="grid-column:1/-1"><span class="muted">Subtotal con descuento precargado</span><b id="statSubtotal">$0.00</b></div><div class="stat" style="grid-column:1/-1"><span class="muted">Descuento extra por producto</span><b id="statExtraDiscount">$0.00</b></div><div class="stat" style="grid-column:1/-1;background:#ecfdf3"><span class="muted">Total final</span><b id="statTotal">$0.00</b></div></div><button class="btn accent" id="saveOrderBtn" style="width:100%;margin-top:14px" onclick="saveOrder()" disabled>Guardar pedido</button></div><div class="card section"><h2>Mis pedidos</h2><div id="history" class="history"></div></div></aside></div>
-<div id="adminView" class="adminGrid hidden"><div class="card section"><div class="top"><h2>Panel Compras / Admin</h2><div class="toolbar"><input id="adminSearch" style="width:320px" placeholder="Filtrar proveedor, cliente, folio..."><button class="btn blue" onclick="exportDynamics()">Exportar Dynamics CSV</button></div></div><div class="stats" style="margin-bottom:14px"><div class="stat"><span class="muted">Pedidos</span><b id="adminPedidos">0</b></div><div class="stat"><span class="muted">Total</span><b id="adminTotal">$0.00</b></div></div><div style="overflow:auto"><table><thead><tr><th>Folio</th><th>Fecha</th><th>Proveedor</th><th>Grupo</th><th>Cliente</th><th>Vendedor</th><th class="right">Total</th><th>Estatus</th><th>Detalle</th><th></th></tr></thead><tbody id="adminOrdersBody"></tbody></table></div></div></div>
+<div id="adminView" class="adminGrid hidden"><div class="card section"><div class="top"><h2>Panel Compras / Admin</h2><div class="toolbar"><button class="btn secondary" onclick="setAdminTab('general')">Pedidos generales</button><button class="btn secondary" onclick="setAdminTab('vendedores')">Captura vendedores</button><input id="adminSearch" style="width:320px" placeholder="Filtrar proveedor, cliente, folio..."><button class="btn blue" onclick="exportDynamics()">Exportar Dynamics CSV</button></div></div><div class="stats" style="margin-bottom:14px"><div class="stat"><span class="muted">Pedidos</span><b id="adminPedidos">0</b></div><div class="stat"><span class="muted">Total</span><b id="adminTotal">$0.00</b></div></div><div style="overflow:auto"><table><thead><tr><th>Folio</th><th>Fecha</th><th>Proveedor</th><th>Grupo</th><th>Cliente</th><th>Vendedor</th><th class="right">Total</th><th>Estatus</th><th>Detalle</th><th></th></tr></thead><tbody id="adminOrdersBody"></tbody></table></div>
+<div id="sellerCaptureView" class="hidden" style="margin-top:18px">
+  <div class="card" style="box-shadow:none;border-style:dashed">
+    <div class="top" style="margin-bottom:12px">
+      <div>
+        <h2>Captura vendedores</h2>
+        <p class="muted">Ordenado para que el vendedor capture en Dynamics por vendedor → cliente → proveedor.</p>
+      </div>
+      <div class="toolbar">
+        <select id="sellerFilter" style="min-width:260px" onchange="renderSellerCapture()"></select>
+        <button class="btn blue" onclick="exportSellerCSV()">Exportar vendedor CSV</button>
+      </div>
+    </div>
+    <div style="overflow:auto">
+      <table>
+        <thead><tr><th>Vendedor</th><th>Cliente</th><th>Folio Expo</th><th>Proveedor</th><th>Productos</th><th class="right">Total</th><th>Estatus captura</th><th>Pedido Dynamics</th><th>Acciones</th></tr></thead>
+        <tbody id="sellerCaptureBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div></div></div>
 </main></div>
 
 <div id="detailModal" class="modalBackdrop hidden">
@@ -59,14 +80,14 @@
 const SUPABASE_URL = "https://uuiyscicaanxxpzyqggh.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1aXlzY2ljYWFueHhwenlxZ2doIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2ODc0MjAsImV4cCI6MjA5NDI2MzQyMH0.aVUNwnZ3vhiXlGJj9VxWTUrMXAa2ALwDIJtskdah42I";
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-let currentUser=null,currentProvider=null,catalog=[],clients=[],vendors=[],orders=[],cart=[],adminOrders=[],currentDetailOrder=null,currentDetailItems=[];
+let currentUser=null,currentProvider=null,catalog=[],clients=[],vendors=[],orders=[],cart=[],adminOrders=[],currentDetailOrder=null,currentDetailItems=[],adminTab='general';
 const $=id=>document.getElementById(id);
 const money=v=>Number(v||0).toLocaleString('es-MX',{style:'currency',currency:'MXN'});
 const norm=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 function showNotice(id,msg,kind='ok'){const el=$(id);el.textContent=msg;el.className='notice '+kind;el.style.display='block';setTimeout(()=>el.style.display='none',4500)}
-function init(){ $('loginForm').addEventListener('submit',handleLogin); $('productSearch').addEventListener('input',renderProducts); $('adminSearch').addEventListener('input',renderAdminOrders); ['clientSearch','vendorSelect','destination','notes'].forEach(id=>$(id).addEventListener('input',updateSaveState));}
+function init(){ $('loginForm').addEventListener('submit',handleLogin); $('productSearch').addEventListener('input',renderProducts); $('adminSearch').addEventListener('input',()=>{renderAdminOrders();renderSellerCapture();}); ['clientSearch','vendorSelect','destination','notes'].forEach(id=>$(id).addEventListener('input',updateSaveState));}
 async function handleLogin(e){e.preventDefault();$('loginBtn').disabled=true;$('loginBtn').textContent='Validando...';try{const usuario=$('loginUser').value.trim().toUpperCase();const contrasena=$('loginPass').value.trim();const {data,error}=await sb.from('usuarios').select('*').eq('usuario',usuario).eq('contrasena',contrasena).eq('activo',true).maybeSingle();if(error)throw error;if(!data)throw new Error('Usuario o contraseña incorrectos');currentUser=data;if(currentUser.rol==='proveedor'){const r=await sb.from('proveedores').select('*').eq('id_acceso_proveedor',currentUser.id_acceso_proveedor).eq('activo',true).maybeSingle();if(r.error)throw r.error;if(!r.data)throw new Error('Proveedor no encontrado o inactivo');currentProvider=r.data;}$('loginScreen').classList.add('hidden');$('appScreen').classList.remove('hidden');$('sessionText').innerHTML=`<b>${currentUser.nombre||currentUser.usuario}</b> · Rol: ${currentUser.rol}`;await loadData();}catch(err){showNotice('loginNotice',err.message,'err')}finally{$('loginBtn').disabled=false;$('loginBtn').textContent='Entrar'}}
-async function loadData(){if(currentUser.rol==='proveedor'){$('providerView').classList.remove('hidden');$('adminView').classList.add('hidden');let [pr,cl,ve,pe]=await Promise.all([sb.from('productos').select('*').eq('id_proveedor',currentProvider.id_proveedor).ilike('grupo_catalogo',currentProvider.grupo_catalogo).eq('activo',true).order('descripcion'),sb.from('clientes').select('*').eq('activo',true).order('cliente'),sb.from('vendedores').select('*').eq('activo',true).order('vendedor'),sb.from('pedidos').select('*').eq('id_acceso_proveedor',currentUser.id_acceso_proveedor).neq('estatus','ELIMINADO').order('fecha_hora',{ascending:false})]);if(pr.error)throw pr.error;if(cl.error)throw cl.error;if(ve.error)throw ve.error;if(pe.error)throw pe.error;catalog=pr.data||[];clients=cl.data||[];vendors=ve.data||[];orders=pe.data||[];loadClients();loadVendors();renderProducts();renderCart();renderHistory();}else{$('providerView').classList.add('hidden');$('adminView').classList.remove('hidden');const {data,error}=await sb.from('pedidos').select('*').neq('estatus','ELIMINADO').order('fecha_hora',{ascending:false});if(error)throw error;adminOrders=data||[];renderAdminOrders();}}
+async function loadData(){if(currentUser.rol==='proveedor'){$('providerView').classList.remove('hidden');$('adminView').classList.add('hidden');let [pr,cl,ve,pe]=await Promise.all([sb.from('productos').select('*').eq('id_proveedor',currentProvider.id_proveedor).ilike('grupo_catalogo',currentProvider.grupo_catalogo).eq('activo',true).order('descripcion'),sb.from('clientes').select('*').eq('activo',true).order('cliente'),sb.from('vendedores').select('*').eq('activo',true).order('vendedor'),sb.from('pedidos').select('*').eq('id_acceso_proveedor',currentUser.id_acceso_proveedor).neq('estatus','ELIMINADO').order('fecha_hora',{ascending:false})]);if(pr.error)throw pr.error;if(cl.error)throw cl.error;if(ve.error)throw ve.error;if(pe.error)throw pe.error;catalog=pr.data||[];clients=cl.data||[];vendors=ve.data||[];orders=pe.data||[];loadClients();loadVendors();renderProducts();renderCart();renderHistory();}else{$('providerView').classList.add('hidden');$('adminView').classList.remove('hidden');const {data,error}=await sb.from('pedidos').select('*').neq('estatus','ELIMINADO').order('fecha_hora',{ascending:false});if(error)throw error;adminOrders=data||[];loadSellerFilter();renderAdminOrders();renderSellerCapture();}}
 async function reloadData(){try{await loadData();showNotice('appNotice','Información actualizada.')}catch(err){showNotice('appNotice',err.message,'err')}}
 function logout(){currentUser=null;currentProvider=null;catalog=[];clients=[];vendors=[];orders=[];cart=[];adminOrders=[];$('appScreen').classList.add('hidden');$('loginScreen').classList.remove('hidden')}
 function loadClients(){const dl=$('clientList');dl.innerHTML='';clients.forEach(c=>{const opt=document.createElement('option');opt.value=`${c.id_cliente} - ${c.cliente}${c.poblacion?' · '+c.poblacion:''}`;dl.appendChild(opt);});}
@@ -82,6 +103,81 @@ function updateSaveState(){$('saveOrderBtn').disabled=!(currentUser&&cart.length
 async function saveOrder(){const t=totals(),vendorOpt=$('vendorSelect').selectedOptions[0];const now=new Date();const folio='EXPO-'+currentProvider.id_proveedor+'-'+now.toISOString().replace(/[-:.TZ]/g,'').slice(0,14);const pedido={folio,fecha_hora:now.toISOString(),id_acceso_proveedor:currentUser.id_acceso_proveedor,id_proveedor:currentProvider.id_proveedor,proveedor:currentProvider.proveedor,grupo_catalogo:currentProvider.grupo_catalogo,usuario:currentUser.usuario,cliente:$('clientSearch').value.trim(),id_vendedor:$('vendorSelect').value,vendedor:vendorOpt?vendorOpt.dataset.name||vendorOpt.textContent:'',destino:$('destination').value.trim(),observaciones:$('notes').value.trim(),subtotal:t.subtotal,descuento_extra_productos_importe:t.extraAmount,total:t.total,estatus:'CAPTURADO'};const detalle=cart.map(i=>{const qty=Number(i.cantidad||0),base=Number(i.precio_neto||0),pct=Number(i.descuento_extra_pct||0),final=base*(1-pct/100);return{folio,fecha_hora:now.toISOString(),id_proveedor:currentProvider.id_proveedor,proveedor:currentProvider.proveedor,grupo_catalogo:currentProvider.grupo_catalogo,cliente:pedido.cliente,id_vendedor:pedido.id_vendedor,vendedor:pedido.vendedor,sku:i.sku,producto:i.descripcion,unidad:i.unidad,cantidad:qty,precio_lista:Number(i.precio_lista||0),descuento_precargado_pct:Number(i.descuento_pct||0),precio_neto_base:base,descuento_extra_pct:pct,precio_final:final,importe_base:qty*base,importe_final:qty*final}});$('saveOrderBtn').disabled=true;$('saveOrderBtn').textContent='Guardando...';try{const a=await sb.from('pedidos').insert([pedido]);if(a.error)throw a.error;const b=await sb.from('pedido_detalle').insert(detalle);if(b.error)throw b.error;await sb.from('bitacora').insert([{usuario:currentUser.usuario,rol:currentUser.rol,accion:'CREAR_PEDIDO',folio,detalle:'Pedido capturado por proveedor'}]);cart=[];$('notes').value='';showNotice('appNotice',`Pedido ${folio} guardado.`);await loadData();}catch(err){showNotice('appNotice',err.message,'err')}finally{$('saveOrderBtn').textContent='Guardar pedido';updateSaveState()}}
 function renderHistory(){const box=$('history');box.innerHTML='';if(!orders.length){box.innerHTML='<p class="muted">Aún no hay pedidos guardados.</p>';return}orders.forEach(o=>{const div=document.createElement('div');div.className='hist';div.innerHTML=`<div class="top"><div><b>${o.folio}</b><p class="muted">${new Date(o.fecha_hora).toLocaleString('es-MX')} · ${o.cliente}</p></div><span class="pill">${money(o.total)}</span></div><p class="muted" style="margin-top:6px">Estatus: ${o.estatus}</p><div class="toolbar" style="margin-top:10px"><button class="btn secondary" type="button">Ver detalle</button><button class="btn danger" type="button">Eliminar</button></div>`;div.querySelectorAll('button')[0].onclick=()=>showOrderDetail(o);div.querySelectorAll('button')[1].onclick=()=>deleteOrder(o.folio);box.appendChild(div);});}
 async function deleteOrder(folio){if(!confirm(`¿Seguro que quieres eliminar el pedido ${folio}?`))return;try{const r=await sb.from('pedidos').update({estatus:'ELIMINADO'}).eq('folio',folio).eq('id_acceso_proveedor',currentUser.id_acceso_proveedor);if(r.error)throw r.error;await sb.from('bitacora').insert([{usuario:currentUser.usuario,rol:currentUser.rol,accion:'ELIMINAR_PEDIDO',folio,detalle:'Eliminado por proveedor'}]);showNotice('appNotice',`Pedido ${folio} eliminado.`);await loadData();}catch(err){showNotice('appNotice',err.message,'err')}}
+
+function setAdminTab(tab){
+  adminTab = tab;
+  const generalTable = $('adminOrdersBody') ? $('adminOrdersBody').closest('div') : null;
+  if(generalTable) generalTable.classList.toggle('hidden', tab !== 'general');
+  if($('sellerCaptureView')) $('sellerCaptureView').classList.toggle('hidden', tab !== 'vendedores');
+  if(tab === 'vendedores') renderSellerCapture();
+}
+function loadSellerFilter(){
+  const sel = $('sellerFilter');
+  if(!sel) return;
+  const current = sel.value;
+  const sellers = [...new Map(adminOrders.map(o=>[o.id_vendedor, o.vendedor])).entries()]
+    .filter(x=>x[0])
+    .sort((a,b)=>String(a[1]).localeCompare(String(b[1])));
+  sel.innerHTML = '<option value="">Todos los vendedores</option>';
+  sellers.forEach(([id,name])=>{
+    const opt=document.createElement('option');
+    opt.value=id;
+    opt.textContent=`${id} - ${name}`;
+    sel.appendChild(opt);
+  });
+  if(current) sel.value = current;
+}
+function sellerFilteredOrders(){
+  const seller = $('sellerFilter') ? $('sellerFilter').value : '';
+  const q = norm($('adminSearch').value);
+  return adminOrders
+    .filter(o=>!seller || o.id_vendedor === seller)
+    .filter(o=>!q || [o.folio,o.proveedor,o.grupo_catalogo,o.cliente,o.vendedor,o.estatus,o.estatus_captura,o.pedido_dynamics].some(x=>norm(x).includes(q)))
+    .sort((a,b)=>String(a.vendedor||'').localeCompare(String(b.vendedor||'')) || String(a.cliente||'').localeCompare(String(b.cliente||'')) || String(a.proveedor||'').localeCompare(String(b.proveedor||'')) || String(a.folio||'').localeCompare(String(b.folio||'')));
+}
+function renderSellerCapture(){
+  const body = $('sellerCaptureBody');
+  if(!body) return;
+  const list = sellerFilteredOrders();
+  body.innerHTML = '';
+  if(!list.length){ body.innerHTML = '<tr><td colspan="9" class="muted">No hay pedidos para este filtro.</td></tr>'; return; }
+  list.forEach(o=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML = `<td><b>${o.id_vendedor||''}</b><br><span class="muted">${o.vendedor||''}</span></td><td>${o.cliente||''}</td><td><b>${o.folio}</b></td><td>${o.proveedor||''}<br><span class="muted">${o.grupo_catalogo||''}</span></td><td><button class="btn secondary" type="button">Ver detalle</button></td><td class="right"><b>${money(o.total)}</b></td><td><select class="cap-status"><option value="PENDIENTE">PENDIENTE</option><option value="EN CAPTURA">EN CAPTURA</option><option value="CAPTURADO">CAPTURADO</option><option value="ERROR">ERROR</option></select></td><td><input class="dyn-input" placeholder="Ej. SO-000123" value="${o.pedido_dynamics||''}"></td><td><button class="btn accent" type="button">Guardar</button></td>`;
+    tr.querySelector('button').onclick=()=>showOrderDetail(o);
+    tr.querySelector('.cap-status').value = o.estatus_captura || 'PENDIENTE';
+    tr.querySelectorAll('button')[1].onclick=()=>saveCaptureStatus(o.folio, tr.querySelector('.cap-status').value, tr.querySelector('.dyn-input').value);
+    body.appendChild(tr);
+  });
+}
+async function saveCaptureStatus(folio, estatusCaptura, pedidoDynamics){
+  try{
+    const r = await sb.from('pedidos').update({estatus_captura: estatusCaptura, pedido_dynamics: pedidoDynamics.trim() || null}).eq('folio', folio);
+    if(r.error) throw r.error;
+    await sb.from('bitacora').insert([{usuario:currentUser.usuario,rol:currentUser.rol,accion:'ACTUALIZAR_CAPTURA_DYNAMICS',folio,detalle:`Estatus captura: ${estatusCaptura}; Pedido Dynamics: ${pedidoDynamics||''}`}]);
+    showNotice('appNotice',`Pedido ${folio} actualizado.`);
+    await loadData();
+    setAdminTab('vendedores');
+  }catch(err){ showNotice('appNotice',err.message,'err'); }
+}
+async function exportSellerCSV(){
+  try{
+    const list = sellerFilteredOrders();
+    if(!list.length){ showNotice('appNotice','No hay pedidos para exportar con este filtro.','err'); return; }
+    const folios = list.map(o=>o.folio);
+    const {data,error}=await sb.from('pedido_detalle').select('*').in('folio',folios).order('vendedor').order('cliente').order('folio');
+    if(error) throw error;
+    const rows=[['VendedorID','Vendedor','Cliente','FolioExpo','Proveedor','GrupoCatalogo','SKU','Producto','Unidad','Cantidad','PrecioFinal','ImporteFinal','EstatusCaptura','PedidoDynamics']];
+    const orderMap = new Map(list.map(o=>[o.folio,o]));
+    (data||[]).forEach(i=>{
+      const o = orderMap.get(i.folio) || {};
+      rows.push([i.id_vendedor,i.vendedor,i.cliente,i.folio,i.proveedor,i.grupo_catalogo,i.sku,i.producto,i.unidad,i.cantidad,i.precio_final,i.importe_final,o.estatus_captura||'PENDIENTE',o.pedido_dynamics||'']);
+    });
+    const seller = $('sellerFilter') && $('sellerFilter').value ? $('sellerFilter').value : 'TODOS';
+    downloadCSV(`captura_vendedor_${seller}_expo_dvt_2026.csv`, rows);
+  }catch(err){ showNotice('appNotice',err.message,'err'); }
+}
+
 function renderAdminOrders(){const q=norm($('adminSearch').value);const list=adminOrders.filter(o=>!q||[o.folio,o.proveedor,o.grupo_catalogo,o.cliente,o.vendedor,o.estatus].some(x=>norm(x).includes(q)));$('adminPedidos').textContent=list.length;$('adminTotal').textContent=money(list.reduce((a,o)=>a+Number(o.total||0),0));const body=$('adminOrdersBody');body.innerHTML='';list.forEach(o=>{const tr=document.createElement('tr');tr.innerHTML=`<td><b>${o.folio}</b></td><td>${new Date(o.fecha_hora).toLocaleString('es-MX')}</td><td>${o.proveedor}</td><td>${o.grupo_catalogo}</td><td>${o.cliente}</td><td>${o.vendedor}</td><td class="right"><b>${money(o.total)}</b></td><td>${o.estatus}</td><td><button class="btn secondary" type="button">Ver detalle</button></td><td><button class="btn danger" type="button">Cancelar</button></td>`;tr.querySelectorAll('button')[0].onclick=()=>showOrderDetail(o);tr.querySelectorAll('button')[1].onclick=()=>cancelAdminOrder(o.folio);body.appendChild(tr);});}
 
 async function showOrderDetail(order){
