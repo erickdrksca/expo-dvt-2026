@@ -142,6 +142,7 @@
 const SUPABASE_URL = "https://uuiyscicaanxxpzyqggh.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1aXlzY2ljYWFueHhwenlxZ2doIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2ODc0MjAsImV4cCI6MjA5NDI2MzQyMH0.aVUNwnZ3vhiXlGJj9VxWTUrMXAa2ALwDIJtskdah42I";
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const discountTimers={};
 let currentUser=null,currentProvider=null,catalog=[],clients=[],vendors=[],orders=[],cart=[],adminOrders=[],currentDetailOrder=null,currentDetailItems=[],adminTab='dashboard',dashGeneral=[],dashProveedor=[],dashVendedor=[],dashEstatus=[],dashCliente=[];
 const $=id=>document.getElementById(id);
 const money=v=>Number(v||0).toLocaleString('es-MX',{style:'currency',currency:'MXN'});
@@ -158,6 +159,21 @@ function renderProducts(){const q=norm($('productSearch').value),grid=$('product
 function addProduct(p){const ex=cart.find(x=>x.id_producto_app===p.id_producto_app);if(ex)ex.cantidad+=1;else cart.push({...p,cantidad:1,descuento_extra_pct:0});renderCart()}
 function removeProduct(id){cart=cart.filter(x=>x.id_producto_app!==id);renderCart()}
 function updateQty(id,qty){const i=cart.find(x=>x.id_producto_app===id);if(i)i.cantidad=Math.max(1,Number(qty||1));renderCart()}
+
+function updateExtraDiscountDebounced(index, input){
+  clearTimeout(discountTimers[index]);
+  discountTimers[index]=setTimeout(()=>{
+    updateExtraDiscount(index, input.value);
+  }, 650);
+}
+
+function setExtraDiscountDebounced(index, input){
+  clearTimeout(discountTimers[index]);
+  discountTimers[index]=setTimeout(()=>{
+    setExtraDiscount(index, input.value);
+  }, 650);
+}
+
 function updateExtraDiscount(id,pct){const i=cart.find(x=>x.id_producto_app===id);if(i){let v=Number(pct||0);if(v<0)v=0;if(v>100)v=100;i.descuento_extra_pct=v}renderCart()}
 function totals(){return cart.reduce((a,i)=>{const qty=Number(i.cantidad||0),base=Number(i.precio_neto||0),pct=Number(i.descuento_extra_pct||0);const impBase=qty*base,desc=impBase*(pct/100),impFinal=impBase-desc;a.products++;a.units+=qty;a.subtotal+=impBase;a.extraAmount+=desc;a.total+=impFinal;return a},{products:0,units:0,subtotal:0,extraAmount:0,total:0})}
 function renderCart(){const t=totals();$('statProducts').textContent=t.products;$('statUnits').textContent=t.units;$('statSubtotal').textContent=money(t.subtotal);$('statExtraDiscount').textContent=money(t.extraAmount);$('statTotal').textContent=money(t.total);$('cartEmpty').classList.toggle('hidden',cart.length>0);$('cartTableWrap').classList.toggle('hidden',cart.length===0);const body=$('cartBody');body.innerHTML='';cart.forEach(i=>{const qty=Number(i.cantidad||0),pct=Number(i.descuento_extra_pct||0),base=Number(i.precio_neto||0),final=base*(1-pct/100),importe=qty*final;const tr=document.createElement('tr');tr.innerHTML=`<td>${i.sku}</td><td><b>${i.descripcion}</b><br><span class="muted">${i.id_producto_app}</span></td><td>${i.unidad}</td><td class="right">${money(base)}</td><td class="right"><input class="qty qty-cantidad" type="number" min="1" value="${i.cantidad}"></td><td class="right"><input class="qty qty-descuento" type="number" min="0" max="100" step="0.01" value="${pct}"></td><td class="right"><b>${money(final)}</b></td><td class="right"><b>${money(importe)}</b></td><td class="right"><button class="btn secondary" type="button">Quitar</button></td>`;tr.querySelector('.qty-cantidad').oninput=e=>updateQty(i.id_producto_app,e.target.value);tr.querySelector('.qty-descuento').oninput=e=>updateExtraDiscount(i.id_producto_app,e.target.value);tr.querySelector('button').onclick=()=>removeProduct(i.id_producto_app);body.appendChild(tr);});updateSaveState();}

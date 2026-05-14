@@ -1,3 +1,3 @@
-# EXPO DVT 2026 V5.1
+# EXPO DVT 2026 V5.2
 
-Cambio de etiqueta: Destino / comentario corto ahora dice SUCURSAL.
+Corrige captura de descuento extra para que permita escribir 10, 15, etc. sin perder el cursor.
