@@ -13,7 +13,69 @@
 <div id="loginScreen" class="login"><div class="card"><div style="text-align:center;margin-bottom:20px"><div class="logo" style="margin:0 auto 12px">🛒</div><h1>EXPO DVT 2026</h1><p class="muted">Portal formal conectado a Supabase</p></div><div id="loginNotice" class="notice err"></div><form id="loginForm"><div class="section"><label>Usuario</label><input id="loginUser" placeholder="Ej. COLGATE / COMPRAS / ADMIN"></div><div class="section"><label>Contraseña</label><input id="loginPass" type="password" placeholder="Contraseña"></div><button class="btn" id="loginBtn" style="width:100%" type="submit">Entrar</button></form></div></div>
 <div id="appScreen" class="hidden"><header><div class="wrap top"><div class="brand"><div class="logo">🛒</div><div><h1>EXPO DVT 2026</h1><p class="muted" id="sessionText"></p></div></div><div class="toolbar"><button class="btn secondary" onclick="reloadData()">Actualizar</button><button class="btn danger" onclick="logout()">Cerrar sesión</button></div></div></header><main class="wrap"><div id="appNotice" class="notice ok"></div>
 <div id="providerView" class="grid hidden"><section><div class="card section"><h2>1. Datos del pedido</h2><div class="formgrid"><div><label>Cliente *</label><input id="clientSearch" list="clientList" placeholder="Busca por cliente, ID o población"><datalist id="clientList"></datalist></div><div><label>Vendedor *</label><select id="vendorSelect"></select></div><div><label>Destino / comentario corto</label><input id="destination" placeholder="CEDIS, tienda, ruta, etc."></div><div style="grid-column:1/-1"><label>Observaciones</label><textarea id="notes" placeholder="Promoción, condiciones, comentarios..."></textarea></div></div></div><div class="card section"><div class="top" style="margin-bottom:12px"><h2>2. Catálogo autorizado</h2><input id="productSearch" style="max-width:340px" placeholder="Buscar SKU, producto o unidad"></div><div class="products" id="productGrid"></div></div><div class="card section"><h2>3. Pedido capturado</h2><div id="cartEmpty" class="empty">Agrega productos del catálogo para iniciar el pedido.</div><div id="cartTableWrap" class="hidden"><table><thead><tr><th>SKU</th><th>Producto</th><th>Unidad</th><th class="right">Precio neto base</th><th class="right">Cantidad</th><th class="right">Desc. extra %</th><th class="right">Precio final</th><th class="right">Importe final</th><th></th></tr></thead><tbody id="cartBody"></tbody></table></div></div></section><aside><div class="card section"><h2>Resumen</h2><div class="stats"><div class="stat"><span class="muted">Productos</span><b id="statProducts">0</b></div><div class="stat"><span class="muted">Unidades</span><b id="statUnits">0</b></div><div class="stat" style="grid-column:1/-1"><span class="muted">Subtotal con descuento precargado</span><b id="statSubtotal">$0.00</b></div><div class="stat" style="grid-column:1/-1"><span class="muted">Descuento extra por producto</span><b id="statExtraDiscount">$0.00</b></div><div class="stat" style="grid-column:1/-1;background:#ecfdf3"><span class="muted">Total final</span><b id="statTotal">$0.00</b></div></div><button class="btn accent" id="saveOrderBtn" style="width:100%;margin-top:14px" onclick="saveOrder()" disabled>Guardar pedido</button></div><div class="card section"><h2>Mis pedidos</h2><div id="history" class="history"></div></div></aside></div>
-<div id="adminView" class="adminGrid hidden"><div class="card section"><div class="top"><h2>Panel Compras / Admin</h2><div class="toolbar"><button class="btn secondary" onclick="setAdminTab('general')">Pedidos generales</button><button class="btn secondary" onclick="setAdminTab('vendedores')">Captura vendedores</button><input id="adminSearch" style="width:320px" placeholder="Filtrar proveedor, cliente, folio..."><button class="btn blue" onclick="exportDynamics()">Exportar Dynamics CSV</button></div></div><div class="stats" style="margin-bottom:14px"><div class="stat"><span class="muted">Pedidos</span><b id="adminPedidos">0</b></div><div class="stat"><span class="muted">Total</span><b id="adminTotal">$0.00</b></div></div><div style="overflow:auto"><table><thead><tr><th>Folio</th><th>Fecha</th><th>Proveedor</th><th>Grupo</th><th>Cliente</th><th>Vendedor</th><th class="right">Total</th><th>Estatus</th><th>Detalle</th><th></th></tr></thead><tbody id="adminOrdersBody"></tbody></table></div>
+<div id="adminView" class="adminGrid hidden"><div class="card section"><div class="top"><h2>Panel Compras / Admin</h2><div class="toolbar"><button class="btn secondary" onclick="setAdminTab('dashboard')">Dashboard</button><button class="btn secondary" onclick="setAdminTab('general')">Pedidos generales</button><button class="btn secondary" onclick="setAdminTab('vendedores')">Captura vendedores</button><input id="adminSearch" style="width:320px" placeholder="Filtrar proveedor, cliente, folio..."><button class="btn blue" onclick="exportDynamics()">Exportar Dynamics CSV</button></div></div><div class="stats" style="margin-bottom:14px"><div class="stat"><span class="muted">Pedidos</span><b id="adminPedidos">0</b></div><div class="stat"><span class="muted">Total</span><b id="adminTotal">$0.00</b></div></div><div style="overflow:auto"><table><thead><tr><th>Folio</th><th>Fecha</th><th>Proveedor</th><th>Grupo</th><th>Cliente</th><th>Vendedor</th><th class="right">Total</th><th>Estatus</th><th>Detalle</th><th></th></tr></thead><tbody id="adminOrdersBody"></tbody></table></div>
+
+<div id="dashboardView" style="margin-top:18px">
+  <div class="card" style="box-shadow:none;border-style:dashed">
+    <div class="top" style="margin-bottom:12px">
+      <div>
+        <h2>Dashboard EXPO DVT 2026</h2>
+        <p class="muted">Avance de venta capturada por proveedor, vendedor y estatus de captura.</p>
+      </div>
+      <div class="toolbar">
+        <button class="btn blue" onclick="loadDashboard()">Actualizar dashboard</button>
+        <button class="btn secondary" onclick="exportDashboardCSV()">Exportar tablas CSV</button>
+      </div>
+    </div>
+
+    <div class="stats" style="margin-bottom:18px">
+      <div class="stat"><span class="muted">Venta total capturada</span><b id="dashVentaTotal">$0.00</b></div>
+      <div class="stat"><span class="muted">Pedidos capturados</span><b id="dashPedidos">0</b></div>
+      <div class="stat"><span class="muted">Clientes con pedido</span><b id="dashClientes">0</b></div>
+      <div class="stat"><span class="muted">Descuento extra total</span><b id="dashDescuento">$0.00</b></div>
+    </div>
+
+    <div class="formgrid">
+      <div class="card" style="box-shadow:none">
+        <h2>Venta por proveedor / fabricante</h2>
+        <div style="overflow:auto;max-height:360px">
+          <table>
+            <thead><tr><th>Proveedor</th><th>Grupo</th><th class="right">Pedidos</th><th class="right">Clientes</th><th class="right">Venta</th><th class="right">% Part.</th></tr></thead>
+            <tbody id="dashProveedorBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card" style="box-shadow:none">
+        <h2>Venta por vendedor</h2>
+        <div style="overflow:auto;max-height:360px">
+          <table>
+            <thead><tr><th>Vendedor</th><th class="right">Pedidos</th><th class="right">Clientes</th><th class="right">Venta</th><th class="right">Capturado Dyn.</th></tr></thead>
+            <tbody id="dashVendedorBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card" style="box-shadow:none">
+        <h2>Avance captura Dynamics</h2>
+        <div style="overflow:auto;max-height:300px">
+          <table>
+            <thead><tr><th>Estatus</th><th class="right">Pedidos</th><th class="right">Venta</th></tr></thead>
+            <tbody id="dashEstatusBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card" style="box-shadow:none">
+        <h2>Top clientes</h2>
+        <div style="overflow:auto;max-height:300px">
+          <table>
+            <thead><tr><th>Cliente</th><th>Vendedor</th><th class="right">Pedidos</th><th class="right">Venta</th></tr></thead>
+            <tbody id="dashClienteBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="sellerCaptureView" class="hidden" style="margin-top:18px">
   <div class="card" style="box-shadow:none;border-style:dashed">
     <div class="top" style="margin-bottom:12px">
@@ -80,14 +142,14 @@
 const SUPABASE_URL = "https://uuiyscicaanxxpzyqggh.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1aXlzY2ljYWFueHhwenlxZ2doIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2ODc0MjAsImV4cCI6MjA5NDI2MzQyMH0.aVUNwnZ3vhiXlGJj9VxWTUrMXAa2ALwDIJtskdah42I";
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-let currentUser=null,currentProvider=null,catalog=[],clients=[],vendors=[],orders=[],cart=[],adminOrders=[],currentDetailOrder=null,currentDetailItems=[],adminTab='general';
+let currentUser=null,currentProvider=null,catalog=[],clients=[],vendors=[],orders=[],cart=[],adminOrders=[],currentDetailOrder=null,currentDetailItems=[],adminTab='dashboard',dashGeneral=[],dashProveedor=[],dashVendedor=[],dashEstatus=[],dashCliente=[];
 const $=id=>document.getElementById(id);
 const money=v=>Number(v||0).toLocaleString('es-MX',{style:'currency',currency:'MXN'});
 const norm=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 function showNotice(id,msg,kind='ok'){const el=$(id);el.textContent=msg;el.className='notice '+kind;el.style.display='block';setTimeout(()=>el.style.display='none',4500)}
 function init(){ $('loginForm').addEventListener('submit',handleLogin); $('productSearch').addEventListener('input',renderProducts); $('adminSearch').addEventListener('input',()=>{renderAdminOrders();renderSellerCapture();}); ['clientSearch','vendorSelect','destination','notes'].forEach(id=>$(id).addEventListener('input',updateSaveState));}
 async function handleLogin(e){e.preventDefault();$('loginBtn').disabled=true;$('loginBtn').textContent='Validando...';try{const usuario=$('loginUser').value.trim().toUpperCase();const contrasena=$('loginPass').value.trim();const {data,error}=await sb.from('usuarios').select('*').eq('usuario',usuario).eq('contrasena',contrasena).eq('activo',true).maybeSingle();if(error)throw error;if(!data)throw new Error('Usuario o contraseña incorrectos');currentUser=data;if(currentUser.rol==='proveedor'){const r=await sb.from('proveedores').select('*').eq('id_acceso_proveedor',currentUser.id_acceso_proveedor).eq('activo',true).maybeSingle();if(r.error)throw r.error;if(!r.data)throw new Error('Proveedor no encontrado o inactivo');currentProvider=r.data;}$('loginScreen').classList.add('hidden');$('appScreen').classList.remove('hidden');$('sessionText').innerHTML=`<b>${currentUser.nombre||currentUser.usuario}</b> · Rol: ${currentUser.rol}`;await loadData();}catch(err){showNotice('loginNotice',err.message,'err')}finally{$('loginBtn').disabled=false;$('loginBtn').textContent='Entrar'}}
-async function loadData(){if(currentUser.rol==='proveedor'){$('providerView').classList.remove('hidden');$('adminView').classList.add('hidden');let [pr,cl,ve,pe]=await Promise.all([sb.from('productos').select('*').eq('id_proveedor',currentProvider.id_proveedor).ilike('grupo_catalogo',currentProvider.grupo_catalogo).eq('activo',true).order('descripcion'),sb.from('clientes').select('*').eq('activo',true).order('cliente'),sb.from('vendedores').select('*').eq('activo',true).order('vendedor'),sb.from('pedidos').select('*').eq('id_acceso_proveedor',currentUser.id_acceso_proveedor).neq('estatus','ELIMINADO').order('fecha_hora',{ascending:false})]);if(pr.error)throw pr.error;if(cl.error)throw cl.error;if(ve.error)throw ve.error;if(pe.error)throw pe.error;catalog=pr.data||[];clients=cl.data||[];vendors=ve.data||[];orders=pe.data||[];loadClients();loadVendors();renderProducts();renderCart();renderHistory();}else{$('providerView').classList.add('hidden');$('adminView').classList.remove('hidden');const {data,error}=await sb.from('pedidos').select('*').neq('estatus','ELIMINADO').order('fecha_hora',{ascending:false});if(error)throw error;adminOrders=data||[];loadSellerFilter();renderAdminOrders();renderSellerCapture();}}
+async function loadData(){if(currentUser.rol==='proveedor'){$('providerView').classList.remove('hidden');$('adminView').classList.add('hidden');let [pr,cl,ve,pe]=await Promise.all([sb.from('productos').select('*').eq('id_proveedor',currentProvider.id_proveedor).ilike('grupo_catalogo',currentProvider.grupo_catalogo).eq('activo',true).order('descripcion'),sb.from('clientes').select('*').eq('activo',true).order('cliente'),sb.from('vendedores').select('*').eq('activo',true).order('vendedor'),sb.from('pedidos').select('*').eq('id_acceso_proveedor',currentUser.id_acceso_proveedor).neq('estatus','ELIMINADO').order('fecha_hora',{ascending:false})]);if(pr.error)throw pr.error;if(cl.error)throw cl.error;if(ve.error)throw ve.error;if(pe.error)throw pe.error;catalog=pr.data||[];clients=cl.data||[];vendors=ve.data||[];orders=pe.data||[];loadClients();loadVendors();renderProducts();renderCart();renderHistory();}else{$('providerView').classList.add('hidden');$('adminView').classList.remove('hidden');const {data,error}=await sb.from('pedidos').select('*').neq('estatus','ELIMINADO').order('fecha_hora',{ascending:false});if(error)throw error;adminOrders=data||[];loadSellerFilter();renderAdminOrders();renderSellerCapture();await loadDashboard();setAdminTab('dashboard');}}
 async function reloadData(){try{await loadData();showNotice('appNotice','Información actualizada.')}catch(err){showNotice('appNotice',err.message,'err')}}
 function logout(){currentUser=null;currentProvider=null;catalog=[];clients=[];vendors=[];orders=[];cart=[];adminOrders=[];$('appScreen').classList.add('hidden');$('loginScreen').classList.remove('hidden')}
 function loadClients(){const dl=$('clientList');dl.innerHTML='';clients.forEach(c=>{const opt=document.createElement('option');opt.value=`${c.id_cliente} - ${c.cliente}${c.poblacion?' · '+c.poblacion:''}`;dl.appendChild(opt);});}
@@ -104,12 +166,96 @@ async function saveOrder(){const t=totals(),vendorOpt=$('vendorSelect').selected
 function renderHistory(){const box=$('history');box.innerHTML='';if(!orders.length){box.innerHTML='<p class="muted">Aún no hay pedidos guardados.</p>';return}orders.forEach(o=>{const div=document.createElement('div');div.className='hist';div.innerHTML=`<div class="top"><div><b>${o.folio}</b><p class="muted">${new Date(o.fecha_hora).toLocaleString('es-MX')} · ${o.cliente}</p></div><span class="pill">${money(o.total)}</span></div><p class="muted" style="margin-top:6px">Estatus: ${o.estatus}</p><div class="toolbar" style="margin-top:10px"><button class="btn secondary" type="button">Ver detalle</button><button class="btn danger" type="button">Eliminar</button></div>`;div.querySelectorAll('button')[0].onclick=()=>showOrderDetail(o);div.querySelectorAll('button')[1].onclick=()=>deleteOrder(o.folio);box.appendChild(div);});}
 async function deleteOrder(folio){if(!confirm(`¿Seguro que quieres eliminar el pedido ${folio}?`))return;try{const r=await sb.from('pedidos').update({estatus:'ELIMINADO'}).eq('folio',folio).eq('id_acceso_proveedor',currentUser.id_acceso_proveedor);if(r.error)throw r.error;await sb.from('bitacora').insert([{usuario:currentUser.usuario,rol:currentUser.rol,accion:'ELIMINAR_PEDIDO',folio,detalle:'Eliminado por proveedor'}]);showNotice('appNotice',`Pedido ${folio} eliminado.`);await loadData();}catch(err){showNotice('appNotice',err.message,'err')}}
 
+
+async function loadDashboard(){
+  if(!currentUser || currentUser.rol === 'proveedor') return;
+  try{
+    const [g,p,v,e,c] = await Promise.all([
+      sb.from('dashboard_general').select('*'),
+      sb.from('dashboard_por_proveedor').select('*'),
+      sb.from('dashboard_por_vendedor').select('*'),
+      sb.from('dashboard_por_estatus_captura').select('*'),
+      sb.from('dashboard_por_cliente').select('*').limit(50)
+    ]);
+    if(g.error) throw g.error;
+    if(p.error) throw p.error;
+    if(v.error) throw v.error;
+    if(e.error) throw e.error;
+    if(c.error) throw c.error;
+
+    dashGeneral = g.data || [];
+    dashProveedor = p.data || [];
+    dashVendedor = v.data || [];
+    dashEstatus = e.data || [];
+    dashCliente = c.data || [];
+    renderDashboard();
+  }catch(err){
+    showNotice('appNotice','Error dashboard: ' + err.message,'err');
+  }
+}
+
+function renderDashboard(){
+  if(!$('dashVentaTotal')) return;
+  const g = dashGeneral[0] || {};
+  $('dashVentaTotal').textContent = money(g.venta_total || 0);
+  $('dashPedidos').textContent = Number(g.pedidos || 0);
+  $('dashClientes').textContent = Number(g.clientes || 0);
+  $('dashDescuento').textContent = money(g.descuento_extra_total || 0);
+
+  const ventaTotal = Number(g.venta_total || 0);
+
+  const provBody = $('dashProveedorBody');
+  provBody.innerHTML = '';
+  dashProveedor.forEach(r=>{
+    const part = ventaTotal ? (Number(r.venta || 0) / ventaTotal * 100) : 0;
+    const tr=document.createElement('tr');
+    tr.innerHTML = `<td><b>${r.proveedor||''}</b></td><td>${r.grupo_catalogo||''}</td><td class="right">${r.pedidos||0}</td><td class="right">${r.clientes||0}</td><td class="right"><b>${money(r.venta)}</b></td><td class="right">${part.toFixed(1)}%</td>`;
+    provBody.appendChild(tr);
+  });
+
+  const vendBody = $('dashVendedorBody');
+  vendBody.innerHTML = '';
+  dashVendedor.forEach(r=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML = `<td><b>${r.id_vendedor||''}</b><br><span class="muted">${r.vendedor||''}</span></td><td class="right">${r.pedidos||0}</td><td class="right">${r.clientes||0}</td><td class="right"><b>${money(r.venta)}</b></td><td class="right">${money(r.venta_capturada_dynamics||0)}</td>`;
+    vendBody.appendChild(tr);
+  });
+
+  const estBody = $('dashEstatusBody');
+  estBody.innerHTML = '';
+  dashEstatus.forEach(r=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML = `<td><b>${r.estatus_captura||'PENDIENTE'}</b></td><td class="right">${r.pedidos||0}</td><td class="right"><b>${money(r.venta)}</b></td>`;
+    estBody.appendChild(tr);
+  });
+
+  const cliBody = $('dashClienteBody');
+  cliBody.innerHTML = '';
+  dashCliente.forEach(r=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML = `<td><b>${r.cliente||''}</b></td><td>${r.vendedor||''}</td><td class="right">${r.pedidos||0}</td><td class="right"><b>${money(r.venta)}</b></td>`;
+    cliBody.appendChild(tr);
+  });
+}
+
+function exportDashboardCSV(){
+  const rows = [['Seccion','Campo1','Campo2','Campo3','Campo4','Campo5']];
+  dashProveedor.forEach(r=>rows.push(['Proveedor',r.proveedor,r.grupo_catalogo,r.pedidos,r.clientes,r.venta]));
+  dashVendedor.forEach(r=>rows.push(['Vendedor',r.id_vendedor,r.vendedor,r.pedidos,r.clientes,r.venta]));
+  dashEstatus.forEach(r=>rows.push(['Estatus',r.estatus_captura,'',r.pedidos,'',r.venta]));
+  dashCliente.forEach(r=>rows.push(['Cliente',r.cliente,r.vendedor,r.pedidos,'',r.venta]));
+  downloadCSV('dashboard_expo_dvt_2026.csv', rows);
+}
+
+
 function setAdminTab(tab){
   adminTab = tab;
   const generalTable = $('adminOrdersBody') ? $('adminOrdersBody').closest('div') : null;
   if(generalTable) generalTable.classList.toggle('hidden', tab !== 'general');
   if($('sellerCaptureView')) $('sellerCaptureView').classList.toggle('hidden', tab !== 'vendedores');
+  if($('dashboardView')) $('dashboardView').classList.toggle('hidden', tab !== 'dashboard');
   if(tab === 'vendedores') renderSellerCapture();
+  if(tab === 'dashboard') loadDashboard();
 }
 function loadSellerFilter(){
   const sel = $('sellerFilter');

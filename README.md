@@ -1,3 +1,3 @@
-# EXPO DVT 2026 V3
+# EXPO DVT 2026 V4
 
-Incluye captura por vendedores y seguimiento Dynamics.
+Incluye dashboard de ventas por proveedor, vendedor, cliente y estatus de captura.
