@@ -1,3 +1,3 @@
-# EXPO DVT 2026 V5
+# EXPO DVT 2026 V5.1
 
-Incluye comprobante imprimible / guardar como PDF.
+Cambio de etiqueta: Destino / comentario corto ahora dice SUCURSAL.
