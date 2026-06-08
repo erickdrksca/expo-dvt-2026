@@ -1,3 +1,3 @@
-# EXPO DVT 2026 V5.5
+# EXPO DVT 2026 V5.6
 
-Carga hasta 5,000 clientes y 5,000 productos por proveedor. Muestra hasta 1,000 productos en búsqueda.
+Carga clientes y productos por bloques de 1000 registros para evitar límite de Supabase/PostgREST.
