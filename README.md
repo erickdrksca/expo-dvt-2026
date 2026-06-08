@@ -1,3 +1,3 @@
-# EXPO DVT 2026 V5.4
+# EXPO DVT 2026 V5.5
 
-Después de guardar pedido limpia cliente, vendedor, sucursal, observaciones, buscador y carrito.
+Carga hasta 5,000 clientes y 5,000 productos por proveedor. Muestra hasta 1,000 productos en búsqueda.
