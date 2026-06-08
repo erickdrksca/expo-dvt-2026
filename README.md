@@ -1,3 +1,3 @@
-# EXPO DVT 2026 V6
+# EXPO DVT 2026 V6.1
 
-Agrega rol multimarcas con catálogo completo, rol vendedor con vista propia y dashboard por origen de captura.
+Corrige vista vendedor: muestra únicamente sus pedidos y oculta controles de Admin/Compras.

@@ -91,8 +91,8 @@
   <div class="card" style="box-shadow:none;border-style:dashed">
     <div class="top" style="margin-bottom:12px">
       <div>
-        <h2>Captura vendedores</h2>
-        <p class="muted">Ordenado para que el vendedor capture en Dynamics por vendedor → cliente → proveedor.</p>
+        <h2 id="sellerCaptureTitle">Captura vendedores</h2>
+        <p class="muted" id="sellerCaptureSubtitle">Ordenado para que el vendedor capture en Dynamics por vendedor → cliente → proveedor.</p>
       </div>
       <div class="toolbar">
         <select id="sellerFilter" style="min-width:260px" onchange="renderSellerCapture()"></select>
@@ -176,6 +176,40 @@ async function fetchAllRows(buildQuery, pageSize=1000, maxRows=10000){
 function showNotice(id,msg,kind='ok'){const el=$(id);el.textContent=msg;el.className='notice '+kind;el.style.display='block';setTimeout(()=>el.style.display='none',4500)}
 function init(){ $('loginForm').addEventListener('submit',handleLogin); $('productSearch').addEventListener('input',renderProducts); if($('providerFilter')) $('providerFilter').addEventListener('change',renderProducts); $('adminSearch').addEventListener('input',()=>{renderAdminOrders();renderSellerCapture();}); ['clientSearch','vendorSelect','destination','notes'].forEach(id=>$(id).addEventListener('input',updateSaveState));}
 async function handleLogin(e){e.preventDefault();$('loginBtn').disabled=true;$('loginBtn').textContent='Validando...';try{const usuario=$('loginUser').value.trim().toUpperCase();const contrasena=$('loginPass').value.trim();const {data,error}=await sb.from('usuarios').select('*').eq('usuario',usuario).eq('contrasena',contrasena).eq('activo',true).maybeSingle();if(error)throw error;if(!data)throw new Error('Usuario o contraseña incorrectos');currentUser=data;if(currentUser.rol==='proveedor'){const r=await sb.from('proveedores').select('*').eq('id_acceso_proveedor',currentUser.id_acceso_proveedor).eq('activo',true).maybeSingle();if(r.error)throw r.error;if(!r.data)throw new Error('Proveedor no encontrado o inactivo');currentProvider=r.data;} else {currentProvider=null;}$('loginScreen').classList.add('hidden');$('appScreen').classList.remove('hidden');$('sessionText').innerHTML=`<b>${currentUser.nombre||currentUser.usuario}</b> · Rol: ${currentUser.rol}`;await loadData();}catch(err){showNotice('loginNotice',err.message,'err')}finally{$('loginBtn').disabled=false;$('loginBtn').textContent='Entrar'}}
+
+function applyRoleVisibility(){
+  const isVendedor = currentUser && currentUser.rol === 'vendedor';
+  const adminTitle = document.querySelector('#adminView h2');
+  if(adminTitle) adminTitle.textContent = isVendedor ? 'Mis pedidos - Vendedor' : 'Panel Compras / Admin';
+
+  const toolbar = document.querySelector('#adminView .toolbar');
+  if(toolbar){
+    [...toolbar.querySelectorAll('button')].forEach(btn=>{
+      const action = btn.getAttribute('onclick') || '';
+      if(isVendedor && (action.includes("setAdminTab('dashboard')") || action.includes("setAdminTab('general')") || action.includes("exportDynamics"))) {
+        btn.classList.add('hidden');
+      } else {
+        btn.classList.remove('hidden');
+      }
+    });
+  }
+
+  const generalTable = $('adminOrdersBody') ? $('adminOrdersBody').closest('div') : null;
+  if(generalTable) generalTable.classList.toggle('hidden', isVendedor || adminTab !== 'general');
+
+  if($('dashboardView')) $('dashboardView').classList.toggle('hidden', isVendedor || adminTab !== 'dashboard');
+  if($('sellerCaptureView')) $('sellerCaptureView').classList.toggle('hidden', !isVendedor && adminTab !== 'vendedores');
+
+  if($('sellerFilter')){
+    $('sellerFilter').classList.toggle('hidden', isVendedor);
+  }
+
+  const sellerExportBtn = document.querySelector('#sellerCaptureView button[onclick="exportSellerCSV()"]');
+  if(sellerExportBtn) sellerExportBtn.classList.toggle('hidden', isVendedor);
+  if($('sellerCaptureTitle')) $('sellerCaptureTitle').textContent = isVendedor ? 'Mis pedidos por capturar' : 'Captura vendedores';
+  if($('sellerCaptureSubtitle')) $('sellerCaptureSubtitle').textContent = isVendedor ? 'Aquí puedes ver únicamente tus pedidos asignados y actualizar el estatus de captura en Dynamics.' : 'Ordenado para que el vendedor capture en Dynamics por vendedor → cliente → proveedor.';
+}
+
 async function loadData(){
   if(currentUser.rol==='proveedor' || currentUser.rol==='multimarcas'){
     $('providerView').classList.remove('hidden');
@@ -216,6 +250,7 @@ async function loadData(){
     renderAdminOrders();
     renderSellerCapture();
     setAdminTab('vendedores');
+    applyRoleVisibility();
     if($('dashboardView')) $('dashboardView').classList.add('hidden');
   }else{
     $('providerView').classList.add('hidden');
@@ -228,6 +263,7 @@ async function loadData(){
     renderSellerCapture();
     await loadDashboard();
     setAdminTab('dashboard');
+    applyRoleVisibility();
   }
 }
 
@@ -479,13 +515,14 @@ function exportDashboardCSV(){
 
 
 function setAdminTab(tab){
-  adminTab = tab;
+  adminTab = currentUser && currentUser.rol === 'vendedor' ? 'vendedores' : tab;
   const generalTable = $('adminOrdersBody') ? $('adminOrdersBody').closest('div') : null;
-  if(generalTable) generalTable.classList.toggle('hidden', tab !== 'general');
-  if($('sellerCaptureView')) $('sellerCaptureView').classList.toggle('hidden', tab !== 'vendedores');
-  if($('dashboardView')) $('dashboardView').classList.toggle('hidden', tab !== 'dashboard');
-  if(tab === 'vendedores') renderSellerCapture();
-  if(tab === 'dashboard') loadDashboard();
+  if(generalTable) generalTable.classList.toggle('hidden', adminTab !== 'general');
+  if($('sellerCaptureView')) $('sellerCaptureView').classList.toggle('hidden', adminTab !== 'vendedores');
+  if($('dashboardView')) $('dashboardView').classList.toggle('hidden', adminTab !== 'dashboard');
+  if(adminTab === 'vendedores') renderSellerCapture();
+  if(adminTab === 'dashboard') loadDashboard();
+  applyRoleVisibility();
 }
 function loadSellerFilter(){
   const sel = $('sellerFilter');
