@@ -1,3 +1,3 @@
-# EXPO DVT 2026 V5.6
+# EXPO DVT 2026 V6
 
-Carga clientes y productos por bloques de 1000 registros para evitar límite de Supabase/PostgREST.
+Agrega rol multimarcas con catálogo completo, rol vendedor con vista propia y dashboard por origen de captura.
