@@ -5,9 +5,9 @@
 <title>EXPO DVT 2026</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--bg:#f4f6f8;--card:#fff;--text:#172033;--muted:#667085;--line:#d9dee7;--dark:#111827;--accent:#0f766e;--danger:#b42318;--blue:#2563eb;--shadow:0 12px 28px rgba(17,24,39,.08)}
+:root{--bg:#f3f6f9;--card:#fff;--text:#172033;--muted:#667085;--line:#d9dee7;--dark:#111827;--accent:#0f766e;--danger:#b42318;--blue:#2563eb;--shadow:0 12px 30px rgba(17,24,39,.08)}
 *{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}header{background:white;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}.wrap{max-width:1320px;margin:0 auto;padding:18px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:16px;background:var(--dark);color:white;display:grid;place-items:center;font-size:24px}h1{margin:0;font-size:24px}h2{margin:0 0 16px;font-size:18px}p{margin:0}.muted{color:var(--muted);font-size:13px}.login{min-height:100vh;display:grid;place-items:center;padding:20px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:18px}.login .card{width:100%;max-width:430px}label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}input,select,textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px;background:white;outline:none}textarea{min-height:70px;resize:vertical}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.grid{display:grid;grid-template-columns:2fr 1fr;gap:18px;align-items:start}.adminGrid{display:grid;grid-template-columns:1fr;gap:18px}.btn{border:0;background:var(--dark);color:white;padding:10px 14px;border-radius:12px;font-weight:700;cursor:pointer}.btn.secondary{background:white;color:var(--dark);border:1px solid var(--line)}.btn.accent{background:var(--accent)}.btn.danger{background:var(--danger)}.btn.blue{background:var(--blue)}.btn:disabled{opacity:.45;cursor:not-allowed}.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}.stat{background:#f1f5f9;border-radius:16px;padding:14px}.stat b{font-size:22px;display:block;margin-top:4px}.progressTrack{height:12px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:12px 0 8px}.progressFill{height:100%;width:0;background:#0f766e;border-radius:999px;transition:width .25s ease}.progressFill.warn{background:#f59e0b}.progressFill.done{background:#16a34a}.goalNote{display:flex;justify-content:space-between;gap:12px;align-items:center}.products{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-height:430px;overflow:auto;padding-right:4px}.product{border:1px solid var(--line);border-radius:16px;padding:12px;background:white;display:flex;justify-content:space-between;gap:10px}.product strong{display:block;font-size:14px}.product small{color:var(--muted)}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:10px 8px;border-bottom:1px solid #eef2f7;text-align:left;vertical-align:middle}th{color:#475467;font-size:12px;text-transform:uppercase}.right{text-align:right}.qty{width:82px}.priceInput{width:112px}.empty{border:1px dashed #cbd5e1;border-radius:16px;padding:28px;text-align:center;color:var(--muted)}.notice{padding:12px 14px;border-radius:14px;margin-bottom:14px;display:none}.notice.ok{background:#ecfdf3;color:#027a48;border:1px solid #abefc6}.notice.err{background:#fef3f2;color:#b42318;border:1px solid #fecdca}.history{display:flex;flex-direction:column;gap:10px;max-height:500px;overflow:auto}.hist{border:1px solid var(--line);border-radius:16px;padding:12px;background:white}.pill{display:inline-block;border-radius:999px;background:#eef2ff;color:#3538cd;padding:4px 9px;font-size:12px;font-weight:700}.hidden{display:none!important}.section{margin-bottom:18px}.modalBackdrop{position:fixed;inset:0;background:rgba(15,23,42,.55);display:flex;align-items:center;justify-content:center;z-index:99;padding:18px}.modal{background:white;border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.25);width:min(1100px,96vw);max-height:86vh;overflow:auto;padding:18px}.modalHead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:12px}.modalActions{display:flex;gap:10px;flex-wrap:wrap}.detailTotal{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0}.detailTotal div{background:#f1f5f9;border-radius:14px;padding:12px}@media(max-width:950px){.grid,.formgrid{grid-template-columns:1fr}.products{grid-template-columns:1fr}}
-.discountInput{width:92px}
+.discountInput{width:92px}.connection{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:8px 12px;background:#fff;font-size:13px;font-weight:700}.connection.offline{color:var(--danger);background:#fef3f2;border-color:#fecdca}.connection.online{color:#067647;background:#ecfdf3;border-color:#abefc6}.priceStack{display:grid;gap:7px;margin-top:10px;padding:10px;border-radius:13px;background:#f8fafc;border:1px solid #eef2f7}.priceRow{display:flex;justify-content:space-between;gap:12px;font-size:12px}.priceRow.offer{font-size:14px;color:var(--accent)}.priceRow.saving{color:#067647}.piecePrice{display:block;margin-top:4px;color:var(--muted);font-size:11px}.tableScroll{overflow:auto}.product{transition:transform .15s ease,box-shadow .15s ease}.product:hover{transform:translateY(-1px);box-shadow:0 9px 20px rgba(17,24,39,.08)}.btn{transition:transform .15s ease,opacity .15s ease}.btn:not(:disabled):hover{transform:translateY(-1px)}
 </style>
 </head>
 <body>
@@ -161,6 +161,49 @@ const money=v=>Number(v||0).toLocaleString('es-MX',{style:'currency',currency:'M
 const formatDateMX=v=>{if(!v)return '';const [y,m,d]=String(v).slice(0,10).split('-');return y&&m&&d?`${d}/${m}/${y}`:String(v)};
 const norm=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 const isActiveOrder=o=>!['ELIMINADO','CANCELADO'].includes(String(o.estatus||'').toUpperCase());
+const DRAFT_PREFIX='expo_dvt_2026_draft_';
+let draftTimer=null;
+const draftCheckedUsers=new Set();
+
+function unitsPerPackage(unit){
+  const match=String(unit||'').trim().toUpperCase().match(/^(?:CJA|MCJ)(\d+)$/);
+  return match&&Number(match[1])>0?Number(match[1]):null;
+}
+function pieceCost(price,unit){const pieces=unitsPerPackage(unit);return pieces?money(Number(price||0)/pieces):'—'}
+function productPrices(p){
+  const regular=Number(p.precio_lista||0),offer=Number(p.precio_neto||0);
+  const saving=Math.max(regular-offer,0),pct=regular?saving/regular*100:0;
+  return{regular,offer,saving,pct};
+}
+function draftKey(){return currentUser?DRAFT_PREFIX+String(currentUser.usuario||'').toUpperCase():null}
+function readDraft(){try{const raw=localStorage.getItem(draftKey());return raw?JSON.parse(raw):null}catch(_){return null}}
+function clearDraft(){const key=draftKey();if(key)localStorage.removeItem(key)}
+function draftHasContent(d){return !!(d&&(d.cart&&d.cart.length||d.cliente||d.vendedor||d.sucursal||d.observaciones||d.fechaEntrega))}
+function saveDraft(){
+  if(!currentUser||!['proveedor','multimarcas'].includes(currentUser.rol))return;
+  const data={version:1,usuario:currentUser.usuario,guardadoEn:new Date().toISOString(),cliente:$('clientSearch').value,vendedor:$('vendorSelect').value,sucursal:$('destination').value,observaciones:$('notes').value,formaPago:$('paymentMethod').value,fechaEntrega:$('deliveryDate').value,cart};
+  if(draftHasContent(data))localStorage.setItem(draftKey(),JSON.stringify(data));else clearDraft();
+}
+function scheduleDraftSave(){clearTimeout(draftTimer);draftTimer=setTimeout(saveDraft,250)}
+function offerDraftRecovery(){
+  if(!currentUser||draftCheckedUsers.has(currentUser.usuario)||!['proveedor','multimarcas'].includes(currentUser.rol))return;
+  draftCheckedUsers.add(currentUser.usuario);const draft=readDraft();if(!draftHasContent(draft))return;
+  if(confirm('Se encontró un pedido sin guardar. ¿Deseas recuperarlo?\n\nAceptar: Recuperar · Cancelar: Descartar')){
+    $('clientSearch').value=draft.cliente||'';$('vendorSelect').value=draft.vendedor||'';$('destination').value=draft.sucursal||'';$('notes').value=draft.observaciones||'';$('paymentMethod').value=draft.formaPago||'CREDITO';$('deliveryDate').value=draft.fechaEntrega||'';cart=Array.isArray(draft.cart)?draft.cart:[];renderCart();showNotice('appNotice','Borrador recuperado correctamente.');
+  }else{clearDraft();showNotice('appNotice','Borrador descartado.');}
+}
+function updateConnectionStatus(){
+  const el=$('connectionStatus');if(!el)return;const online=navigator.onLine;el.textContent=online?'🟢 En línea':'🔴 Sin conexión';el.className='connection '+(online?'online':'offline');
+  if(!online&&currentUser)showNotice('appNotice','Sin conexión. Puedes continuar capturando; recupera la conexión antes de guardar en Supabase.','err');
+  updateSaveState();
+}
+function initEnhancements(){
+  const toolbar=document.querySelector('#appScreen header .toolbar');if(toolbar){const status=document.createElement('span');status.id='connectionStatus';status.className='connection';status.setAttribute('aria-live','polite');toolbar.prepend(status)}
+  const head=document.querySelector('#cartTableWrap thead tr');if(head)head.innerHTML='<th>SKU</th><th>Producto</th><th>Unidad</th><th class="right">Cantidad</th><th class="right">Precio oferta Expo</th><th class="right">Precio final</th><th class="right">Pago NC %</th><th class="right">Pago NC $</th><th class="right">Costo/pieza</th><th class="right">Importe</th><th></th>';
+  const detailHead=document.querySelector('#detailModal thead tr');if(detailHead){const cells=detailHead.querySelectorAll('th');if(cells[4])cells[4].textContent='Precio Regular';if(cells[6])cells[6].textContent='Precio Oferta Expo';if(cells[7])cells[7].textContent='Pago NC %'}
+  const subtotalLabel=$('statSubtotal')&&$('statSubtotal').previousElementSibling;if(subtotalLabel)subtotalLabel.textContent='Subtotal Oferta Expo';
+  $('cartTableWrap').classList.add('tableScroll');['clientSearch','vendorSelect','paymentMethod','destination','deliveryDate','notes'].forEach(id=>{$(id).addEventListener('input',scheduleDraftSave);$(id).addEventListener('change',scheduleDraftSave)});window.addEventListener('online',updateConnectionStatus);window.addEventListener('offline',updateConnectionStatus);updateConnectionStatus();
+}
 
 async function fetchAllRows(buildQuery, pageSize=1000, maxRows=10000){
   let all = [];
@@ -247,6 +290,7 @@ async function loadData(){
     renderProducts();
     renderCart();
     renderHistory();
+    offerDraftRecovery();
   }else if(currentUser.rol==='vendedor'){
     $('providerView').classList.add('hidden');
     $('adminView').classList.remove('hidden');
@@ -336,7 +380,8 @@ function renderProducts(){
     const div=document.createElement('div');
     div.className='product';
     const providerBadge = currentUser && currentUser.rol==='multimarcas' ? `<span class="pill">${p.grupo_catalogo||p.id_proveedor}</span><br>` : '';
-    div.innerHTML=`<div>${providerBadge}<strong>${p.descripcion}</strong><small>${p.sku} · ${p.unidad} · Desc. ${Number(p.descuento_pct||0).toFixed(1)}%</small><p style="margin-top:6px;font-size:13px">Neto: <b>${money(p.precio_neto)}</b></p></div><button class="btn" type="button">＋</button>`;
+    const prices=productPrices(p);
+    div.innerHTML=`<div style="flex:1">${providerBadge}<strong>${p.descripcion}</strong><small>${p.sku} · ${p.unidad}</small><div class="priceStack"><div class="priceRow"><span>Precio Regular</span><b>${money(prices.regular)}</b></div><div class="priceRow offer"><span>Precio Oferta Expo</span><b>${money(prices.offer)}</b></div><div class="priceRow saving"><span>Ahorro Expo</span><b>${money(prices.saving)} (${prices.pct.toFixed(2)}%)</b></div><span class="piecePrice">Costo por pieza: ${pieceCost(prices.offer,p.unidad)}</span></div></div><button class="btn" type="button" aria-label="Agregar ${p.descripcion}">＋</button>`;
     div.querySelector('button').onclick=()=>addProduct(p);
     grid.appendChild(div);
   });
@@ -371,7 +416,17 @@ function renderCart(){updateCartStats();$('cartEmpty').classList.toggle('hidden'
     tr.querySelector('.qty-pago-nc').onchange=e=>updateExtraDiscount(i.id_producto_app,e.target.value);
     tr.querySelector('.qty-pago-nc').onblur=e=>updateExtraDiscount(i.id_producto_app,e.target.value);
     tr.querySelector('.qty-pago-nc').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();updateExtraDiscount(i.id_producto_app,e.target.value);e.target.blur();}};tr.querySelector('button').onclick=()=>removeProduct(i.id_producto_app);body.appendChild(tr);});updateSaveState();}
-function updateSaveState(){$('saveOrderBtn').disabled=!(currentUser&&cart.length&&$('clientSearch').value.trim()&&$('vendorSelect').value)}
+renderCart=function(){
+  updateCartStats();$('cartEmpty').classList.toggle('hidden',cart.length>0);$('cartTableWrap').classList.toggle('hidden',cart.length===0);const body=$('cartBody');body.innerHTML='';
+  cart.forEach(i=>{
+    const qty=Number(i.cantidad||0),base=Number(i.precio_neto||0),final=lineFinalPrice(i),pct=base?((base-final)/base)*100:0,ncUnit=Math.max(base-final,0),importe=qty*final;
+    const tr=document.createElement('tr');tr.innerHTML=`<td>${i.sku}</td><td><b>${i.descripcion}</b><br><span class="muted">${i.id_producto_app}</span></td><td>${i.unidad}</td><td class="right"><input class="qty qty-cantidad" type="number" min="1" value="${i.cantidad}"></td><td class="right">${money(base)}</td><td class="right"><input class="priceInput qty-precio-final" type="number" inputmode="decimal" min="0" max="${base}" step="0.01" value="${final.toFixed(2)}"></td><td class="right"><input class="discountInput qty-pago-nc" type="number" inputmode="decimal" min="0" max="100" step="0.01" value="${pct.toFixed(2)}"></td><td class="right"><b>${money(ncUnit)}</b><span class="piecePrice">por unidad</span></td><td class="right">${pieceCost(final,i.unidad)}</td><td class="right"><b>${money(importe)}</b></td><td class="right"><button class="btn secondary" type="button">Quitar</button></td>`;
+    tr.querySelector('.qty-cantidad').oninput=e=>updateQty(i.id_producto_app,e.target.value,false);tr.querySelector('.qty-cantidad').onchange=e=>commitQty(i.id_producto_app,e.target.value);tr.querySelector('.qty-cantidad').onblur=e=>commitQty(i.id_producto_app,e.target.value);tr.querySelector('.qty-cantidad').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();commitQty(i.id_producto_app,e.target.value);e.target.blur()}};
+    tr.querySelector('.qty-precio-final').onchange=e=>updateFinalPrice(i.id_producto_app,e.target.value);tr.querySelector('.qty-precio-final').onblur=e=>updateFinalPrice(i.id_producto_app,e.target.value);tr.querySelector('.qty-precio-final').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();updateFinalPrice(i.id_producto_app,e.target.value);e.target.blur()}};
+    tr.querySelector('.qty-pago-nc').onchange=e=>updateExtraDiscount(i.id_producto_app,e.target.value);tr.querySelector('.qty-pago-nc').onblur=e=>updateExtraDiscount(i.id_producto_app,e.target.value);tr.querySelector('.qty-pago-nc').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();updateExtraDiscount(i.id_producto_app,e.target.value);e.target.blur()}};tr.querySelector('button').onclick=()=>removeProduct(i.id_producto_app);body.appendChild(tr);
+  });updateSaveState();scheduleDraftSave();
+};
+function updateSaveState(){$('saveOrderBtn').disabled=!(currentUser&&navigator.onLine&&cart.length&&$('clientSearch').value.trim()&&$('vendorSelect').value)}
 
 function clearOrderForm(){
   cart = [];
@@ -387,6 +442,7 @@ function clearOrderForm(){
 }
 
 async function saveOrder(){
+  if(!navigator.onLine){showNotice('appNotice','Sin conexión. El pedido permanece en el borrador local; recupera la conexión antes de guardar en Supabase.','err');saveDraft();return}
   const t=totals(),vendorOpt=$('vendorSelect').selectedOptions[0];
   const now=new Date();
   const tipoCaptura = currentUser.rol==='multimarcas' ? 'MULTIMARCAS' : 'PROVEEDOR';
@@ -451,6 +507,7 @@ async function saveOrder(){
     const b=await sb.from('pedido_detalle').insert(detalle);if(b.error)throw b.error;
     await sb.from('bitacora').insert([{usuario:currentUser.usuario,rol:currentUser.rol,accion:'CREAR_PEDIDO',folio,detalle:`Pedido capturado por ${tipoCaptura}`}]);
     clearOrderForm();
+    clearDraft();
     showNotice('appNotice',`Pedido ${folio} guardado.`);
     await loadData();
   }catch(err){showNotice('appNotice',err.message,'err')}
@@ -716,6 +773,7 @@ function openReceiptWindow(order, items){
       <td>${escapeHtml(i.producto)}</td>
       <td>${escapeHtml(i.unidad)}</td>
       <td class="num">${Number(i.cantidad||0)}</td>
+      <td class="num">${money(i.precio_lista)}</td>
       <td class="num">${money(i.precio_neto_base)}</td>
       <td class="num">${money(i.precio_final)}</td>
       <td class="num">${Number(i.descuento_extra_pct||0).toFixed(2)}%</td>
@@ -789,13 +847,14 @@ function openReceiptWindow(order, items){
             <th>Producto</th>
             <th>Unidad</th>
             <th class="num">Cantidad</th>
-            <th class="num">Precio neto</th>
+            <th class="num">Precio Regular</th>
+            <th class="num">Precio Oferta Expo</th>
             <th class="num">Precio final</th>
             <th class="num">Pago NC</th>
             <th class="num">Importe</th>
           </tr>
         </thead>
-        <tbody>${rows || '<tr><td colspan="8">Sin productos</td></tr>'}</tbody>
+        <tbody>${rows || '<tr><td colspan="9">Sin productos</td></tr>'}</tbody>
       </table>
 
       <div class="totals">
@@ -857,7 +916,7 @@ function exportCurrentDetail(){
 async function cancelAdminOrder(folio){if(!confirm(`¿Cancelar pedido ${folio}?`))return;try{const r=await sb.from('pedidos').update({estatus:'CANCELADO'}).eq('folio',folio);if(r.error)throw r.error;await sb.from('bitacora').insert([{usuario:currentUser.usuario,rol:currentUser.rol,accion:'CANCELAR_PEDIDO',folio,detalle:'Cancelado por compras/admin'}]);showNotice('appNotice',`Pedido ${folio} cancelado.`);await loadData();}catch(err){showNotice('appNotice',err.message,'err')}}
 function downloadCSV(filename,rows){const csv=rows.map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(',')).join('\\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;a.click();URL.revokeObjectURL(a.href)}
 async function exportDynamics(){try{const {data,error}=await sb.from('export_dynamics').select('*');if(error)throw error;const rows=[['Folio','Cliente','Vendedor','IDProveedor','SKU','Unidad','Cantidad','PrecioNetoBase','PagoNCPct','PrecioFinal','ImporteFinal']];(data||[]).forEach(i=>rows.push([i.folio,i.cliente,i.vendedor,i.id_proveedor,i.sku,i.unidad,i.cantidad,i.precio_neto_base,i.desc_extra_pct,i.precio_final,i.importe_final]));downloadCSV('export_dynamics_expo_dvt_2026.csv',rows);}catch(err){showNotice('appNotice',err.message,'err')}}
-init();
+init();initEnhancements();
 </script>
 </body></html>
 
