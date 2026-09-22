@@ -14,7 +14,23 @@
 <div id="loginScreen" class="login"><div class="card"><div style="text-align:center;margin-bottom:20px"><div class="logo" style="margin:0 auto 12px">🛒</div><h1>EXPO DVT 2026</h1><p class="muted">Portal formal conectado a Supabase</p></div><div id="loginNotice" class="notice err"></div><form id="loginForm"><div class="section"><label>Usuario</label><input id="loginUser" placeholder="Ej. COLGATE / COMPRAS / ADMIN"></div><div class="section"><label>Contraseña</label><input id="loginPass" type="password" placeholder="Contraseña"></div><button class="btn" id="loginBtn" style="width:100%" type="submit">Entrar</button></form></div></div>
 <div id="appScreen" class="hidden"><header><div class="wrap top"><div class="brand"><div class="logo">🛒</div><div><h1>EXPO DVT 2026</h1><p class="muted" id="sessionText"></p></div></div><div class="toolbar"><button class="btn secondary" onclick="reloadData()">Actualizar</button><button class="btn danger" onclick="logout()">Cerrar sesión</button></div></div></header><main class="wrap"><div id="appNotice" class="notice ok"></div>
 <div id="providerView" class="grid hidden"><section><div class="card section"><h2>1. Datos del pedido</h2><div class="formgrid"><div><label>Cliente *</label><input id="clientSearch" list="clientList" placeholder="Busca por cliente, ID o población"><datalist id="clientList"></datalist></div><div><label>Vendedor *</label><select id="vendorSelect"></select></div><div><label>Forma de pago</label><select id="paymentMethod"><option value="CREDITO">Crédito</option><option value="CONTADO">Contado</option></select></div><div><label>SUCURSAL</label><input id="destination" placeholder="CEDIS, tienda, ruta, etc."></div><div><label>Fecha de entrega</label><input id="deliveryDate" type="date"></div><div style="grid-column:1/-1"><label>Observaciones</label><textarea id="notes" placeholder="Promoción, condiciones, comentarios..."></textarea></div></div></div><div class="card section"><div class="top" style="margin-bottom:12px"><h2>2. Catálogo autorizado</h2><input id="productSearch" style="max-width:340px" placeholder="Buscar SKU, producto, unidad o proveedor"><select id="providerFilter" class="hidden" style="max-width:260px"><option value="">Todos los proveedores</option></select></div><div class="products" id="productGrid"></div></div><div class="card section"><h2>3. Pedido capturado</h2><div id="cartEmpty" class="empty">Agrega productos del catálogo para iniciar el pedido.</div><div id="cartTableWrap" class="hidden"><table><thead><tr><th>SKU</th><th>Producto</th><th>Unidad</th><th class="right">Cantidad</th><th class="right">Precio neto</th><th class="right">Precio final</th><th class="right">Pago NC</th><th class="right">Importe</th><th></th></tr></thead><tbody id="cartBody"></tbody></table></div></div></section><aside><div class="card section" id="goalCard"><div class="top" style="margin-bottom:10px"><div><h2>Objetivo Expo</h2><p class="muted" id="goalProviderName">Proveedor</p></div><span class="pill" id="goalPctPill">0.0%</span></div><div class="progressTrack"><div class="progressFill" id="goalProgressFill"></div></div><div class="stats"><div class="stat"><span class="muted">Objetivo</span><b id="goalTarget">$0.00</b></div><div class="stat"><span class="muted">Capturado</span><b id="goalCaptured">$0.00</b></div><div class="stat"><span class="muted">Pedido actual</span><b id="goalCurrentOrder">$0.00</b></div><div class="stat"><span class="muted">Faltante</span><b id="goalRemaining">$0.00</b></div></div><p class="muted" id="goalProjected" style="margin-top:10px">Proyección con pedido actual: $0.00</p></div><div class="card section"><h2>Resumen</h2><div class="stats"><div class="stat"><span class="muted">Productos</span><b id="statProducts">0</b></div><div class="stat"><span class="muted">Unidades</span><b id="statUnits">0</b></div><div class="stat" style="grid-column:1/-1"><span class="muted">Subtotal Neto</span><b id="statSubtotal">$0.00</b></div><div class="stat" style="grid-column:1/-1"><span class="muted">Pago NC</span><b id="statExtraDiscount">$0.00</b></div><div class="stat" style="grid-column:1/-1;background:#ecfdf3"><span class="muted">TOTAL PEDIDO</span><b id="statTotal">$0.00</b></div></div><button class="btn accent" id="saveOrderBtn" style="width:100%;margin-top:14px" onclick="saveOrder()" disabled>Guardar pedido</button></div><div class="card section"><h2>Mis pedidos</h2><div id="history" class="history"></div></div></aside></div>
-<div id="adminView" class="adminGrid hidden"><div class="card section"><div class="top"><h2>Panel Compras / Admin</h2><div class="toolbar"><button class="btn secondary" onclick="setAdminTab('dashboard')">Dashboard</button><button class="btn secondary" onclick="setAdminTab('general')">Pedidos generales</button><button class="btn secondary" onclick="setAdminTab('vendedores')">Captura vendedores</button><input id="adminSearch" style="width:320px" placeholder="Filtrar proveedor, cliente, folio..."><button class="btn blue" onclick="exportDynamics()">Exportar Dynamics CSV</button></div></div><div class="stats" style="margin-bottom:14px"><div class="stat"><span class="muted">Pedidos</span><b id="adminPedidos">0</b></div><div class="stat"><span class="muted">Total</span><b id="adminTotal">$0.00</b></div></div><div style="overflow:auto"><table><thead><tr><th>Folio</th><th>Fecha</th><th>Proveedor</th><th>Grupo</th><th>Cliente</th><th>Vendedor</th><th class="right">Total</th><th>Estatus</th><th>Detalle</th><th></th></tr></thead><tbody id="adminOrdersBody"></tbody></table></div>
+<div id="adminView" class="adminGrid hidden"><div class="card section"><div class="top"><h2>Panel Compras / Admin</h2><div class="toolbar"><button class="btn secondary" onclick="setAdminTab('dashboard')">Dashboard</button><button class="btn secondary" onclick="setAdminTab('general')">Pedidos generales</button><button class="btn secondary" onclick="setAdminTab('cliente')">Por cliente</button><button class="btn secondary" onclick="setAdminTab('vendedores')">Captura vendedores</button><input id="adminSearch" style="width:320px" placeholder="Filtrar proveedor, cliente, folio..."><button class="btn blue" onclick="exportDynamics()">Exportar Dynamics CSV</button></div></div><div class="stats" style="margin-bottom:14px"><div class="stat"><span class="muted">Pedidos</span><b id="adminPedidos">0</b></div><div class="stat"><span class="muted">Total</span><b id="adminTotal">$0.00</b></div></div><div style="overflow:auto"><table><thead><tr><th>Folio</th><th>Fecha</th><th>Proveedor</th><th>Grupo</th><th>Cliente</th><th>Vendedor</th><th class="right">Total</th><th>Estatus</th><th>Detalle</th><th></th></tr></thead><tbody id="adminOrdersBody"></tbody></table></div>
+
+<div id="clientOrdersView" class="hidden" style="margin-top:18px">
+  <div class="card" style="box-shadow:none;border-style:dashed">
+    <h2>Pedidos por cliente</h2>
+    <div style="max-width:480px;margin-bottom:16px"><label for="clientOrderFilter">Buscar o seleccionar cliente</label><input id="clientOrderFilter" list="clientOrderList" autocomplete="off" placeholder="Escribe el nombre del cliente"><datalist id="clientOrderList"></datalist></div>
+    <div class="stats" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin-bottom:18px">
+      <div class="stat"><span class="muted">Cliente</span><b id="clientOrdersName" style="font-size:16px">Selecciona un cliente</b></div>
+      <div class="stat"><span class="muted">Pedidos</span><b id="clientOrdersCount">0</b></div>
+      <div class="stat"><span class="muted">Proveedores</span><b id="clientProvidersCount">0</b></div>
+      <div class="stat"><span class="muted">Total comprado</span><b id="clientOrdersTotal">$0.00</b></div>
+    </div>
+    <div class="tableScroll"><table><thead><tr><th>Folio</th><th>Fecha</th><th>Proveedor</th><th>Vendedor</th><th class="right">Total</th><th>Estatus</th><th>Detalle</th><th>PDF</th></tr></thead><tbody id="clientOrdersBody"></tbody></table></div>
+    <h2 style="margin-top:22px">Venta por proveedor</h2>
+    <div class="tableScroll" style="max-width:620px"><table><thead><tr><th>Proveedor</th><th class="right">Pedidos</th><th class="right">Venta</th></tr></thead><tbody id="clientProvidersBody"></tbody></table></div>
+  </div>
+</div>
 
 <div id="dashboardView" style="margin-top:18px">
   <div class="card" style="box-shadow:none;border-style:dashed">
@@ -220,7 +236,7 @@ async function fetchAllRows(buildQuery, pageSize=1000, maxRows=10000){
 }
 
 function showNotice(id,msg,kind='ok'){const el=$(id);el.textContent=msg;el.className='notice '+kind;el.style.display='block';setTimeout(()=>el.style.display='none',4500)}
-function init(){ $('loginForm').addEventListener('submit',handleLogin); $('productSearch').addEventListener('input',renderProducts); if($('providerFilter')) $('providerFilter').addEventListener('change',renderProducts); $('adminSearch').addEventListener('input',()=>{renderAdminOrders();renderSellerCapture();}); ['clientSearch','vendorSelect','paymentMethod','destination','deliveryDate','notes'].forEach(id=>$(id).addEventListener('input',updateSaveState));}
+function init(){ $('loginForm').addEventListener('submit',handleLogin); $('productSearch').addEventListener('input',renderProducts); if($('providerFilter')) $('providerFilter').addEventListener('change',renderProducts); $('adminSearch').addEventListener('input',()=>{renderAdminOrders();renderSellerCapture();}); $('clientOrderFilter').addEventListener('input',renderOrdersByClient); ['clientSearch','vendorSelect','paymentMethod','destination','deliveryDate','notes'].forEach(id=>$(id).addEventListener('input',updateSaveState));}
 async function handleLogin(e){e.preventDefault();$('loginBtn').disabled=true;$('loginBtn').textContent='Validando...';try{const usuario=$('loginUser').value.trim().toUpperCase();const contrasena=$('loginPass').value.trim();const {data,error}=await sb.from('usuarios').select('*').eq('usuario',usuario).eq('contrasena',contrasena).eq('activo',true).maybeSingle();if(error)throw error;if(!data)throw new Error('Usuario o contraseña incorrectos');currentUser=data;if(currentUser.rol==='proveedor'){const r=await sb.from('proveedores').select('*').eq('id_acceso_proveedor',currentUser.id_acceso_proveedor).eq('activo',true).maybeSingle();if(r.error)throw r.error;if(!r.data)throw new Error('Proveedor no encontrado o inactivo');currentProvider=r.data;} else {currentProvider=null;}$('loginScreen').classList.add('hidden');$('appScreen').classList.remove('hidden');$('sessionText').innerHTML=`<b>${currentUser.nombre||currentUser.usuario}</b> · Rol: ${currentUser.rol}`;await loadData();}catch(err){showNotice('loginNotice',err.message,'err')}finally{$('loginBtn').disabled=false;$('loginBtn').textContent='Entrar'}}
 
 function applyRoleVisibility(){
@@ -232,7 +248,7 @@ function applyRoleVisibility(){
   if(toolbar){
     [...toolbar.querySelectorAll('button')].forEach(btn=>{
       const action = btn.getAttribute('onclick') || '';
-      if(isVendedor && (action.includes("setAdminTab('dashboard')") || action.includes("setAdminTab('general')") || action.includes("exportDynamics"))) {
+      if(isVendedor && (action.includes("setAdminTab('dashboard')") || action.includes("setAdminTab('general')") || action.includes("setAdminTab('cliente')") || action.includes("exportDynamics"))) {
         btn.classList.add('hidden');
       } else {
         btn.classList.remove('hidden');
@@ -244,6 +260,7 @@ function applyRoleVisibility(){
   if(generalTable) generalTable.classList.toggle('hidden', isVendedor || adminTab !== 'general');
 
   if($('dashboardView')) $('dashboardView').classList.toggle('hidden', isVendedor || adminTab !== 'dashboard');
+  if($('clientOrdersView')) $('clientOrdersView').classList.toggle('hidden', isVendedor || adminTab !== 'cliente');
   if($('sellerCaptureView')) $('sellerCaptureView').classList.toggle('hidden', !isVendedor && adminTab !== 'vendedores');
 
   if($('sellerFilter')){
@@ -312,6 +329,8 @@ async function loadData(){
     adminOrders=data||[];
     loadSellerFilter();
     renderAdminOrders();
+    loadClientOrderFilter();
+    renderOrdersByClient();
     renderSellerCapture();
     await loadDashboard();
     setAdminTab('dashboard');
@@ -623,9 +642,82 @@ function setAdminTab(tab){
   if(generalTable) generalTable.classList.toggle('hidden', adminTab !== 'general');
   if($('sellerCaptureView')) $('sellerCaptureView').classList.toggle('hidden', adminTab !== 'vendedores');
   if($('dashboardView')) $('dashboardView').classList.toggle('hidden', adminTab !== 'dashboard');
+  if($('clientOrdersView')) $('clientOrdersView').classList.toggle('hidden', adminTab !== 'cliente');
   if(adminTab === 'vendedores') renderSellerCapture();
+  if(adminTab === 'cliente') renderOrdersByClient();
   if(adminTab === 'dashboard') loadDashboard();
   applyRoleVisibility();
+}
+function loadClientOrderFilter(){
+  const list = $('clientOrderList');
+  const names = [...new Set(adminOrders.map(o=>String(o.cliente||'').trim()).filter(Boolean))]
+    .sort((a,b)=>a.localeCompare(b,'es'));
+  list.replaceChildren();
+  names.forEach(name=>{
+    const option=document.createElement('option');
+    option.value=name;
+    list.appendChild(option);
+  });
+}
+function renderOrdersByClient(){
+  if(!currentUser || !['admin','compras'].includes(currentUser.rol)) return;
+  const query=norm($('clientOrderFilter').value.trim());
+  const names=[...new Set(adminOrders.map(o=>String(o.cliente||'').trim()).filter(Boolean))];
+  const exact=names.find(name=>norm(name)===query);
+  const matches=query ? names.filter(name=>norm(name).includes(query)) : [];
+  const selected=exact || (matches.length===1 ? matches[0] : '');
+  const orders=selected ? adminOrders.filter(o=>norm(String(o.cliente||'').trim())===norm(selected)) : [];
+  $('clientOrdersName').textContent=selected || 'Selecciona un cliente';
+  $('clientOrdersCount').textContent=orders.length;
+  $('clientOrdersTotal').textContent=money(orders.reduce((sum,o)=>sum+Number(o.total||0),0));
+  const providers=new Map();
+  orders.forEach(o=>{
+    const name=String(o.proveedor||'Sin proveedor').trim();
+    const previous=providers.get(name)||{count:0,total:0};
+    previous.count++;
+    previous.total+=Number(o.total||0);
+    providers.set(name,previous);
+  });
+  $('clientProvidersCount').textContent=providers.size;
+  const body=$('clientOrdersBody');
+  body.replaceChildren();
+  if(!orders.length){
+    const row=body.insertRow();
+    const cell=row.insertCell();
+    cell.colSpan=8;
+    cell.className='muted';
+    cell.textContent=query && matches.length>1 ? 'Hay varios clientes coincidentes. Selecciona uno de la lista.' : 'Selecciona un cliente con pedidos para ver sus órdenes.';
+  }
+  orders.forEach(o=>{
+    const row=body.insertRow();
+    const values=[o.folio,o.fecha_hora ? new Date(o.fecha_hora).toLocaleString('es-MX') : '',o.proveedor,o.vendedor,money(o.total),o.estatus];
+    values.forEach((value,index)=>{
+      const cell=row.insertCell();
+      cell.textContent=value||'';
+      if(index===4) cell.className='right';
+    });
+    const detail=document.createElement('button');
+    detail.className='btn secondary'; detail.type='button'; detail.textContent='Ver detalle';
+    detail.onclick=()=>showOrderDetail(o);
+    row.insertCell().appendChild(detail);
+    const pdf=document.createElement('button');
+    pdf.className='btn blue'; pdf.type='button'; pdf.textContent='PDF';
+    pdf.onclick=()=>openReceiptForOrder(o);
+    row.insertCell().appendChild(pdf);
+  });
+  const providerBody=$('clientProvidersBody');
+  providerBody.replaceChildren();
+  if(!providers.size){
+    const row=providerBody.insertRow();
+    const cell=row.insertCell(); cell.colSpan=3; cell.className='muted';
+    cell.textContent='Sin ventas para mostrar.';
+  }
+  [...providers.entries()].sort((a,b)=>b[1].total-a[1].total).forEach(([name,values])=>{
+    const row=providerBody.insertRow();
+    row.insertCell().textContent=name;
+    row.insertCell().textContent=values.count;
+    const total=row.insertCell(); total.className='right'; total.textContent=money(values.total);
+  });
 }
 function loadSellerFilter(){
   const sel = $('sellerFilter');
