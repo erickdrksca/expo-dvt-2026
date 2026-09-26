@@ -491,7 +491,16 @@ async function loadData(){
 }
 
 async function reloadData(){try{await loadData();showNotice('appNotice','Información actualizada.')}catch(err){showNotice('appNotice',err.message,'err')}}
-function logout(){currentUser=null;currentProvider=null;catalog=[];giftChoices={};promoState={promos:[],byId:{},tramosByKey:{},tramosByPromo:{},partsByPromo:{},regalosByPromo:{},bonByKey:{}};clients=[];vendors=[];orders=[];cart=[];adminOrders=[];$('appScreen').classList.add('hidden');$('loginScreen').classList.remove('hidden')}
+function resetOrderScreen(){
+  ['clientSearch','destination','deliveryDate','notes','productSearch'].forEach(id=>{if($(id))$(id).value=''});
+  if($('vendorSelect'))$('vendorSelect').value='';
+  if($('paymentMethod'))$('paymentMethod').value='CREDITO';
+  if($('providerFilter'))$('providerFilter').value='';
+  ['cartBody','productGrid','history'].forEach(id=>{if($(id))$(id).innerHTML=''});
+  if($('giftBox')){$('giftBox').innerHTML='';$('giftBox').classList.add('hidden')}
+  if($('loginPass'))$('loginPass').value='';
+}
+function logout(){clearTimeout(draftTimer);try{saveDraft()}catch(_){}resetOrderScreen();currentUser=null;currentProvider=null;catalog=[];giftChoices={};promoState={promos:[],byId:{},tramosByKey:{},tramosByPromo:{},partsByPromo:{},regalosByPromo:{},bonByKey:{}};clients=[];vendors=[];orders=[];cart=[];adminOrders=[];$('appScreen').classList.add('hidden');$('loginScreen').classList.remove('hidden')}
 function loadClients(){const dl=$('clientList');dl.innerHTML='';clients.forEach(c=>{const opt=document.createElement('option');opt.value=`${c.id_cliente} - ${c.cliente}${c.poblacion?' · '+c.poblacion:''}`;dl.appendChild(opt);});}
 function loadVendors(){const sel=$('vendorSelect');sel.innerHTML='<option value="">Selecciona vendedor</option>';vendors.forEach(v=>{const opt=document.createElement('option');opt.value=v.id_vendedor;opt.textContent=`${v.id_vendedor} - ${v.vendedor}`;opt.dataset.name=v.vendedor;sel.appendChild(opt);});}
 
