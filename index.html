@@ -436,23 +436,22 @@ async function loadData(){
 
     let [pr,cl,ve,pe]=await Promise.all([
       currentUser.rol==='proveedor'
-        ? fetchAllRows(()=>sb.from('productos').select('*').eq('id_proveedor',currentProvider.id_proveedor).ilike('grupo_catalogo',currentProvider.grupo_catalogo).eq('tipo','STAND').eq('activo',true).order('descripcion'))
-        : fetchAllRows(()=>sb.from('productos').select('*').eq('tipo','MULTIMARCA').eq('activo',true).order('grupo_catalogo').order('descripcion')),
-      fetchAllRows(()=>sb.from('clientes').select('*').eq('activo',true).order('cliente')),
+        ? fetchAllRows(()=>sb.from('productos').select('*').eq('id_proveedor',currentProvider.id_proveedor).ilike('grupo_catalogo',currentProvider.grupo_catalogo).eq('tipo','STAND').eq('activo',true).order('descripcion').order('id'))
+        : fetchAllRows(()=>sb.from('productos').select('*').eq('tipo','MULTIMARCA').eq('activo',true).order('grupo_catalogo').order('descripcion').order('id')),
+      fetchAllRows(()=>sb.from('clientes').select('*').eq('activo',true).order('cliente').order('id')),
       sb.from('vendedores').select('*').eq('activo',true).order('vendedor'),
       currentUser.rol==='proveedor'
-        ? sb.from('pedidos').select('*').eq('id_acceso_proveedor',currentUser.id_acceso_proveedor).neq('estatus','ELIMINADO').order('fecha_hora',{ascending:false})
-        : sb.from('pedidos').select('*').eq('usuario',currentUser.usuario).neq('estatus','ELIMINADO').order('fecha_hora',{ascending:false})
+        ? fetchAllRows(()=>myOrdersQuery())
+        : fetchAllRows(()=>myOrdersQuery())
     ]);
 
     if(ve.error)throw ve.error;
-    if(pe.error)throw pe.error;
     catalog=pr||[];
     await loadPromotions();
     if(currentUser.rol==='proveedor'){const deals=catalog.filter(hasDeal);if(deals.length)catalog=deals;}
     clients=cl||[];
     vendors=ve.data||[];
-    orders=pe.data||[];
+    orders=pe||[];
 
     loadClients();
     loadVendors();
@@ -466,9 +465,7 @@ async function loadData(){
     $('providerView').classList.add('hidden');
     $('adminView').classList.remove('hidden');
     const vendedorId = currentUser.id_vendedor || currentUser.id_acceso_proveedor || currentUser.usuario.replace('VEND','');
-    const {data,error}=await sb.from('pedidos').select('*').eq('id_vendedor',vendedorId).neq('estatus','ELIMINADO').order('fecha_hora',{ascending:false});
-    if(error)throw error;
-    adminOrders=data||[];
+    adminOrders=await fetchAllRows(()=>sb.from('pedidos').select('*').eq('id_vendedor',vendedorId).neq('estatus','ELIMINADO').order('fecha_hora',{ascending:false}).order('id',{ascending:false}),1000,100000);
     loadSellerFilter();
     renderAdminOrders();
     renderSellerCapture();
@@ -478,9 +475,7 @@ async function loadData(){
   }else{
     $('providerView').classList.add('hidden');
     $('adminView').classList.remove('hidden');
-    const {data,error}=await sb.from('pedidos').select('*').neq('estatus','ELIMINADO').order('fecha_hora',{ascending:false});
-    if(error)throw error;
-    adminOrders=data||[];
+    adminOrders=await fetchAllRows(()=>sb.from('pedidos').select('*').neq('estatus','ELIMINADO').order('fecha_hora',{ascending:false}).order('id',{ascending:false}),1000,100000);
     loadSellerFilter();
     renderAdminOrders();
     loadClientOrderFilter();
@@ -492,6 +487,11 @@ async function loadData(){
   }
 }
 
+function myOrdersQuery(){return currentUser.rol==='proveedor'
+  ? sb.from('pedidos').select('*').eq('id_acceso_proveedor',currentUser.id_acceso_proveedor).neq('estatus','ELIMINADO').order('fecha_hora',{ascending:false}).order('id',{ascending:false})
+  : sb.from('pedidos').select('*').eq('usuario',currentUser.usuario).neq('estatus','ELIMINADO').order('fecha_hora',{ascending:false}).order('id',{ascending:false})}
+// Después de guardar solo se recargan los pedidos (no catálogo, clientes ni promociones)
+async function refreshMyOrders(){try{orders=await fetchAllRows(()=>myOrdersQuery());renderHistory();renderGoalProgress(0)}catch(err){console.error(err)}}
 async function reloadData(){try{await loadData();showNotice('appNotice','Información actualizada.')}catch(err){showNotice('appNotice',err.message,'err')}}
 function resetOrderScreen(){
   ['clientSearch','destination','deliveryDate','notes','productSearch'].forEach(id=>{if($(id))$(id).value=''});
@@ -733,7 +733,7 @@ async function saveOrder(){
     clearOrderForm();
     clearDraft();
     showNotice('appNotice',`Pedido ${folio} guardado.`);
-    await loadData();
+    await refreshMyOrders();
   }catch(err){showNotice('appNotice',err.message,'err')}
   finally{$('saveOrderBtn').textContent='Guardar pedido';updateSaveState()}
 }
@@ -1004,8 +1004,9 @@ async function exportSellerCSV(){
     const list = sellerFilteredOrders();
     if(!list.length){ showNotice('appNotice','No hay pedidos para exportar con este filtro.','err'); return; }
     const folios = list.map(o=>o.folio);
-    const {data,error}=await sb.from('pedido_detalle').select('*').in('folio',folios).order('vendedor').order('cliente').order('folio');
-    if(error) throw error;
+    let data=[];
+    for(let k=0;k<folios.length;k+=100){const chunk=folios.slice(k,k+100);data=data.concat(await fetchAllRows(()=>sb.from('pedido_detalle').select('*').in('folio',chunk).order('id'),1000,100000));}
+    data.sort((a,b)=>String(a.vendedor).localeCompare(String(b.vendedor))||String(a.cliente).localeCompare(String(b.cliente))||String(a.folio).localeCompare(String(b.folio))||(a.id-b.id));
     const rows=[['VendedorID','Vendedor','Cliente','FolioExpo','Proveedor','GrupoCatalogo','SKU','Producto','Unidad','Cantidad','PrecioFinal','ImporteFinal','EstatusCaptura','PedidoDynamics']];
     const orderMap = new Map(list.map(o=>[o.folio,o]));
     (data||[]).forEach(i=>{
@@ -1236,8 +1237,8 @@ function exportCurrentDetail(){
 }
 
 async function cancelAdminOrder(folio){if(!confirm(`¿Cancelar pedido ${folio}?`))return;try{const r=await sb.from('pedidos').update({estatus:'CANCELADO'}).eq('folio',folio);if(r.error)throw r.error;await sb.from('bitacora').insert([{usuario:currentUser.usuario,rol:currentUser.rol,accion:'CANCELAR_PEDIDO',folio,detalle:'Cancelado por compras/admin'}]);showNotice('appNotice',`Pedido ${folio} cancelado.`);await loadData();}catch(err){showNotice('appNotice',err.message,'err')}}
-function downloadCSV(filename,rows){const csv=rows.map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(',')).join('\\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;a.click();URL.revokeObjectURL(a.href)}
-async function exportDynamics(){try{const {data,error}=await sb.from('export_dynamics').select('*');if(error)throw error;const rows=[['Folio','Cliente','Vendedor','IDProveedor','SKU','Unidad','Cantidad','PrecioNetoBase','PagoNCPct','PrecioFinal','ImporteFinal']];(data||[]).forEach(i=>rows.push([i.folio,i.cliente,i.vendedor,i.id_proveedor,i.sku,i.unidad,i.cantidad,i.precio_neto_base,i.desc_extra_pct,i.precio_final,i.importe_final]));downloadCSV('export_dynamics_expo_dvt_2026.csv',rows);}catch(err){showNotice('appNotice',err.message,'err')}}
+function downloadCSV(filename,rows){const csv=rows.map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(',')).join('\r\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;a.click();URL.revokeObjectURL(a.href)}
+async function exportDynamics(){try{const data=await fetchAllRows(()=>sb.from('export_dynamics').select('*').order('folio').order('sku').order('unidad').order('precio_final').order('cantidad').order('importe_final'),1000,200000);const rows=[['Folio','Cliente','Vendedor','IDProveedor','SKU','Unidad','Cantidad','PrecioNetoBase','PagoNCPct','PrecioFinal','ImporteFinal']];(data||[]).forEach(i=>rows.push([i.folio,i.cliente,i.vendedor,i.id_proveedor,i.sku,i.unidad,i.cantidad,i.precio_neto_base,i.desc_extra_pct,i.precio_final,i.importe_final]));downloadCSV('export_dynamics_expo_dvt_2026.csv',rows);}catch(err){showNotice('appNotice',err.message,'err')}}
 init();initEnhancements();
 </script>
 </body></html>
