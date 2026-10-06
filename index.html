@@ -436,7 +436,7 @@ function computeGifts(){
     const g={promo:p,opts,earned,total,falta,lines:[]};
     if(earned>0){
       if(p.modo_regalo==='PUNTOS'){
-        const pts=earned;let ch=giftChoices[p.id_promocion]||{};
+        const pts=earned*Math.max(1,Number(p.cantidad_regalo||1));let ch=giftChoices[p.id_promocion]||{};
         let used=opts.reduce((a,o)=>a+Number(ch[pkey(o.sku,o.unidad)]||0)*Number(o.puntos||1),0);
         if(used>pts){ch={};used=0}
         const cheap=opts.reduce((a,o)=>Number(o.puntos||1)<Number(a.puntos||1)?o:a,opts[0]);
