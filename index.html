@@ -24,6 +24,7 @@
 .vzMini{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:12px}.vzMini div{background:#f4f4f6;border-radius:12px;padding:10px 12px}.vzMini span{display:block;font-size:12px;color:var(--muted)}.vzMini b{font-size:18px;font-variant-numeric:tabular-nums}
 .tag{display:inline-block;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:700}.tag.ok{background:#e3f6ea;color:#0b7a3b}.tag.pend{background:#fdecec;color:#a5060f}
 @media(max-width:760px){.vzKpis{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:10px}.vzKpi:nth-child(3){border-left:0}.vzKpis.three{grid-template-columns:repeat(3,minmax(0,1fr))}.vzKpi{padding:6px 10px}.vzKpi span{font-size:12px}.vzTitle{font-size:24px}.vzPctCol{width:160px}}
+.giftStock{font-size:12px;font-weight:700;color:#027a48}.giftStock.low{color:#b54708}.giftStock.out{color:#b42318}.giftStockOut{background:#fef3f2;border:1px solid #fecdca;color:#b42318;border-radius:10px;padding:8px 10px;margin:8px 0 0}
 </style>
 </head>
 <body>
@@ -413,6 +414,27 @@ function applyPromoPricing(){
     }
   });
 }
+// Inventario de regalos: lo que queda por regalar (servidor) menos lo regalado en pedidos de este dispositivo que aún no se envían
+let giftStock={};
+function setGiftStock(rows){giftStock={};(rows||[]).forEach(r=>{giftStock[pkey(r.sku,r.unidad)]={disponible:Number(r.disponible||0),restante:Number(r.restante||0)}})}
+function giftStockLeft(o){
+  const k=pkey(o.sku,o.unidad),st=giftStock[k];if(!st)return Infinity;
+  const pend=pendingForUser().reduce((a,p)=>a+(p._detalle||[]).filter(d=>d.es_bonificacion&&pkey(d.sku,d.unidad)===k).reduce((b,d)=>b+Number(d.cantidad||0),0),0);
+  return Math.max(0,Math.floor(st.restante-pend));
+}
+async function fetchGiftStock(provider){
+  if(!currentUser||currentUser.rol!=='proveedor'||!provider)return [];
+  try{const {data,error}=await sb.from('inventario_regalos_estado').select('sku,unidad,disponible,usado,restante').eq('id_proveedor',provider.id_proveedor);if(error)throw error;return data||[]}
+  catch(err){if(isNetErr(err))throw err;console.warn('Inventario de regalos no disponible',err);return []}
+}
+async function refreshGiftStock(){
+  if(!navigator.onLine||!currentUser||currentUser.rol!=='proveedor'||!currentProvider)return;
+  try{
+    const rows=await fetchGiftStock(currentProvider);setGiftStock(rows);
+    const k='datos|'+currentUser.usuario;idbGet(k).then(d=>{if(d){d.inventarioRegalos=rows;return idbSet(k,d)}}).catch(()=>{});
+    if(typeof renderGifts==='function')renderGifts();
+  }catch(err){console.warn('No se pudo actualizar el inventario de regalos',err)}
+}
 // Calcula regalos ganados según el pedido actual
 function computeGifts(){
   const res=[];
@@ -436,25 +458,31 @@ function computeGifts(){
     const g={promo:p,opts,earned,total,falta,lines:[]};
     if(earned>0){
       if(p.modo_regalo==='PUNTOS'){
-        const pts=earned*Math.max(1,Number(p.cantidad_regalo||1));let ch=giftChoices[p.id_promocion]||{};
+        const pts=earned*Math.max(1,Number(p.cantidad_regalo||1));let ch={...(giftChoices[p.id_promocion]||{})};
+        opts.forEach(o=>{const k=pkey(o.sku,o.unidad);if(Number(ch[k]||0)>giftStockLeft(o))ch[k]=giftStockLeft(o)});
         let used=opts.reduce((a,o)=>a+Number(ch[pkey(o.sku,o.unidad)]||0)*Number(o.puntos||1),0);
         if(used>pts){ch={};used=0}
-        const cheap=opts.reduce((a,o)=>Number(o.puntos||1)<Number(a.puntos||1)?o:a,opts[0]);
-        const k0=pkey(cheap.sku,cheap.unidad);const add=Math.floor((pts-used)/Number(cheap.puntos||1));
-        if(add>0)ch[k0]=Number(ch[k0]||0)+add;
+        // Lo que sobra se llena con la opción más barata en puntos; si se agotó, con la siguiente
+        [...opts].sort((a,b)=>Number(a.puntos||1)-Number(b.puntos||1)).forEach(o=>{
+          const k=pkey(o.sku,o.unidad),c=Number(o.puntos||1);
+          const add=Math.min(Math.floor((pts-used)/c),giftStockLeft(o)-Number(ch[k]||0));
+          if(add>0){ch[k]=Number(ch[k]||0)+add;used+=add*c}
+        });
         giftChoices[p.id_promocion]=ch;g.points=pts;
         g.used=opts.reduce((a,o)=>a+Number(ch[pkey(o.sku,o.unidad)]||0)*Number(o.puntos||1),0);
         opts.forEach(o=>{const q=Number(ch[pkey(o.sku,o.unidad)]||0);if(q>0)g.lines.push({o,qty:q})});
       }else{
         const qtyTotal=earned*Number(p.cantidad_regalo||1);
         if(p.modo_regalo==='ELEGIR'&&opts.length>1){
-          let ch=giftChoices[p.id_promocion]||{};
+          let ch={...(giftChoices[p.id_promocion]||{})};
+          opts.forEach(o=>{const k=pkey(o.sku,o.unidad);if(Number(ch[k]||0)>giftStockLeft(o))ch[k]=giftStockLeft(o)});
           let sum=opts.reduce((a,o)=>a+Number(ch[pkey(o.sku,o.unidad)]||0),0);
           if(sum>qtyTotal){ch={};sum=0}
-          if(sum<qtyTotal){const k0=pkey(opts[0].sku,opts[0].unidad);ch[k0]=Number(ch[k0]||0)+(qtyTotal-sum)}
+          opts.forEach(o=>{const k=pkey(o.sku,o.unidad);const add=Math.min(qtyTotal-sum,giftStockLeft(o)-Number(ch[k]||0));if(add>0){ch[k]=Number(ch[k]||0)+add;sum+=add}});
+          g.entregados=sum;
           giftChoices[p.id_promocion]=ch;g.qtyTotal=qtyTotal;
           opts.forEach(o=>{const q=Number(ch[pkey(o.sku,o.unidad)]||0);if(q>0)g.lines.push({o,qty:q})});
-        }else{g.qtyTotal=qtyTotal;g.lines.push({o:opts[0],qty:qtyTotal})}
+        }else{g.qtyTotal=qtyTotal;const q=Math.min(qtyTotal,giftStockLeft(opts[0]));g.entregados=q;if(q>0)g.lines.push({o:opts[0],qty:q})}
       }
     }else{delete giftChoices[p.id_promocion]}
     res.push(g);
@@ -478,7 +506,7 @@ function setGiftChoice(pid,key,value){
   const limit=puntos?g.points:g.qtyTotal;
   const ch={...(giftChoices[pid]||{})};
   const me=g.opts.find(o=>pkey(o.sku,o.unidad)===key);if(!me)return;
-  let v=Math.max(0,Math.floor(Number(value||0)));v=Math.min(v,Math.floor(limit/cost(me)));ch[key]=v;
+  let v=Math.max(0,Math.floor(Number(value||0)));v=Math.min(v,Math.floor(limit/cost(me)),giftStockLeft(me));ch[key]=v;
   let used=g.opts.reduce((a,o)=>a+Number(ch[pkey(o.sku,o.unidad)]||0)*cost(o),0);
   // Si se pasa, se quita de las otras opciones; lo que sobre se rellena solo con la opción base
   for(const o of g.opts){const k=pkey(o.sku,o.unidad);if(k===key)continue;while(used>limit&&Number(ch[k]||0)>0){ch[k]=Number(ch[k])-1;used-=cost(o)}}
@@ -499,13 +527,19 @@ function renderGifts(){
     if(g.excluida){html+=`<p class="muted">También aplica, pero el cliente solo puede llevar una de las dos promociones.</p><button class="btn secondary" type="button" onclick="selectExclusive('${escapeHtml(g.grupo)}','${escapeHtml(p.id_promocion)}')">Usar esta promoción</button></div>`;return}
     if(!g.earned){html+=`<p class="muted">Llevas ${unit}. ${p.base==='IMPORTE'?'Faltan '+money(g.falta):'Faltan '+Number(g.falta).toLocaleString('es-MX')} para ganar el regalo.</p></div>`;return}
     const editable=(p.modo_regalo==='PUNTOS')||(p.modo_regalo==='ELEGIR'&&g.opts.length>1);
+    const conInv=g.opts.some(o=>giftStock[pkey(o.sku,o.unidad)]);
+    if(conInv&&g.opts.every(o=>giftStockLeft(o)<=0)){html+=`<p class="giftStockOut">🚫 <b>Se agotó el inventario para regalo de esta promoción.</b> Ya no se puede entregar el regalo.</p></div>`;return}
     html+='<table><tbody>';
-    (editable?g.opts:[g.lines[0].o]).forEach(o=>{const k=pkey(o.sku,o.unidad);const q=editable?Number((giftChoices[p.id_promocion]||{})[k]||0):g.lines[0].qty;
-      html+=`<tr><td>${escapeHtml(o.sku)}</td><td>${escapeHtml(o.descripcion||'')}${p.modo_regalo==='PUNTOS'?` <span class="muted">(${Number(o.puntos)} pto${Number(o.puntos)>1?'s':''})</span>`:''}</td><td>${escapeHtml(o.unidad)}</td><td class="right">${editable?`<input class="qty giftQty" type="number" min="0" step="1" value="${q}" data-pid="${escapeHtml(p.id_promocion)}" data-key="${escapeHtml(k)}">`:`<b>${q}</b>`}</td><td class="right">${money(p.precio_regalo)}</td><td class="right"><b>${money(q*Number(p.precio_regalo||0))}</b></td></tr>`});
+    (editable?g.opts:[g.opts[0]]).forEach(o=>{const k=pkey(o.sku,o.unidad);const q=editable?Number((giftChoices[p.id_promocion]||{})[k]||0):(g.lines[0]?g.lines[0].qty:0);
+      const left=giftStockLeft(o);const inv=giftStock[k]?`<br><span class="giftStock${left<=0?' out':left<=10?' low':''}">${left<=0?'Agotado para regalo':`Quedan ${left.toLocaleString('es-MX')} para regalo`}</span>`:'';
+      html+=`<tr><td>${escapeHtml(o.sku)}</td><td>${escapeHtml(o.descripcion||'')}${p.modo_regalo==='PUNTOS'?` <span class="muted">(${Number(o.puntos)} pto${Number(o.puntos)>1?'s':''})</span>`:''}${inv}</td><td>${escapeHtml(o.unidad)}</td><td class="right">${editable?`<input class="qty giftQty" type="number" min="0" step="1" value="${q}" data-pid="${escapeHtml(p.id_promocion)}" data-key="${escapeHtml(k)}">`:`<b>${q}</b>`}</td><td class="right">${money(p.precio_regalo)}</td><td class="right"><b>${money(q*Number(p.precio_regalo||0))}</b></td></tr>`});
     html+='</tbody></table>';
     if(g.alternativas)html+=`<p class="muted"><b>✔ Promoción elegida.</b> Solo aplica una: si el cliente prefiere la otra, da clic en "Usar esta promoción".</p>`;
     if(editable)html+=`<p class="muted">Para cambiar, sube la cantidad del producto que quiere el cliente; los demás se ajustan solos.</p>`;
     if(p.modo_regalo==='PUNTOS')html+=`<p class="muted">Puntos usados: ${g.used} de ${g.points}${g.used<g.points?' · <b style="color:#b54708">quedan puntos sin usar</b>':''}</p>`;
+    const chs=giftChoices[p.id_promocion]||{};
+    const corto=conInv&&(p.modo_regalo==='PUNTOS'?(g.used<g.points&&!g.opts.some(o=>Number(o.puntos||1)<=g.points-g.used&&Number(chs[pkey(o.sku,o.unidad)]||0)<giftStockLeft(o))):(g.entregados!==undefined&&g.entregados<g.qtyTotal));
+    if(corto)html+=`<p class="giftStockOut">⚠️ <b>No alcanza el inventario para regalo:</b> ${p.modo_regalo==='PUNTOS'?'no hay suficientes cajas para usar todos los puntos':`se entregan ${g.entregados} de ${g.qtyTotal}`}. Avísale al cliente.</p>`;
     html+='</div>';
   });
   box.innerHTML=html;
@@ -700,7 +734,8 @@ async function fetchCaptureData(){
   const promos=await fetchPromotionsRaw();
   const historial=await fetchHistorial2025(provider);
   const credito=await fetchCreditoExpo();
-  return {savedAt:new Date().toISOString(),provider,productos:pr||[],clientes:cl||[],vendedores:ve.data||[],pedidos:pe||[],promos,historial,credito};
+  const inventarioRegalos=await fetchGiftStock(provider);
+  return {savedAt:new Date().toISOString(),provider,productos:pr||[],clientes:cl||[],vendedores:ve.data||[],pedidos:pe||[],promos,historial,credito,inventarioRegalos};
 }
 // Rastreador de crédito: lo usado por cada cliente en pedidos a crédito de TODOS los stands
 let creditoUsado={};
@@ -760,6 +795,7 @@ async function loadData(){
     if(currentUser.rol==='proveedor'&&!isMesa()){const deals=catalog.filter(p=>hasDeal(p)||p.mostrar_siempre);if(deals.length)catalog=deals;}
     clients=d.clientes||[];
     setCreditoUsado(d.credito);
+    setGiftStock(d.inventarioRegalos);
     hist2025={};(d.historial||[]).forEach(h=>{const k=String(h.id_cliente).trim();const x=hist2025[k]||(hist2025[k]={total:0,productos:0});x.total+=Number(h.total||0);x.productos+=Number(h.productos||0)});
     vendors=d.vendedores||[];
     orders=d.pedidos||[];
@@ -812,7 +848,7 @@ function myOrdersQuery(){return currentUser.rol==='proveedor'
   ? sb.from('pedidos').select('*').eq('id_acceso_proveedor',currentUser.id_acceso_proveedor).neq('estatus','ELIMINADO').order('fecha_hora',{ascending:false}).order('id',{ascending:false})
   : sb.from('pedidos').select('*').eq('usuario',currentUser.usuario).neq('estatus','ELIMINADO').order('fecha_hora',{ascending:false}).order('id',{ascending:false})}
 // Después de guardar solo se recargan los pedidos (no catálogo, clientes ni promociones)
-async function refreshMyOrders(){refreshCreditoExpo();try{orders=await fetchAllRows(()=>myOrdersQuery());const k='datos|'+currentUser.usuario;idbGet(k).then(d=>{if(d){d.pedidos=orders;return idbSet(k,d)}}).catch(()=>{})}catch(err){console.error(err)}renderHistory();renderGoalProgress(cart.length?totals().total:0)}
+async function refreshMyOrders(){refreshCreditoExpo();refreshGiftStock();try{orders=await fetchAllRows(()=>myOrdersQuery());const k='datos|'+currentUser.usuario;idbGet(k).then(d=>{if(d){d.pedidos=orders;return idbSet(k,d)}}).catch(()=>{})}catch(err){console.error(err)}renderHistory();renderGoalProgress(cart.length?totals().total:0)}
 async function reloadData(){try{await loadData();await refreshPendingUI();if(dataSavedAt)showNotice('appNotice','Sin conexión: se muestran los datos guardados el '+fmtFecha(dataSavedAt)+'.','warn');else{showNotice('appNotice','Información actualizada.');syncOutbox()}}catch(err){showNotice('appNotice',isNetErr(err)?'Sin conexión: '+err.message:err.message,'err')}}
 function resetOrderScreen(){
   ['clientSearch','destination','deliveryDate','notes','buyerNote','productSearch'].forEach(id=>{if($(id))$(id).value=''});
@@ -1116,6 +1152,11 @@ async function saveOrder(){
   const assignment=clientAssignment();
   if(!currentUser || !cart.length || !assignment.ready){showNotice('appNotice','Selecciona un cliente con vendedor activo y sucursal antes de guardar.','err');updateSaveState();return}
   autofillClientData();
+  if(navigator.onLine&&netOK&&currentUser.rol==='proveedor'&&Object.keys(giftStock).length&&giftLines().length){
+    const antes=JSON.stringify(giftLines().map(g=>[g.sku,g.unidad,g.cantidad]));
+    await Promise.race([refreshGiftStock(),new Promise(r=>setTimeout(r,4000))]);
+    if(JSON.stringify(giftLines().map(g=>[g.sku,g.unidad,g.cantidad]))!==antes){renderCart();showNotice('appNotice','El inventario para regalo cambió mientras capturabas (se regalaron cajas en otro pedido). Revisa los regalos y vuelve a guardar.','err');return}
+  }
   const t=totals();
   const now=new Date();
   const tipoCaptura = (currentUser.rol==='multimarcas'||isMesa()) ? 'MULTIMARCAS' : 'PROVEEDOR';
