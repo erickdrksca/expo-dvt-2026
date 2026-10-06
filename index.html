@@ -628,6 +628,8 @@ function applyRoleVisibility(){
       const action = btn.getAttribute('onclick') || '';
       if(isVendedor && (action.includes("setAdminTab('dashboard')") || action.includes("setAdminTab('general')") || action.includes("setAdminTab('cliente')") || action.includes("setAdminTab('credito')") || action.includes("exportDynamics") || action.includes("openVentasDashboard") || action.includes("exportBuyerComments"))) {
         btn.classList.add('hidden');
+      } else if(isSoloLectura() && (action.includes("exportDynamics") || action.includes("exportBuyerComments"))) {
+        btn.classList.add('hidden');
       } else {
         btn.classList.remove('hidden');
       }
@@ -1886,7 +1888,7 @@ function ventasDetalle(tipo,id){
 // ===== Comentarios para el comprador (solo Compras/Admin, no se imprimen) =====
 function loadSheetJS(){return new Promise((ok,ko)=>{if(window.XLSX)return ok(window.XLSX);const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';s.onload=()=>window.XLSX?ok(window.XLSX):ko(new Error('XLSX'));s.onerror=()=>ko(new Error('No se pudo cargar el generador de Excel'));document.head.appendChild(s)})}
 async function exportBuyerComments(){
-  if(!currentUser||!['admin','compras','direccion'].includes(currentUser.rol)){showNotice('appNotice','Solo Compras puede descargar los comentarios.','err');return}
+  if(!currentUser||!['admin','compras'].includes(currentUser.rol)){showNotice('appNotice','Solo Compras puede descargar los comentarios.','err');return}
   try{
     const rows=await fetchAllRows(()=>sb.from('pedidos').select('folio,fecha_hora,proveedor,grupo_catalogo,usuario,cliente,id_vendedor,vendedor,forma_pago,total,estatus,comentario_comprador').not('comentario_comprador','is',null).neq('estatus','ELIMINADO').order('grupo_catalogo').order('fecha_hora'),1000,100000);
     if(!rows.length){showNotice('appNotice','Todavía no hay pedidos con comentarios para el comprador.','warn');return}
