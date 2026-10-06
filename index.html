@@ -616,10 +616,11 @@ async function handleLogin(e){e.preventDefault();$('loginBtn').disabled=true;$('
   if(!offline)syncOutbox();
 }catch(err){showNotice('loginNotice',err.message,'err')}finally{$('loginBtn').disabled=false;$('loginBtn').textContent='Entrar'}}
 
+function isSoloLectura(){return !!(currentUser&&currentUser.rol==='direccion')}
 function applyRoleVisibility(){
   const isVendedor = currentUser && currentUser.rol === 'vendedor';
   const adminTitle = document.querySelector('#adminView h2');
-  if(adminTitle) adminTitle.textContent = isVendedor ? 'Mis pedidos - Vendedor' : 'Panel Compras / Admin';
+  if(adminTitle) adminTitle.textContent = isVendedor ? 'Mis pedidos - Vendedor' : (isSoloLectura() ? 'Dirección General · solo consulta' : 'Panel Compras / Admin');
 
   const toolbar = document.querySelector('#adminView .toolbar');
   if(toolbar){
@@ -1381,7 +1382,7 @@ function loadClientOrderFilter(){
   });
 }
 function renderOrdersByClient(){
-  if(!currentUser || !['admin','compras'].includes(currentUser.rol)) return;
+  if(!currentUser || !['admin','compras','direccion'].includes(currentUser.rol)) return;
   const query=norm($('clientOrderFilter').value.trim());
   const names=[...new Set(adminOrders.map(o=>String(o.cliente||'').trim()).filter(Boolean))];
   const exact=names.find(name=>norm(name)===query);
@@ -1476,11 +1477,13 @@ function renderSellerCapture(){
     tr.querySelectorAll('button')[0].onclick=()=>showOrderDetail(o);
     tr.querySelectorAll('button')[1].onclick=()=>openReceiptForOrder(o);
     tr.querySelector('.cap-status').value = o.estatus_captura || 'PENDIENTE';
-    tr.querySelectorAll('button')[2].onclick=()=>saveCaptureStatus(o.folio, tr.querySelector('.cap-status').value, tr.querySelector('.dyn-input').value);
+    if(isSoloLectura()){tr.querySelector('.cap-status').disabled=true;tr.querySelector('.dyn-input').readOnly=true;tr.querySelectorAll('button')[2].remove();}
+    else tr.querySelectorAll('button')[2].onclick=()=>saveCaptureStatus(o.folio, tr.querySelector('.cap-status').value, tr.querySelector('.dyn-input').value);
     body.appendChild(tr);
   });
 }
 async function saveCaptureStatus(folio, estatusCaptura, pedidoDynamics){
+  if(isSoloLectura()){showNotice('appNotice','Usuario de solo consulta: no puede modificar pedidos.','err');return}
   try{
     const r = await sb.from('pedidos').update({estatus_captura: estatusCaptura, pedido_dynamics: pedidoDynamics.trim() || null}).eq('folio', folio);
     if(r.error) throw r.error;
@@ -1509,7 +1512,7 @@ async function exportSellerCSV(){
   }catch(err){ showNotice('appNotice',err.message,'err'); }
 }
 
-function renderAdminOrders(){const q=norm($('adminSearch').value);const list=adminOrders.filter(o=>!q||[o.folio,o.proveedor,o.grupo_catalogo,o.cliente,o.vendedor,o.estatus].some(x=>norm(x).includes(q)));$('adminPedidos').textContent=list.length;$('adminTotal').textContent=money(list.reduce((a,o)=>a+Number(o.total||0),0));const body=$('adminOrdersBody');body.innerHTML='';list.forEach(o=>{const tr=document.createElement('tr');tr.innerHTML=`<td><b>${o.folio}</b></td><td>${new Date(o.fecha_hora).toLocaleString('es-MX')}</td><td>${o.proveedor}</td><td>${o.grupo_catalogo}</td><td>${o.cliente}</td><td>${o.vendedor}</td><td class="right"><b>${money(o.total)}</b></td><td>${o.estatus}</td><td><button class="btn secondary" type="button">Ver detalle</button><button class="btn blue" type="button" style="margin-left:6px">PDF</button></td><td><button class="btn danger" type="button">Cancelar</button>${currentUser && currentUser.rol === 'admin' ? '<button class="btn danger btn-delete" type="button" style="margin-left:6px">Eliminar</button>' : ''}</td>`;tr.querySelectorAll('button')[0].onclick=()=>showOrderDetail(o);tr.querySelectorAll('button')[1].onclick=()=>openReceiptForOrder(o);tr.querySelectorAll('button')[2].onclick=()=>cancelAdminOrder(o.folio);const deleteBtn=tr.querySelector('.btn-delete');if(deleteBtn)deleteBtn.onclick=()=>deleteOrder(o.folio);body.appendChild(tr);});}
+function renderAdminOrders(){const q=norm($('adminSearch').value);const list=adminOrders.filter(o=>!q||[o.folio,o.proveedor,o.grupo_catalogo,o.cliente,o.vendedor,o.estatus].some(x=>norm(x).includes(q)));$('adminPedidos').textContent=list.length;$('adminTotal').textContent=money(list.reduce((a,o)=>a+Number(o.total||0),0));const body=$('adminOrdersBody');body.innerHTML='';list.forEach(o=>{const tr=document.createElement('tr');tr.innerHTML=`<td><b>${o.folio}</b></td><td>${new Date(o.fecha_hora).toLocaleString('es-MX')}</td><td>${o.proveedor}</td><td>${o.grupo_catalogo}</td><td>${o.cliente}</td><td>${o.vendedor}</td><td class="right"><b>${money(o.total)}</b></td><td>${o.estatus}</td><td><button class="btn secondary" type="button">Ver detalle</button><button class="btn blue" type="button" style="margin-left:6px">PDF</button></td><td>${isSoloLectura()?'':'<button class="btn danger btn-cancel" type="button">Cancelar</button>'}${currentUser && currentUser.rol === 'admin' ? '<button class="btn danger btn-delete" type="button" style="margin-left:6px">Eliminar</button>' : ''}</td>`;tr.querySelectorAll('button')[0].onclick=()=>showOrderDetail(o);tr.querySelectorAll('button')[1].onclick=()=>openReceiptForOrder(o);const cancelBtn=tr.querySelector('.btn-cancel');if(cancelBtn)cancelBtn.onclick=()=>cancelAdminOrder(o.folio);const deleteBtn=tr.querySelector('.btn-delete');if(deleteBtn)deleteBtn.onclick=()=>deleteOrder(o.folio);body.appendChild(tr);});}
 
 async function showOrderDetail(order){
   try{
@@ -1729,7 +1732,7 @@ function exportCurrentDetail(){
   downloadCSV(`${currentDetailOrder.folio}_detalle.csv`,rows);
 }
 
-async function cancelAdminOrder(folio){if(!confirm(`¿Cancelar pedido ${folio}?`))return;try{const r=await sb.from('pedidos').update({estatus:'CANCELADO'}).eq('folio',folio);if(r.error)throw r.error;await sb.from('bitacora').insert([{usuario:currentUser.usuario,rol:currentUser.rol,accion:'CANCELAR_PEDIDO',folio,detalle:'Cancelado por compras/admin'}]);showNotice('appNotice',`Pedido ${folio} cancelado.`);await loadData();}catch(err){showNotice('appNotice',err.message,'err')}}
+async function cancelAdminOrder(folio){if(isSoloLectura()){showNotice('appNotice','Usuario de solo consulta: no puede modificar pedidos.','err');return}if(!confirm(`¿Cancelar pedido ${folio}?`))return;try{const r=await sb.from('pedidos').update({estatus:'CANCELADO'}).eq('folio',folio);if(r.error)throw r.error;await sb.from('bitacora').insert([{usuario:currentUser.usuario,rol:currentUser.rol,accion:'CANCELAR_PEDIDO',folio,detalle:'Cancelado por compras/admin'}]);showNotice('appNotice',`Pedido ${folio} cancelado.`);await loadData();}catch(err){showNotice('appNotice',err.message,'err')}}
 // ================= DASHBOARD DE VENTAS (rol ventas / admin) =================
 let ventasData=null,ventasCalc=null,ventasTimer=null,vzClientFilter='todos';
 const vzMoney=v=>Number(v||0).toLocaleString('es-MX',{style:'currency',currency:'MXN',maximumFractionDigits:0});
@@ -1883,7 +1886,7 @@ function ventasDetalle(tipo,id){
 // ===== Comentarios para el comprador (solo Compras/Admin, no se imprimen) =====
 function loadSheetJS(){return new Promise((ok,ko)=>{if(window.XLSX)return ok(window.XLSX);const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';s.onload=()=>window.XLSX?ok(window.XLSX):ko(new Error('XLSX'));s.onerror=()=>ko(new Error('No se pudo cargar el generador de Excel'));document.head.appendChild(s)})}
 async function exportBuyerComments(){
-  if(!currentUser||!['admin','compras'].includes(currentUser.rol)){showNotice('appNotice','Solo Compras puede descargar los comentarios.','err');return}
+  if(!currentUser||!['admin','compras','direccion'].includes(currentUser.rol)){showNotice('appNotice','Solo Compras puede descargar los comentarios.','err');return}
   try{
     const rows=await fetchAllRows(()=>sb.from('pedidos').select('folio,fecha_hora,proveedor,grupo_catalogo,usuario,cliente,id_vendedor,vendedor,forma_pago,total,estatus,comentario_comprador').not('comentario_comprador','is',null).neq('estatus','ELIMINADO').order('grupo_catalogo').order('fecha_hora'),1000,100000);
     if(!rows.length){showNotice('appNotice','Todavía no hay pedidos con comentarios para el comprador.','warn');return}
