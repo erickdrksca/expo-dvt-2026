@@ -591,7 +591,11 @@ async function handleLogin(e){e.preventDefault();$('loginBtn').disabled=true;$('
   const usuario=$('loginUser').value.trim().toUpperCase();const contrasena=$('loginPass').value.trim();
   let user=null,provider=null,offline=false;
   try{
-    const {data,error}=await sb.from('usuarios').select('*').eq('usuario',usuario).eq('contrasena',contrasena).eq('activo',true).maybeSingle();
+    // La contraseña se valida en el servidor (iniciar_sesion); la tabla de usuarios no se lee desde el navegador.
+    let {data,error}=await sb.rpc('iniciar_sesion',{p_usuario:usuario,p_contrasena:contrasena});
+    if(error&&!isNetErr(error)&&(error.code==='PGRST202'||/could not find the function/i.test(String(error.message||'')))){
+      ({data,error}=await sb.from('usuarios').select('*').eq('usuario',usuario).eq('contrasena',contrasena).eq('activo',true).maybeSingle());
+    }
     if(error)throw error;if(!data)throw new Error('Usuario o contraseña incorrectos');user=data;
     if(user.rol==='proveedor'){const r=await sb.from('proveedores').select('*').eq('id_acceso_proveedor',user.id_acceso_proveedor).eq('activo',true).maybeSingle();if(r.error)throw r.error;if(!r.data)throw new Error('Proveedor no encontrado o inactivo');provider=r.data;}
     const h=await hashCred(usuario,contrasena);
