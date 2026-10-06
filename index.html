@@ -1014,7 +1014,7 @@ function promoChips(p){
   const esc={};(promoState.tramosByKey[k]||[]).forEach(t=>{(esc[t.id_promocion]=esc[t.id_promocion]||[]).push(t)});
   Object.entries(esc).forEach(([pid,list])=>{
     const pr=promoState.byId[pid];
-    list.sort((a,b)=>a.desde-b.desde).forEach(t=>{html+=`<span class="chip esc" title="Precio por volumen${pr&&pr.acumulacion==='COMBINADA'?' · se combinan presentaciones':''}">📉 ${Number(t.desde)}${Number(t.hasta)>=999?'+':'–'+Number(t.hasta)}: ${money(t.precio)}</span>`});
+    list.sort((a,b)=>a.desde-b.desde).filter(t=>Number(t.precio)<Number(p.precio_neto||0)-0.001).forEach(t=>{html+=`<span class="chip esc" title="Precio por volumen${pr&&pr.acumulacion==='COMBINADA'?' · se combinan presentaciones':''}">📉 ${Number(t.desde)}${Number(t.hasta)>=999?'+':'–'+Number(t.hasta)}: ${money(t.precio)}</span>`});
   });
   [...new Set(promoState.bonByKey[k]||[])].forEach(pid=>{const pr=promoState.byId[pid];if(pr)html+=`<span class="chip bon" title="${escapeHtml(pr.descripcion||'')}">🎁 ${escapeHtml(pr.descripcion||'Bonificación')}</span>`});
   return html;
@@ -1738,7 +1738,7 @@ const vzKey=s=>String(s||'').split(' - ')[0].trim();
 function vzPctHtml(p){if(p===null)return '<span class="vzNo">Sin meta</span>';const w=Math.max(0,Math.min(100,p));const cls=p>=80?'':p>=50?'mid':'low';return `<div class="vzPct"><div class="vzBar"><i class="${cls}" style="width:${w}%"></i></div><b>${p.toFixed(1)}%</b></div>`}
 async function fetchVentasData(){
   const [ped,prov,ven,cli,cfg]=await Promise.all([
-    fetchAllRows(()=>sb.from('pedidos').select('folio,fecha_hora,id_proveedor,proveedor,grupo_catalogo,cliente,id_vendedor,vendedor,total,estatus,forma_pago,tipo_captura').not('estatus','in','(ELIMINADO,CANCELADO)').order('id'),1000,100000),
+    fetchAllRows(()=>sb.from('pedidos').select('folio,fecha_hora,id_proveedor,proveedor,grupo_catalogo,usuario,cliente,id_vendedor,vendedor,total,estatus,forma_pago,tipo_captura').not('estatus','in','(ELIMINADO,CANCELADO)').order('id'),1000,100000),
     fetchAllRows(()=>sb.from('proveedores').select('id_proveedor,proveedor,grupo_catalogo,objetivo_venta,canal,activo').order('id')),
     sb.from('vendedores').select('*').eq('activo',true).order('id_vendedor'),
     fetchAllRows(()=>sb.from('clientes').select('id_cliente,cliente,poblacion,id_vendedor,sucursal').eq('activo',true).order('id')),
@@ -1748,7 +1748,9 @@ async function fetchVentasData(){
   return {savedAt:new Date().toISOString(),pedidos:ped||[],proveedores:prov||[],vendedores:ven.data||[],clientes:cli||[],config:cfg.error?[]:(cfg.data||[])};
 }
 function computeVentas(d){
-  const peds=d.pedidos||[];
+  // Los usuarios y proveedores DEMO (capacitación) no cuentan en el dashboard
+  const demoProv=new Set((d.proveedores||[]).filter(p=>/^DEMO/i.test(String(p.grupo_catalogo||''))).map(p=>p.id_proveedor));
+  const peds=(d.pedidos||[]).filter(o=>!demoProv.has(String(o.id_proveedor||''))&&!/^DEMO/i.test(String(o.usuario||'')));
   const cfg={};(d.config||[]).forEach(r=>cfg[r.clave]=r);
   // Clientes
   const cliMap={};(d.clientes||[]).forEach(c=>{cliMap[String(c.id_cliente).trim()]=c});
@@ -1772,11 +1774,13 @@ function computeVentas(d){
   });
   // Expositores: los que tienen objetivo + los que ya vendieron
   const expos=[];const seen=new Set();
-  (d.proveedores||[]).forEach(p=>{if(p.activo&&Number(p.objetivo_venta||0)>0&&!seen.has(p.id_proveedor)){seen.add(p.id_proveedor)}});
+  (d.proveedores||[]).forEach(p=>{if(p.activo&&!demoProv.has(p.id_proveedor)&&Number(p.objetivo_venta||0)>0&&!seen.has(p.id_proveedor)){seen.add(p.id_proveedor)}});
+  const objMulti=cfg.objetivo_multimarcas?Number(cfg.objetivo_multimarcas.valor||0):0;
+  if(objMulti>0)seen.add('MULTI');
   Object.keys(porExpo).forEach(id=>seen.add(id));
   seen.forEach(id=>{
     const p=provById[id];const s=porExpo[id]||{pedidos:0,total:0,clientes:{}};
-    const obj=id==='MULTI'?0:Number(p&&p.objetivo_venta||0);
+    const obj=id==='MULTI'?objMulti:Number(p&&p.objetivo_venta||0);
     const nombre=id==='MULTI'?'MULTIMARCAS':(p?(p.grupo_catalogo||p.proveedor):id);
     expos.push({id,nombre,razon:id==='MULTI'?'Mesa de multimarcas':(p?p.proveedor:''),objetivo:obj,vendido:s.total,pedidos:s.pedidos,pendiente:Math.max(obj-s.total,0),pct:obj>0?s.total/obj*100:null,clientes:s.clientes});
   });
