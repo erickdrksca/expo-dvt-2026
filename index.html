@@ -1911,7 +1911,18 @@ async function exportBuyerComments(){
 function downloadCSV(filename,rows){const csv=rows.map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(',')).join('\r\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;a.click();URL.revokeObjectURL(a.href)}
 async function exportDynamics(){try{const data=await fetchAllRows(()=>sb.from('export_dynamics').select('*').order('folio').order('sku').order('unidad').order('precio_final').order('cantidad').order('importe_final'),1000,200000);const rows=[['Folio','Cliente','Vendedor','IDProveedor','SKU','Unidad','Cantidad','PrecioNetoBase','PagoNCPct','PrecioFinal','ImporteFinal']];(data||[]).forEach(i=>rows.push([i.folio,i.cliente,i.vendedor,i.id_proveedor,i.sku,i.unidad,i.cantidad,i.precio_neto_base,i.desc_extra_pct,i.precio_final,i.importe_final]));downloadCSV('export_dynamics_expo_dvt_2026.csv',rows);}catch(err){showNotice('appNotice',err.message,'err')}}
 init();initEnhancements();
-if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(e=>console.warn('Modo sin conexión no disponible:',e)))}
+// La rueda del ratón no cambia cantidades: si el cursor está sobre un campo numérico activo, se suelta el campo y la página se desplaza normal
+document.addEventListener('wheel',e=>{const el=document.activeElement;if(el&&el.tagName==='INPUT'&&el.type==='number'&&(e.target===el||el.contains(e.target)))el.blur()},{passive:true});
+if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(e=>console.warn('Modo sin conexión no disponible:',e)));navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.tipo==='nueva-version')avisoNuevaVersion()})}
+function avisoNuevaVersion(){
+  if(!currentUser){location.reload();return}
+  if(document.getElementById('nuevaVersionBar'))return;
+  const d=document.createElement('div');d.id='nuevaVersionBar';
+  d.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:9999;background:#111;color:#fff;padding:10px 14px;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,.3);display:flex;gap:10px;align-items:center;flex-wrap:wrap;max-width:calc(100vw - 32px);font-size:14px';
+  d.innerHTML='<span>Hay una versión nueva de la plataforma. Termina el pedido que estás capturando y actualiza.</span><button class="btn accent" type="button">Actualizar ahora</button><button class="btn secondary" type="button">Después</button>';
+  d.querySelectorAll('button')[0].onclick=()=>location.reload();d.querySelectorAll('button')[1].onclick=()=>d.remove();
+  document.body.appendChild(d);
+}
 if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
 </script>
 </body></html>
