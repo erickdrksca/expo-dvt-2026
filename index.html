@@ -750,9 +750,22 @@ async function fetchCaptureData(){
   const historial=await fetchHistorial2025(provider);
   const credito=await fetchCreditoExpo();
   const inventarioRegalos=await fetchGiftStock(provider);
+  const ventaExpo=await fetchVentaExpoCliente();
   let proveedores=[];
   if(isMaestro()){const r=await sb.from('proveedores').select('id_proveedor,proveedor,grupo_catalogo,id_acceso_proveedor,canal,activo').order('proveedor');if(r.error)throw r.error;proveedores=r.data||[]}
-  return {savedAt:new Date().toISOString(),provider,productos:pr||[],clientes:cl||[],vendedores:ve.data||[],pedidos:pe||[],promos,historial,credito,inventarioRegalos,proveedores};
+  return {savedAt:new Date().toISOString(),provider,productos:pr||[],clientes:cl||[],vendedores:ve.data||[],pedidos:pe||[],promos,historial,credito,inventarioRegalos,proveedores,ventaExpo};
+}
+// Venta 2026 de cada cliente en TODA la Expo (para el catálogo maestro / tickets)
+let ventaExpoCliente={};
+async function fetchVentaExpoCliente(){
+  if(!isMaestro())return [];
+  try{return await fetchAllRows(()=>sb.from('venta_expo_cliente').select('id_cliente,total').order('id_cliente'))}
+  catch(err){if(isNetErr(err))throw err;console.warn('Venta por cliente no disponible',err);return []}
+}
+function setVentaExpo(rows){ventaExpoCliente={};(rows||[]).forEach(r=>{ventaExpoCliente[String(r.id_cliente).trim()]=Number(r.total||0)})}
+async function refreshVentaExpo(){
+  if(!navigator.onLine||!isMaestro())return;
+  try{const rows=await fetchVentaExpoCliente();setVentaExpo(rows);const k='datos|'+currentUser.usuario;idbGet(k).then(d=>{if(d){d.ventaExpo=rows;return idbSet(k,d)}}).catch(()=>{});renderClientInsight()}catch(err){console.warn(err)}
 }
 // Rastreador de crédito: lo usado por cada cliente en pedidos a crédito de TODOS los stands
 let creditoUsado={};
@@ -785,7 +798,7 @@ async function fetchHistorial2025(provider){
   try{
     return await fetchAllRows(()=>{let q=sb.from('expo2025_resumen').select('id_cliente,total,productos');
       if(currentUser.rol==='proveedor'&&provider)q=q.eq('id_proveedor',provider.id_proveedor).ilike('grupo_catalogo',provider.grupo_catalogo);
-      else q=q.eq('id_proveedor','MULTIMARCAS');
+      else if(!isMaestro())q=q.eq('id_proveedor','MULTIMARCAS'); // catálogo maestro / tickets: toda la Expo 2025
       return q.order('id_cliente')});
   }catch(err){if(isNetErr(err))throw err;console.warn('Historial 2025 no disponible',err);return []}
 }
@@ -816,6 +829,7 @@ async function loadData(){
     setCreditoUsado(d.credito);
     setGiftStock(d.inventarioRegalos);
     maestroProvs=d.proveedores||[];
+    setVentaExpo(d.ventaExpo);
     if($('ticketHint'))$('ticketHint').classList.toggle('hidden',!isTicket());
     hist2025={};(d.historial||[]).forEach(h=>{const k=String(h.id_cliente).trim();const x=hist2025[k]||(hist2025[k]={total:0,productos:0});x.total+=Number(h.total||0);x.productos+=Number(h.productos||0)});
     vendors=d.vendedores||[];
@@ -875,7 +889,7 @@ function myOrdersQuery(){return currentUser.rol==='proveedor'
   ? sb.from('pedidos').select('*').eq('id_acceso_proveedor',currentUser.id_acceso_proveedor).neq('estatus','ELIMINADO').order('fecha_hora',{ascending:false}).order('id',{ascending:false})
   : sb.from('pedidos').select('*').eq('usuario',currentUser.usuario).neq('estatus','ELIMINADO').order('fecha_hora',{ascending:false}).order('id',{ascending:false})}
 // Después de guardar solo se recargan los pedidos (no catálogo, clientes ni promociones)
-async function refreshMyOrders(){refreshCreditoExpo();refreshGiftStock();try{orders=await fetchAllRows(()=>myOrdersQuery());const k='datos|'+currentUser.usuario;idbGet(k).then(d=>{if(d){d.pedidos=orders;return idbSet(k,d)}}).catch(()=>{})}catch(err){console.error(err)}renderHistory();renderGoalProgress(cart.length?totals().total:0)}
+async function refreshMyOrders(){refreshCreditoExpo();refreshGiftStock();refreshVentaExpo();try{orders=await fetchAllRows(()=>myOrdersQuery());const k='datos|'+currentUser.usuario;idbGet(k).then(d=>{if(d){d.pedidos=orders;return idbSet(k,d)}}).catch(()=>{})}catch(err){console.error(err)}renderHistory();renderGoalProgress(cart.length?totals().total:0)}
 async function reloadData(){try{await loadData();await refreshPendingUI();if(dataSavedAt)showNotice('appNotice','Sin conexión: se muestran los datos guardados el '+fmtFecha(dataSavedAt)+'.','warn');else{showNotice('appNotice','Información actualizada.');syncOutbox()}}catch(err){showNotice('appNotice',isNetErr(err)?'Sin conexión: '+err.message:err.message,'err')}}
 function resetOrderScreen(){
   ['clientSearch','destination','deliveryDate','notes','buyerNote','productSearch'].forEach(id=>{if($(id))$(id).value=''});
@@ -957,18 +971,21 @@ function renderClientInsight(currentTotal){
   if(currentTotal===undefined)currentTotal=cart.length?totals().total:0;
   const id=String(c.id_cliente).trim(),h=hist2025[id]||{total:0,productos:0},label=clientLabel(c);
   const multi=isGeneral();
-  const guardado=historyList().filter(isActiveOrder).filter(o=>String(o.cliente||'')===label||String(o.cliente||'').startsWith(id+' - ')).reduce((a,o)=>a+Number(o.total||0),0);
+  const delCliente=o=>String(o.cliente||'')===label||String(o.cliente||'').startsWith(id+' - ');
+  const guardado=isMaestro()
+    ? Number(ventaExpoCliente[id]||0)+pendingForUser().filter(isActiveOrder).filter(delCliente).reduce((a,o)=>a+Number(o.total||0),0) // toda la Expo + lo de este dispositivo aún sin enviar
+    : historyList().filter(isActiveOrder).filter(delCliente).reduce((a,o)=>a+Number(o.total||0),0);
   const lleva=guardado+Number(currentTotal||0);
   const pct=h.total>0?lleva/h.total*100:0;
   const mes=Number(c.compra_mes_promedio||0);
-  const quien=multi?'Compró en multimarcas':(isMesa()?'Le compró a esta mesa':'Te compró');
+  const quien=isMaestro()?'Compró en toda la':(multi?'Compró en multimarcas':(isMesa()?'Le compró a esta mesa':'Te compró'));
   const sub2026=h.total>0?`${pct.toFixed(0)}% de lo de 2025${lleva>=h.total?' · ¡Ya lo superó!':` · faltan ${money(h.total-lleva)}`}`:(lleva>0?'Venta nueva vs 2025':'Aún sin pedido');
   box.innerHTML=`<div class="insHead">📊 Historial del cliente</div>
    <div class="insGrid">
-    <div class="ins"><span>${quien} en Expo 2025</span><b>${h.total>0?money(h.total):'Sin compra'}</b><small>${h.total>0?`${h.productos} producto${h.productos===1?'':'s'}`:(multi?'No compró en multimarcas':'Oportunidad: cliente nuevo para tu marca')}</small></div>
+    <div class="ins"><span>${quien} en Expo 2025</span><b>${h.total>0?money(h.total):'Sin compra'}</b><small>${h.total>0?`${h.productos} producto${h.productos===1?'':'s'}`:(isMaestro()?'No compró en la Expo 2025':(multi?'No compró en multimarcas':'Oportunidad: cliente nuevo para tu marca'))}</small></div>
     <div class="ins"><span>Compra promedio al mes</span><b>${mes>0?money(mes):'Sin dato'}</b><small>General en DVT (2026)</small></div>
     ${(()=>{const st=creditStatus(c,currentTotal);if(!st)return `<div class="ins"><span>Crédito Expo</span><b>Contado</b><small>Sin crédito autorizado</small></div>`;const over=st.disponible<0;return `<div class="ins credit${over?' warn':''}"><span>Crédito disponible</span><b>${money(Math.max(st.disponible,0))}</b><small>${over?`⚠ Rebasa por ${money(-st.disponible)} · `:''}de ${money(st.lim)} · ${st.dias} días</small><div class="insBar"><i style="width:${Math.min(st.pct,100).toFixed(1)}%"></i></div></div>`})()}
-    <div class="ins now${h.total>0&&lleva>=h.total?' done':''}"><span>Lleva en Expo 2026</span><b>${money(lleva)}</b><small>${sub2026}</small>${h.total>0?`<div class="insBar"><i style="width:${Math.min(pct,100).toFixed(1)}%"></i></div>`:''}</div>
+    <div class="ins now${h.total>0&&lleva>=h.total?' done':''}"><span>Lleva en ${isMaestro()?'toda la ':''}Expo 2026</span><b>${money(lleva)}</b><small>${sub2026}</small>${h.total>0?`<div class="insBar"><i style="width:${Math.min(pct,100).toFixed(1)}%"></i></div>`:''}</div>
    </div>`;
   box.classList.remove('hidden');
 }
