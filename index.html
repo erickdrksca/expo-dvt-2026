@@ -25,6 +25,7 @@
 .tag{display:inline-block;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:700}.tag.ok{background:#e3f6ea;color:#0b7a3b}.tag.pend{background:#fdecec;color:#a5060f}
 @media(max-width:760px){.vzKpis{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:10px}.vzKpi:nth-child(3){border-left:0}.vzKpis.three{grid-template-columns:repeat(3,minmax(0,1fr))}.vzKpi{padding:6px 10px}.vzKpi span{font-size:12px}.vzTitle{font-size:24px}.vzPctCol{width:160px}}
 .giftStock{font-size:12px;font-weight:700;color:#027a48}.giftStock.low{color:#b54708}.giftStock.out{color:#b42318}.giftStockOut{background:#fef3f2;border:1px solid #fecdca;color:#b42318;border-radius:10px;padding:8px 10px;margin:8px 0 0}
+.tarBar{height:10px;background:#eceaf0;border-radius:99px;overflow:hidden;margin:8px 0 2px}.tarBar i{display:block;height:100%;background:#e30613;border-radius:99px}
 </style>
 </head>
 <body>
@@ -451,6 +452,22 @@ async function refreshGiftStock(){
 // Calcula regalos ganados según el pedido actual
 function computeGifts(){
   const res=[];
+  promoState.promos.filter(p=>p.tipo==='TARIMA').forEach(p=>{
+    const parts=promoState.partsByPromo[p.id_promocion]||[],opts=promoState.regalosByPromo[p.id_promocion]||[];
+    if(!parts.length)return;
+    const qtyOf=x=>cart.filter(i=>pkey(i.sku,i.unidad)===pkey(x.sku,x.unidad)).reduce((a,i)=>a+Number(i.cantidad||0),0);
+    const det=parts.map(x=>{const req=Number(x.cantidad||1),have=qtyOf(x);return {x,req,have,ok:have>=req}});
+    if(!det.some(d=>d.have>0))return; // la tarjeta aparece en cuanto llevan algún producto de la tarima
+    const okN=det.filter(d=>d.ok).length,completa=okN===det.length;
+    const info=tarimaInfo(p,selectedClient());
+    const g={promo:p,tarima:true,opts,det,okN,info,earned:0,lines:[],total:0,falta:0};
+    if(!completa)g.estado='incompleta';
+    else if(!(navigator.onLine&&netOK))g.estado='offline';
+    else if(info.clienteFolio)g.estado='cliente';
+    else if(info.restantes<=0)g.estado='agotada';
+    else{g.estado='ok';g.earned=1;opts.forEach(o=>g.lines.push({o,qty:Number(o.cantidad||1)}))}
+    res.push(g);
+  });
   promoState.promos.filter(p=>p.tipo==='BONIFICACION').forEach(p=>{
     const parts=promoState.partsByPromo[p.id_promocion]||[];
     const fac={};parts.forEach(x=>fac[pkey(x.sku,x.unidad)]=Number(x.factor||1));
@@ -511,6 +528,31 @@ function computeGifts(){
   });
   return res;
 }
+function tarimaCard(g){
+  const p=g.promo,n=g.det.length,inf=g.info;
+  const desc=x=>{const c=catalog.find(c=>pkey(c.sku,c.unidad)===pkey(x.sku,x.unidad));return c?c.descripcion:x.sku};
+  const quedan=inf.limite==null?'':`Quedan ${Math.max(0,Math.min(inf.restantes,inf.limite))} de ${inf.limite}`;
+  let h=`<div class="giftCard tarimaCard ${g.estado==='ok'?'won':''}"><div class="giftHead"><div><b>🎁 ${escapeHtml(p.descripcion||'Tarima')}</b> · <span>${n} productos + producto sin cargo · 1 por cliente</span></div><span class="pill">${g.estado==='ok'?'✓ Tarima completa':(inf.restantes<=0&&inf.limite!=null?'Agotada':quedan)}</span></div>`;
+  if(g.estado==='incompleta'){
+    const f=g.det.filter(d=>!d.ok);
+    h+=`<div class="tarBar"><i style="width:${(g.okN/n*100).toFixed(1)}%"></i></div><p class="muted" style="margin:6px 0"><b>Llevas ${g.okN} de ${n} productos completos.</b> Para abrir el producto sin cargo falta:</p><table><tbody>`;
+    f.forEach(d=>{h+=`<tr><td>${escapeHtml(d.x.sku)}</td><td>${escapeHtml(desc(d.x))}</td><td>${escapeHtml(d.x.unidad)}</td><td class="right">lleva ${d.have} de ${d.req}</td><td class="right"><b>faltan ${d.req-d.have}</b></td></tr>`});
+    h+='</tbody></table>';
+    if(inf.limite!=null&&inf.restantes<=0)h+=`<p class="giftStockOut">🚫 <b>Ya se vendieron las ${inf.limite} tarimas.</b></p>`;
+  }else if(g.estado==='ok'){
+    h+=`<p class="muted" style="margin:6px 0"><b style="color:#027a48">✓ El pedido completa la tarima.</b> Producto sin cargo:</p><table><tbody>`;
+    g.lines.forEach(l=>{h+=`<tr><td>${escapeHtml(l.o.sku)}</td><td>${escapeHtml(l.o.descripcion||desc(l.o))}</td><td>${escapeHtml(l.o.unidad)}</td><td class="right"><b>${l.qty}</b></td><td class="right">${money(p.precio_regalo)}</td><td class="right"><b>${money(l.qty*Number(p.precio_regalo||0))}</b></td></tr>`});
+    h+='</tbody></table>';
+    if(inf.limite!=null)h+=`<p class="muted">Con este pedido quedarán ${Math.max(0,inf.restantes-1)} de ${inf.limite} tarimas.</p>`;
+  }else if(g.estado==='cliente'){
+    h+=`<p class="giftStockOut">⚠️ <b>Este cliente ya se llevó su tarima</b> (pedido ${escapeHtml(String(inf.clienteFolio))}). Solo una por cliente: este pedido va sin el producto sin cargo.</p>`;
+  }else if(g.estado==='agotada'){
+    h+=`<p class="giftStockOut">🚫 <b>Ya se vendieron las ${inf.limite} tarimas.</b> Este pedido va sin el producto sin cargo.</p>`;
+  }else if(g.estado==='offline'){
+    h+=`<p class="giftStockOut">📴 <b>Sin conexión:</b> la tarima está completa, pero hay que tener internet para confirmar que quedan tarimas y aplicar el producto sin cargo.</p>`;
+  }
+  return h+'</div>';
+}
 function selectExclusive(ge,pid){giftChoices['__grupo|'+ge]=pid;renderCart()}
 function setGiftChoice(pid,key,value){
   const g=computeGifts().find(x=>x.promo.id_promocion===pid);if(!g)return;
@@ -535,6 +577,7 @@ function renderGifts(){
   box.classList.remove('hidden');
   let html='<h3 class="giftTitle">🎁 Promociones de bonificación</h3>';
   gifts.forEach(g=>{
+    if(g.tarima){html+=tarimaCard(g);return}
     const p=g.promo,unit=p.base==='IMPORTE'?money(g.total):`${Number(g.total).toLocaleString('es-MX')}`;
     html+=`<div class="giftCard ${g.earned&&!g.excluida?'won':''}"><div class="giftHead"><div><b>${escapeHtml(p.fabricante||'')}</b> · <span>${escapeHtml(p.descripcion||'')}</span></div><span class="pill">${g.excluida?'Otra opción elegida':g.earned?(p.modo_regalo==='PUNTOS'?`${g.points} punto(s)`:`${g.qtyTotal} regalo(s)`):'Aún no aplica'}</span></div>`;
     if(g.excluida){html+=`<p class="muted">También aplica, pero el cliente solo puede llevar una de las dos promociones.</p><button class="btn secondary" type="button" onclick="selectExclusive('${escapeHtml(g.grupo)}','${escapeHtml(p.id_promocion)}')">Usar esta promoción</button></div>`;return}
@@ -712,16 +755,50 @@ async function fetchPromotionsRaw(){
       fetchAllRows(()=>sb.from('promo_participantes').select('*').in('id_promocion',ids).order('id')),
       fetchAllRows(()=>sb.from('promo_regalos').select('*').in('id_promocion',ids).order('id'))
     ]);
-    return {promos,tramos:tr||[],parts:pa||[],regalos:rg||[]};
+    const tar=await fetchTarimas(promos);
+    return {promos,tramos:tr||[],parts:pa||[],regalos:rg||[],tarimas:tar.estado,tarimaCli:tar.cliente};
   }catch(err){
     if(isNetErr(err))throw err;
     console.error('Promociones no disponibles:',err);showNotice('appNotice','No se pudieron cargar las promociones: '+(err.message||err),'err');
     return {promos:[],tramos:[],parts:[],regalos:[]};
   }
 }
+// ===== Tarimas: paquete de productos que, completo, abre el producto sin cargo (límite total y 1 por cliente) =====
+async function fetchTarimas(promos){
+  const ids=(promos||[]).filter(p=>p.tipo==='TARIMA').map(p=>p.id_promocion);
+  if(!ids.length)return {estado:[],cliente:[]};
+  try{
+    const [a,b]=await Promise.all([sb.from('tarimas_estado').select('*').in('id_promocion',ids),sb.from('tarimas_por_cliente').select('*').in('id_promocion',ids)]);
+    if(a.error)throw a.error;if(b.error)throw b.error;
+    return {estado:a.data||[],cliente:b.data||[]};
+  }catch(err){if(isNetErr(err))throw err;console.warn('Tarimas no disponibles',err);return {estado:[],cliente:[]}}
+}
+function setTarimas(estado,cliente){
+  promoState.tarimas={};(estado||[]).forEach(r=>{promoState.tarimas[r.id_promocion]={limite:r.limite_total==null?null:Number(r.limite_total),restantes:r.restantes==null?null:Number(r.restantes)}});
+  promoState.tarimaCli={};(cliente||[]).forEach(r=>{promoState.tarimaCli[r.id_promocion+'|'+String(r.id_cliente).trim()]=r.folio||'sí'});
+}
+async function refreshTarimas(){
+  if(!navigator.onLine||!netOK||!promoState.promos.some(p=>p.tipo==='TARIMA'))return;
+  try{
+    const t=await fetchTarimas(promoState.promos);setTarimas(t.estado,t.cliente);
+    const k='datos|'+currentUser.usuario;idbGet(k).then(d=>{if(d&&d.promos){d.promos.tarimas=t.estado;d.promos.tarimaCli=t.cliente;return idbSet(k,d)}}).catch(()=>{});
+    if(typeof renderGifts==='function')renderGifts();
+  }catch(err){console.warn('No se pudo actualizar tarimas',err)}
+}
+// Lo que queda de una tarima: servidor menos lo que este dispositivo tiene sin enviar
+function tarimaInfo(p,client){
+  const pid=p.id_promocion,st=(promoState.tarimas||{})[pid]||{limite:Number(p.limite_total)||null,restantes:Number(p.limite_total)||null};
+  const pend=pendingForUser().filter(o=>(o._detalle||[]).some(d=>d.es_bonificacion&&d.id_promocion===pid));
+  const restantes=st.restantes==null?Infinity:Math.max(0,st.restantes-pend.length);
+  let clienteFolio=null;
+  if(client){const id=String(client.id_cliente).trim();clienteFolio=(promoState.tarimaCli||{})[pid+'|'+id]||null;
+    if(!clienteFolio){const l=pend.find(o=>String(o.cliente||'').startsWith(id+' - '));if(l)clienteFolio=l.folio}}
+  return {limite:st.limite,restantes,clienteFolio};
+}
 function buildPromoState(raw){
-  promoState={promos:[],byId:{},tramosByKey:{},tramosByPromo:{},partsByPromo:{},regalosByPromo:{},bonByKey:{}};
+  promoState={promos:[],byId:{},tramosByKey:{},tramosByPromo:{},partsByPromo:{},regalosByPromo:{},bonByKey:{},tarimas:{},tarimaCli:{}};
   if(!raw)return;
+  setTarimas(raw.tarimas,raw.tarimaCli);
   (raw.promos||[]).forEach(p=>{promoState.byId[p.id_promocion]=p});promoState.promos=raw.promos||[];
   (raw.tramos||[]).forEach(t=>{const k=pkey(t.sku,t.unidad);(promoState.tramosByKey[k]=promoState.tramosByKey[k]||[]).push(t);(promoState.tramosByPromo[t.id_promocion]=promoState.tramosByPromo[t.id_promocion]||[]).push(t)});
   (raw.parts||[]).forEach(t=>{(promoState.partsByPromo[t.id_promocion]=promoState.partsByPromo[t.id_promocion]||[]).push(t);const k=pkey(t.sku,t.unidad);(promoState.bonByKey[k]=promoState.bonByKey[k]||[]).push(t.id_promocion)});
@@ -889,7 +966,7 @@ function myOrdersQuery(){return currentUser.rol==='proveedor'
   ? sb.from('pedidos').select('*').eq('id_acceso_proveedor',currentUser.id_acceso_proveedor).neq('estatus','ELIMINADO').order('fecha_hora',{ascending:false}).order('id',{ascending:false})
   : sb.from('pedidos').select('*').eq('usuario',currentUser.usuario).neq('estatus','ELIMINADO').order('fecha_hora',{ascending:false}).order('id',{ascending:false})}
 // Después de guardar solo se recargan los pedidos (no catálogo, clientes ni promociones)
-async function refreshMyOrders(){refreshCreditoExpo();refreshGiftStock();refreshVentaExpo();try{orders=await fetchAllRows(()=>myOrdersQuery());const k='datos|'+currentUser.usuario;idbGet(k).then(d=>{if(d){d.pedidos=orders;return idbSet(k,d)}}).catch(()=>{})}catch(err){console.error(err)}renderHistory();renderGoalProgress(cart.length?totals().total:0)}
+async function refreshMyOrders(){refreshCreditoExpo();refreshGiftStock();refreshVentaExpo();refreshTarimas();try{orders=await fetchAllRows(()=>myOrdersQuery());const k='datos|'+currentUser.usuario;idbGet(k).then(d=>{if(d){d.pedidos=orders;return idbSet(k,d)}}).catch(()=>{})}catch(err){console.error(err)}renderHistory();renderGoalProgress(cart.length?totals().total:0)}
 async function reloadData(){try{await loadData();await refreshPendingUI();if(dataSavedAt)showNotice('appNotice','Sin conexión: se muestran los datos guardados el '+fmtFecha(dataSavedAt)+'.','warn');else{showNotice('appNotice','Información actualizada.');syncOutbox()}}catch(err){showNotice('appNotice',isNetErr(err)?'Sin conexión: '+err.message:err.message,'err')}}
 function resetOrderScreen(){
   ['clientSearch','destination','deliveryDate','notes','buyerNote','productSearch'].forEach(id=>{if($(id))$(id).value=''});
@@ -1013,6 +1090,7 @@ function autofillClientData(){
   if($('clientAssignmentHint').textContent!==hintText)$('clientAssignmentHint').textContent=hintText;
   setPaymentOptions(client);
   renderClientInsight();
+  if(promoState.promos.some(p=>p.tipo==='TARIMA'))renderGifts(); // la tarima depende del cliente (1 por cliente)
   updateSaveState();
   scheduleDraftSave();
 }
@@ -1104,7 +1182,9 @@ function promoChips(p){
     const pr=promoState.byId[pid];
     list.sort((a,b)=>a.desde-b.desde).filter(t=>Number(t.precio)<Number(p.precio_neto||0)-0.001).forEach(t=>{html+=`<span class="chip esc" title="Precio por volumen${pr&&pr.acumulacion==='COMBINADA'?' · se combinan presentaciones':''}">📉 ${Number(t.desde)}${Number(t.hasta)>=999?'+':'–'+Number(t.hasta)}: ${money(t.precio)}</span>`});
   });
-  [...new Set(promoState.bonByKey[k]||[])].forEach(pid=>{const pr=promoState.byId[pid];if(pr)html+=`<span class="chip bon" title="${escapeHtml(pr.descripcion||'')}">🎁 ${escapeHtml(pr.descripcion||'Bonificación')}</span>`});
+  [...new Set(promoState.bonByKey[k]||[])].forEach(pid=>{const pr=promoState.byId[pid];if(!pr)return;
+    if(pr.tipo==='TARIMA'){const x=(promoState.partsByPromo[pid]||[]).find(x=>pkey(x.sku,x.unidad)===k);html+=`<span class="chip bon" title="Completa la tarima para recibir producto sin cargo">🎁 ${escapeHtml(pr.descripcion||'Tarima')}: ${x?Number(x.cantidad||1):''} ${escapeHtml(p.unidad)}</span>`;return}
+    html+=`<span class="chip bon" title="${escapeHtml(pr.descripcion||'')}">🎁 ${escapeHtml(pr.descripcion||'Bonificación')}</span>`});
   return html;
 }
 function cartQtyOf(id){const i=cart.find(x=>x.id_producto_app===id);return i?Number(i.cantidad||0):0}
@@ -1202,10 +1282,11 @@ async function saveOrder(){
   const assignment=clientAssignment();
   if(!currentUser || !cart.length || !assignment.ready){showNotice('appNotice','Selecciona un cliente con vendedor activo y sucursal antes de guardar.','err');updateSaveState();return}
   autofillClientData();
-  if(navigator.onLine&&netOK&&['proveedor','maestro','ticket'].includes(currentUser.rol)&&Object.keys(giftStock).length&&giftLines().length){
+  const conTarima=giftLines().some(g=>g.promo.tipo==='TARIMA');
+  if(navigator.onLine&&netOK&&giftLines().length&&(conTarima||(['proveedor','maestro','ticket'].includes(currentUser.rol)&&Object.keys(giftStock).length))){
     const antes=JSON.stringify(giftLines().map(g=>[g.sku,g.unidad,g.cantidad]));
-    await Promise.race([refreshGiftStock(),new Promise(r=>setTimeout(r,4000))]);
-    if(JSON.stringify(giftLines().map(g=>[g.sku,g.unidad,g.cantidad]))!==antes){renderCart();showNotice('appNotice','El inventario para regalo cambió mientras capturabas (se regalaron cajas en otro pedido). Revisa los regalos y vuelve a guardar.','err');return}
+    await Promise.race([Promise.all([refreshGiftStock(),refreshTarimas()]),new Promise(r=>setTimeout(r,4000))]);
+    if(JSON.stringify(giftLines().map(g=>[g.sku,g.unidad,g.cantidad]))!==antes){renderCart();showNotice('appNotice','El producto sin cargo cambió mientras capturabas (se agotó el inventario o la tarima, o el cliente ya se llevó su tarima). Revisa la sección de promociones y vuelve a guardar.','err');return}
   }
   if(isMaestro()){await saveOrderMaestro(assignment);return}
   const t=totals();
