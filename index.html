@@ -1904,6 +1904,7 @@ function openReceiptWindow(order, items){
           ${fechaEntrega ? `<p class="muted">Fecha entrega: ${escapeHtml(fechaEntrega)}</p>` : ''}
         </div>
       </div>
+      ${String(order.observaciones||'').trim()?`<div class="box obs"><h2>Observaciones</h2><p style="white-space:pre-wrap;margin:6px 0 0">${escapeHtml(String(order.observaciones).trim())}</p></div>`:''}
 
       <table>
         <thead>
