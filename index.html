@@ -30,7 +30,14 @@
 <body>
 <div id="loginScreen" class="login"><div class="loginHero" role="img" aria-label="EXPO DVT · 10 de octubre"></div><div class="loginSide"><div class="card"><div style="text-align:center;margin-bottom:20px"><h1>Portal de pedidos</h1><p class="muted">Ingresa con el usuario de tu stand</p></div><div id="loginNotice" class="notice err"></div><form id="loginForm"><div class="section"><label>Usuario</label><input id="loginUser" placeholder="Ej. COLGATE / COMPRAS / ADMIN"></div><div class="section"><label>Contraseña</label><input id="loginPass" type="password" placeholder="Contraseña"></div><button class="btn accent" id="loginBtn" style="width:100%" type="submit">Entrar</button><p id="loginOfflineHint" class="muted hidden" style="margin-top:10px;text-align:center">📴 Sin conexión: puedes entrar si ya usaste este usuario en este dispositivo.</p></form></div></div></div>
 <div id="appScreen" class="hidden"><header><div class="wrap top"><div class="brand"><img class="brandLogo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMjk2IDEzMTIiPjxyZWN0IHg9IjMwNCIgeT0iOTgzIiB3aWR0aD0iOTMyIiBoZWlnaHQ9IjIzMiIgZmlsbD0iI0UzMDYxMyIvPjxwYXRoIGZpbGw9IiNFMzA2MTMiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTQxNiwxMTQyQzQxMSwxMTQwIDQwOSwxMTI3IDQwOSwxMDk5QzQwOSwxMDY2IDQwOCwxMDY3IDQzNCwxMDY3TDQ1MiwxMDY3TDQ1NCwxMDY5TDQ1NiwxMDcxTDQ1NiwxMTA1TDQ1NiwxMTM5TDQ1MywxMTQxTDQ1MSwxMTQzTDQzNSwxMTQzQzQyNiwxMTQzIDQxOCwxMTQyIDQxNiwxMTQyWk0xMDI3LDExNDFDMTAyMywxMTM4IDEwMjQsMTEyNiAxMDI5LDExMjRDMTAzMywxMTIyIDEwNjUsMTEyMyAxMDY4LDExMjRDMTA3MiwxMTI4IDEwNzIsMTEzOSAxMDY3LDExNDJDMTA2MiwxMTQ0IDEwMzAsMTE0NCAxMDI3LDExNDFaTTE1NjEsOTM2QzE1NjAsOTM1IDE1NTgsOTMzIDE1NTcsOTMyQzE1NTYsOTI5IDE1NTYsNTI5IDE1NTcsNTI2QzE1NTksNTIxIDE1NjAsNTIxIDE2MjAsNTIxQzE2NTYsNTIxIDE2NzksNTIxIDE2ODQsNTIwQzE3MDEsNTE3IDE3MjAsNTI0IDE3MzEsNTM2QzE3MzQsNTM5IDE3MzYsNTQzIDE3MzYsNTQzQzE3MzYsNTQ0IDE3MzgsNTQ3IDE3NDAsNTUwTDE3NDQsNTU1TDE3NDQsNzI2QzE3NDQsOTEyIDE3NDQsOTA3IDE3NDAsOTExQzE3MzgsOTEzIDE3MzYsOTE3IDE3MzUsOTE5QzE3MzMsOTI0IDE3MjUsOTMyIDE3MjAsOTM0QzE3MTQsOTM4IDE3MDgsOTM4IDE2MzYsOTM4TDE1NjQsOTM4TDE1NjEsOTM2Wk0xODc2LDkzN0MxODczLDkzNSAxODcyLDkzMiAxODcxLDkyMEMxODcxLDkxMCAxODcwLDkwOCAxODY4LDkwNEMxODYzLDg5OCAxODYxLDg4NSAxODYxLDg2OEMxODYxLDg1OCAxODYxLDg1NCAxODU5LDg1MUMxODU5LDg0OSAxODU2LDg0MyAxODU0LDgzN0wxODUxLDgyNkwxODUwLDgwOEMxODQ5LDc4NiAxODQ4LDc4MCAxODQ1LDc3N0MxODQxLDc3MyAxODQxLDc3MCAxODQwLDc1MEMxODM5LDcyOSAxODM4LDcyNSAxODM1LDcxOUMxODMzLDcxNiAxODMzLDcxNCAxODMyLDcwMkMxODMyLDY5NCAxODMxLDY4NiAxODMwLDY4NEMxODI5LDY4MSAxODI4LDY3NyAxODI4LDY3NEMxODI4LDY3MiAxODI3LDY2OCAxODI2LDY2NkMxODI2LDY2NCAxODI1LDY1NyAxODI0LDY1MkMxODIzLDY0NCAxODIzLDY0MiAxODIwLDYzOUwxODE4LDYzNUwxODE3LDYxNkMxODE2LDU5MyAxODE1LDU4OCAxODEyLDU4M0MxODA5LDU4MCAxODA5LDU3OCAxODA5LDU2N0MxODA4LDU2MCAxODA3LDU1MSAxODA2LDU0N0MxODA0LDUzOCAxODA1LDUyNiAxODA3LDUyM0MxODA5LDUyMiAxODEyLDUyMSAxODMxLDUyMUMxODY0LDUyMSAxODYzLDUyMCAxODY0LDU1MEwxODY1LDU3MEwxODY3LDU3NUMxODcxLDU4MSAxODcyLDU5MCAxODczLDYxMkwxODc0LDYyOEwxODc2LDYzMkMxODc4LDYzNSAxODc5LDYzNyAxODc5LDY0OEMxODgwLDY1NSAxODgwLDY2MiAxODgxLDY2NEMxODgyLDY2NiAxODgzLDY3MyAxODgzLDY4MEMxODgzLDY4OCAxODg0LDY5MyAxODg2LDY5NUMxODg3LDY5NyAxODg4LDcwMiAxODg4LDcwOUMxODg4LDcxNiAxODg5LDcyMSAxODkxLDcyNUMxODk0LDczMyAxODk1LDc0MiAxODk2LDc2N0wxODk2LDc4OUwxODk5LDc5MkMxOTAxLDc5NCAxOTAyLDc5OCAxOTAzLDgwMUMxOTA1LDgxMCAxOTA5LDgxMCAxOTE0LDgwMUMxOTE4LDc5NCAxOTE5LDc5MCAxOTIwLDc2MkwxOTIxLDc0MEwxOTI0LDczNEMxOTI4LDcyNyAxOTI5LDcxOSAxOTMwLDY5MkwxOTMxLDY3MkwxOTMzLDY2N0MxOTM1LDY2NCAxOTM2LDY2MCAxOTM2LDY1OEMxOTM2LDY1NiAxOTM3LDY1MSAxOTM5LDY0OEwxOTQxLDY0MEwxOTQxLDYyM0MxOTQxLDYxMCAxOTQxLDYwNSAxOTQzLDYwMkMxOTQzLDU5OSAxOTQ0LDU5NCAxOTQ1LDU4OUMxOTQ1LDU4MiAxOTQ2LDU4MCAxOTQ4LDU3NkwxOTUwLDU3MkwxOTUxLDU1NEMxOTUyLDUyOSAxOTUzLDUyNCAxOTU4LDUyMkMxOTYxLDUyMSAyMDA5LDUyMSAyMDExLDUyMkMyMDEzLDUyMyAyMDE0LDUyNiAyMDExLDUzMEMyMDEwLDUzMyAyMDA5LDUzNyAyMDA5LDU0NkMyMDA5LDU1MiAyMDA4LDU2NCAyMDA3LDU3MkwyMDA2LDU4NkwyMDAzLDU5MUMyMDAxLDU5NCAyMDAwLDU5NyAyMDAwLDU5OUMyMDAwLDYwMiAxOTk5LDYwNiAxOTk5LDYwOUMxOTk4LDYxMiAxOTk3LDYyMSAxOTk3LDYyOEMxOTk2LDYzOCAxOTk2LDY0MyAxOTk1LDY0NUMxOTk0LDY0NyAxOTkyLDY1MSAxOTkxLDY1NUMxOTkxLDY1OSAxOTg5LDY2MyAxOTg4LDY2NUMxOTg2LDY2OSAxOTg2LDY3MSAxOTg2LDY4MkMxOTg2LDY4OSAxOTg1LDY5OCAxOTg0LDcwMkMxOTg0LDcwNyAxOTgzLDcxMiAxOTgzLDcxNEMxOTgzLDcxNSAxOTgyLDcxOSAxOTgwLDcyMkwxOTc3LDcyNkwxOTc2LDc0MkMxOTc1LDc1OSAxOTc0LDc2OSAxOTcwLDc3NUMxOTY5LDc3OCAxOTY4LDc4MiAxOTY4LDc5NkMxOTY4LDgxMCAxOTY3LDgxMyAxOTY1LDgxNkMxOTYyLDgyMyAxOTU5LDg0NCAxOTU5LDg2MUwxOTU5LDg3NUwxOTU2LDg4MEMxOTUzLDg4NCAxOTUyLDg4NiAxOTUxLDg5NkMxOTUwLDkwMiAxOTQ5LDkwOSAxOTQ3LDkxM0MxOTQ2LDkxNiAxOTQ0LDkyMyAxOTQ0LDkyN0MxOTQzLDkzMyAxOTQzLDkzNSAxOTQxLDkzNkwxOTM5LDkzOEwxOTA5LDkzOEMxODkxLDkzOCAxODc4LDkzNyAxODc2LDkzN1pNMjEzOCw5MzdDMjEzMyw5MzQgMjEzMyw5NDMgMjEzMyw3NjBDMjEzMyw2NTMgMjEzMyw1ODggMjEzMiw1ODdDMjEzMiw1ODYgMjEyOCw1ODMgMjEyNCw1ODFMMjExOCw1NzZMMjA5Niw1NzZDMjA2Niw1NzUgMjA2Nyw1NzYgMjA2Nyw1NDlMMjA2Nyw1MzJMMjA3MCw1MjdDMjA3Miw1MjQgMjA3NSw1MjIgMjA3Niw1MjJDMjA3Niw1MjEgMjExNSw1MjEgMjE2MCw1MjFMMjI0NCw1MjFMMjI0Niw1MjNMMjI0OCw1MjVMMjI0OCw1NDhMMjI0OCw1NzFMMjI0Miw1NzdDMjIzNSw1ODQgMjIzMCw1ODQgMjIyNCw1NzlDMjIyMiw1NzcgMjIyMSw1NzYgMjIxNCw1NzZDMjIwNCw1NzYgMjIwMiw1NzcgMjE5NCw1ODRMMjE4OSw1ODlMMjE4OSw3NjBDMjE4OSw5NDEgMjE4OSw5MzQgMjE4NCw5MzZDMjE4MCw5MzggMjE0Miw5MzkgMjEzOCw5MzdaTTE2NzgsODc5QzE2ODEsODc3IDE2ODUsODczIDE2ODcsODY5QzE2ODgsODY2IDE2ODgsNTk1IDE2ODcsNTkwQzE2ODYsNTg2IDE2ODAsNTc4IDE2NzcsNTc3QzE2NzIsNTc1IDE2NjEsNTc2IDE2NTYsNTc5QzE2NTAsNTgzIDE2NDgsNTgzIDE2NDEsNTgyQzE2MzQsNTgxIDE2MjEsNTgzIDE2MTgsNTg2TDE2MTYsNTg3TDE2MTYsNzMxTDE2MTYsODc1TDE2MTgsODc4TDE2MjEsODgwTDE2NDgsODgwQzE2NjksODgwIDE2NzYsODgwIDE2NzgsODc5WiIvPjxwYXRoIGZpbGw9IiNGRkZGRkYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTIxOTMsMTI1NUMyMTkyLDEyNTUgMjE3OSwxMjU0IDIxNjMsMTI1NEwyMTM0LDEyNTNMMjEzMCwxMjUxTDIxMjQsMTI0OEwyMTAwLDEyNDdDMjA4NiwxMjQ3IDIwNzMsMTI0NiAyMDcwLDEyNDVDMjA2NywxMjQ1IDIwNTUsMTI0NCAyMDQ0LDEyNDNDMjAzMCwxMjQzIDIwMjEsMTI0MiAyMDE4LDEyNDFDMjAxNSwxMjQwIDIwMDYsMTI0MCAxOTg5LDEyMzlDMTk2OCwxMjM4IDE5NjQsMTIzOCAxOTYwLDEyMzZDMTk1NiwxMjM1IDE5NDEsMTIzNCAxODc2LDEyMzFMMTg0OCwxMjMwTDE4NDEsMTIyN0wxODM1LDEyMjRMMTgxOCwxMjI0QzE4MDksMTIyNCAxNzk1LDEyMjQgMTc4NywxMjIzQzE3NzksMTIyMiAxNzY0LDEyMjIgMTc1MywxMjIxQzE3MzksMTIyMCAxNzMyLDEyMjAgMTcyOCwxMjE4QzE3MjMsMTIxNyAxNzE3LDEyMTYgMTY5NiwxMjE2QzE2NzUsMTIxNSAxNjY4LDEyMTQgMTY2NCwxMjEzQzE2NTksMTIxMiAxNjU0LDEyMTEgMTYzMiwxMjExQzE2MTcsMTIxMCAxNjA0LDEyMTAgMTYwMiwxMjA5QzE2MDAsMTIwOCAxNTg2LDEyMDggMTU3MSwxMjA3TDE1NDMsMTIwNkwxNTM4LDEyMDRMMTUzMiwxMjAxTDE1MTQsMTIwMUMxNTA1LDEyMDEgMTQ5MiwxMjAwIDE0ODYsMTIwMEMxNDgwLDExOTkgMTQ2NCwxMTk5IDE0NDksMTE5OEwxNDIyLDExOTdMMTQxOCwxMTk1QzE0MTQsMTE5MyAxNDExLDExOTIgMTQwNiwxMTkyQzEzODksMTE5MiAxMzg3LDExOTAgMTM4NywxMTc2QzEzODcsMTE3MCAxMzg2LDExNjIgMTM4NiwxMTU4QzEzODUsMTE1NCAxMzg1LDExMzcgMTM4NCwxMTIxTDEzODQsMTA5MUwxMzgxLDEwODdMMTM3OCwxMDgyTDEzNzcsMTA1NkMxMzc2LDEwNDIgMTM3NiwxMDI3IDEzNzUsMTAyMkMxMzc0LDEwMTcgMTM3NCwxMDAzIDEzNzQsOTkxTDEzNzQsOTY4TDEzNzEsOTYyTDEzNjksOTU0TDEzNjgsOTMxQzEzNjgsOTEyIDEzNjcsOTA2IDEzNjYsOTAwQzEzNjQsODkzIDEzNjQsODg3IDEzNjMsODY5QzEzNjMsODU3IDEzNjIsODQ0IDEzNjIsODQwQzEzNjEsODM3IDEzNjAsODIyIDEzNjAsODA4TDEzNTksNzgyTDEzNTcsNzc2TDEzNTQsNzcwTDEzNTMsNzQ0QzEzNTIsNzI5IDEzNTEsNzA2IDEzNTEsNjkyTDEzNTAsNjY4TDEzNDgsNjYzTDEzNDYsNjU4TDEzNDUsNjM1QzEzNDUsNjIyIDEzNDQsNjA5IDEzNDMsNjA3QzEzNDMsNjA1IDEzNDIsNTkyIDEzNDEsNTgwQzEzNDAsNTY1IDEzNDAsNTU2IDEzMzksNTU0QzEzMzgsNTUxIDEzMzcsNTQyIDEzMzcsNTI0TDEzMzYsNDk5TDEzMzQsNDk0TDEzMzEsNDg4TDEzMzEsNDY1QzEzMzAsNDUyIDEzMjksNDM5IDEzMjksNDM2QzEzMjksNDM0IDEzMjgsNDI0IDEzMjgsNDE2QzEzMjgsMzkwIDEzMjQsMzg0IDEzMTIsMzg5QzEzMDksMzkwIDEzMDMsMzkyIDEyOTksMzkyQzEyOTQsMzkzIDEyOTEsMzk0IDEyODgsMzk2QzEyODUsMzk4IDEyODIsMzk5IDEyODAsNDAwQzEyNzQsNDAwIDEyNTAsNDA4IDEyNDQsNDExQzEyNDIsNDEzIDEyMzcsNDE0IDEyMzQsNDE1QzEyMzAsNDE2IDEyMjYsNDE3IDEyMjMsNDE5QzEyMjAsNDIxIDEyMTUsNDIzIDEyMDksNDI0QzEyMDMsNDI1IDExOTcsNDI3IDExOTQsNDI4QzExOTEsNDMwIDExODcsNDMxIDExODQsNDMyQzExODIsNDMzIDExNzcsNDM0IDExNzQsNDM2QzExNzEsNDM3IDExNjUsNDM5IDExNjEsNDQwQzExNTYsNDQxIDExNTMsNDQyIDExNTEsNDQ0QzExNDksNDQ1IDExNDcsNDQ2IDExNDYsNDQ2QzExMzIsNDQ5IDExMjcsNDUxIDExMjMsNDUzQzExMTMsNDU3IDEwODAsNDU3IDEwNjksNDUyTDEwNjQsNDUwTDEwMzQsNDQ5QzEwMTksNDQ4IDk5Myw0NDggOTc4LDQ0N0w5NTEsNDQ2TDk0Niw0NDNMOTQwLDQ0MUw5MTIsNDQwQzg5NSw0NDAgODgyLDQzOSA4ODAsNDM4Qzg3OCw0MzcgODY1LDQzNyA4NTIsNDM2QzgzMyw0MzUgODI1LDQzNSA4MjEsNDMzQzgxNyw0MzIgODEwLDQzMiA3OTAsNDMxTDc2NCw0MzBMNzU5LDQyOEw3NTUsNDI2TDcyOSw0MjVDNzE0LDQyNSA3MDAsNDI0IDY5OCw0MjRDNjk2LDQyNCA2ODMsNDIzIDY3MCw0MjJMNjQ3LDQyMkw2NDEsNDE5TDYzNiw0MTZMNjIyLDQxNkM2MTQsNDE2IDYwMyw0MTYgNTk2LDQxNUM1OTAsNDE1IDU3Niw0MTQgNTY0LDQxM0M1NDgsNDEyIDU0MSw0MTEgNTM2LDQxMEM1MzIsNDA5IDUyNiw0MDggNTA4LDQwN0M0OTIsNDA3IDQ4Myw0MDYgNDc4LDQwNUM0NzIsNDA0IDQ2NSw0MDMgNDQ2LDQwM0M0MzMsNDAyIDQyMSw0MDIgNDE4LDQwMUM0MTYsNDAwIDQwNyw0MDAgMzk4LDQwMEMzNjcsMzk4IDM2MiwzOTggMzU2LDM5NUMzNTAsMzkzIDM0OCwzOTMgMzM3LDM5M0MzMjksMzkzIDMxNiwzOTMgMzA2LDM5MkMyOTYsMzkxIDI3OCwzOTEgMjY0LDM5MEwyNDAsMzg5TDIzNCwzODdMMjI4LDM4NEwyMDIsMzg0QzE4NiwzODMgMTc1LDM4MyAxNzMsMzgyQzE3MSwzODEgMTU5LDM4MCAxNDQsMzgwQzEyMiwzNzkgMTE4LDM3OSAxMTIsMzc3QzEwOCwzNzYgMTAzLDM3NSA5NywzNzVDODgsMzc1IDc4LDM3MyA3OCwzNzJDNzgsMzY5IDg1LDM2OSAyMTQsMzY4TDM0MiwzNjhMMzQ2LDM2NUwzNTAsMzYzTDM4MywzNjJDNDAxLDM2MSA0NTYsMzYxIDUwNCwzNjFDNTU1LDM2MSA1OTcsMzYwIDYwMSwzNjBDNjA1LDM1OSA2NjMsMzU5IDczMywzNThMODU4LDM1OEw4NjMsMzU2TDg2OCwzNTRMOTM2LDM1M0M5NzMsMzUyIDEwMjksMzUyIDEwNjAsMzUyQzEwOTksMzUyIDExMTgsMzUyIDExMjAsMzUxQzExMjIsMzUwIDExMjksMzQ5IDExMzYsMzQ5QzExNDgsMzQ4IDExNTcsMzQ2IDExNjAsMzQyQzExNjIsMzM5IDExNzEsMzMyIDExNzcsMzI5QzExNzksMzI4IDExODQsMzI0IDExODgsMzIxQzExOTEsMzE4IDEyMDAsMzEyIDEyMDYsMzA4QzEyMTIsMzAzIDEyMTgsMjk5IDEyMjAsMjk5QzEyMjEsMjk4IDEyMjUsMjk1IDEyMjgsMjkzQzEyMzIsMjkxIDEyMzcsMjg3IDEyMzksMjg1QzEyNDEsMjg0IDEyNDcsMjc5IDEyNTIsMjc2QzEyNjcsMjY0IDEyNjgsMjYxIDEyNTYsMjQzQzEyNTMsMjM4IDEyNTAsMjMzIDEyNDksMjMwQzEyNDgsMjI4IDEyNDYsMjIzIDEyNDQsMjIwQzEyMzUsMjAwIDEyMzUsMTQ4IDEyNDUsMTI5QzEyNDcsMTI1IDEyNDksMTIxIDEyNDksMTIwQzEyNDksMTE5IDEyNTEsMTE2IDEyNTMsMTEzQzEyNTUsMTEwIDEyNTcsMTA3IDEyNTcsMTA3QzEyNTcsMTA1IDEyODQsNzggMTI5MCw3NEMxMjkzLDcyIDEyOTcsNjkgMTI5OSw2OEMxMzAwLDY2IDEzMDQsNjQgMTMwOCw2NEMxMzEyLDYzIDEzMTcsNjEgMTMxOSw2MEMxMzIyLDU4IDEzMjYsNTcgMTMzMCw1NkMxMzMzLDU2IDEzMzksNTUgMTM0Myw1NEMxMzU0LDUxIDEzNzAsNTEgMTM4MCw1NEMxMzgzLDU1IDEzODksNTYgMTM5Miw1N0MxMzk1LDU3IDEzOTksNTggMTQwMSw2MEMxNDAzLDYxIDE0MDcsNjMgMTQxMCw2NEMxNDEzLDY1IDE0MTYsNjcgMTQxOCw2OEMxNDE5LDcwIDE0MjMsNzIgMTQyNiw3NUMxNDMwLDc3IDE0MzQsNzkgMTQzNiw4MUMxNDQ1LDg3IDE0NjAsMTA4IDE0NjQsMTE5QzE0NjQsMTIyIDE0NjYsMTI2IDE0NjgsMTI4QzE0NzAsMTMxIDE0NzIsMTM1IDE0NzMsMTQyQzE0ODAsMTc1IDE0ODAsMTgyIDE0NzcsMTkyQzE0NzYsMTk2IDE0NzUsMjAxIDE0NzUsMjA1QzE0NzQsMjE0IDE0NjksMjI3IDE0NjQsMjM2QzE0NjIsMjQwIDE0NTgsMjQ1IDE0NTcsMjQ4QzE0NTAsMjU5IDE0MzQsMjc0IDE0MjIsMjc5QzE0MjAsMjgwIDE0MTYsMjgyIDE0MTQsMjg0QzE0MTIsMjg2IDE0MDksMjg3IDE0MDgsMjg4QzE0MDEsMjkwIDEzOTksMjk2IDE0MDMsMzA0QzE0MDUsMzA5IDE0MDYsMzE0IDE0MDgsMzQ4TDE0MDksMzY0TDE0MTIsMzY5QzE0MTQsMzczIDE0MTQsMzc1IDE0MTUsMzg1QzE0MTYsMzkyIDE0MTYsNDAwIDE0MTcsNDAzQzE0MTgsNDA2IDE0MTgsNDEyIDE0MTgsNDE2QzE0MTgsNDIyIDE0MTksNDI2IDE0MjEsNDMxQzE0MjIsNDM2IDE0MjMsNDQxIDE0MjMsNDQ1QzE0MjMsNDQ5IDE0MjQsNDU2IDE0MjUsNDYwQzE0MjYsNDYzIDE0MjcsNDcxIDE0MjgsNDc3QzE0MjksNDgzIDE0MjksNDkwIDE0MzAsNDkyQzE0MzEsNDk1IDE0MzEsNTAzIDE0MzIsNTExTDE0MzIsNTI0TDE0MzUsNTI5TDE0MzgsNTMzTDE0MzksNTQ3QzE0NDAsNTU1IDE0NDAsNTY3IDE0NDEsNTc0QzE0NDIsNTg1IDE0NDIsNTg4IDE0NDQsNTkzQzE0NDcsNTk4IDE0NDcsNjAwIDE0NDgsNjEzQzE0NDgsNjI0IDE0NDksNjMwIDE0NTAsNjM0QzE0NTEsNjM3IDE0NTIsNjQyIDE0NTIsNjQ3QzE0NTIsNjUyIDE0NTMsNjU4IDE0NTQsNjYyQzE0NTQsNjY1IDE0NTYsNjc0IDE0NTYsNjgyQzE0NTcsNjk2IDE0NTcsNjk4IDE0NTksNzAzQzE0NjIsNzA5IDE0NjIsNzEzIDE0NjUsNzU0QzE0NjYsNzY0IDE0NjYsNzY3IDE0NjgsNzcwQzE0NzAsNzczIDE0NzAsNzc2IDE0NzEsNzg3QzE0NzIsNzkzIDE0NzMsODAzIDE0NzMsODA4QzE0NzQsODEyIDE0NzUsODE5IDE0NzUsODIyQzE0NzUsODI1IDE0NzYsODMwIDE0NzcsODMzQzE0NzcsODM2IDE0NzksODQzIDE0NzksODUwQzE0ODAsODU3IDE0ODEsODYyIDE0ODIsODY1QzE0ODMsODY4IDE0ODQsODczIDE0ODQsODc5QzE0ODUsODgzIDE0ODYsODkyIDE0ODcsODk3QzE0ODcsOTAyIDE0ODgsOTEwIDE0ODgsOTE1QzE0ODgsOTIzIDE0ODgsOTI0IDE0OTEsOTI5QzE0OTQsOTM1IDE0OTQsOTM3IDE0OTcsOTc0QzE0OTgsOTg0IDE0OTksOTkxIDE1MDAsOTk2QzE1MDIsMTAwMSAxNTAzLDEwMDYgMTUwMywxMDE1QzE1MDQsMTAyMyAxNTA1LDEwMjggMTUwNiwxMDMzQzE1MDcsMTAzNyAxNTA4LDEwNDMgMTUwOSwxMDUyQzE1MTAsMTA2NiAxNTEyLDEwNzMgMTUxNiwxMDc1QzE1MjEsMTA3NyAxNTMwLDEwODAgMTUzNiwxMDgxQzE1MzksMTA4MSAxNTQzLDEwODMgMTU0NiwxMDg0QzE1NDgsMTA4NSAxNTUzLDEwODYgMTU1NywxMDg3QzE1NzMsMTA4OSAxNTc4LDEwOTAgMTU4MywxMDkzQzE1ODUsMTA5NSAxNTkwLDEwOTYgMTU5MiwxMDk3QzE2MDIsMTA5OCAxNjExLDExMDAgMTYxNSwxMTAyQzE2MTcsMTEwMyAxNjIxLDExMDQgMTYyNCwxMTA1QzE2MjYsMTEwNSAxNjMyLDExMDYgMTYzNiwxMTA4QzE2NDEsMTEwOSAxNjUwLDExMTEgMTY1NiwxMTEyQzE2NjUsMTExMyAxNjY5LDExMTUgMTY3MiwxMTE3QzE2NzUsMTExOSAxNjc4LDExMTkgMTY4NiwxMTIwQzE3MDAsMTEyMSAxNzA2LDExMjMgMTcxMCwxMTI1QzE3MTEsMTEyNiAxNzE2LDExMjggMTcxOSwxMTI4QzE3MjMsMTEyOSAxNzI4LDExMzAgMTczMCwxMTMxQzE3MzksMTEzMyAxNzUxLDExMzYgMTc1OCwxMTM3QzE3NjIsMTEzNyAxNzY2LDExMzggMTc2OSwxMTQwQzE3NzMsMTE0MSAxNzc4LDExNDMgMTc4OCwxMTQ0QzE3OTUsMTE0NSAxODAyLDExNDcgMTgwNCwxMTQ3QzE4MDUsMTE0OCAxODA3LDExNDkgMTgwOSwxMTUwQzE4MTEsMTE1MSAxODE1LDExNTIgMTgxOSwxMTUzQzE4MjQsMTE1NCAxODI5LDExNTUgMTgzMywxMTU2QzE4MzYsMTE1NyAxODQxLDExNTkgMTg0NCwxMTYwQzE4NDgsMTE2MCAxODU0LDExNjIgMTg1OCwxMTYzQzE4NjEsMTE2NCAxODcwLDExNjYgMTg3OCwxMTY3QzE4ODgsMTE2OSAxODkyLDExNzAgMTg5NSwxMTcyQzE4OTgsMTE3NSAxOTAxLDExNzUgMTkwOCwxMTc2QzE5MjEsMTE3NyAxOTI4LDExNzkgMTkzNCwxMTgxQzE5MzcsMTE4MyAxOTQyLDExODQgMTk0NCwxMTg0QzE5NDYsMTE4NSAxOTUxLDExODYgMTk1NCwxMTg3QzE5NjAsMTE4OSAxOTczLDExOTIgMTk4MiwxMTkzQzE5ODYsMTE5MyAxOTg5LDExOTQgMTk5MiwxMTk2QzE5OTUsMTE5OCAxOTk4LDExOTkgMjAwOSwxMjAwQzIwMTksMTIwMiAyMDI0LDEyMDMgMjAyOSwxMjA1QzIwMzMsMTIwNyAyMDM4LDEyMDggMjA0MywxMjA5QzIwNTQsMTIxMCAyMDcyLDEyMTUgMjA5MCwxMjIxQzIwOTIsMTIyMiAyMDk5LDEyMjQgMjEwNCwxMjI1QzIxMTAsMTIyNiAyMTE3LDEyMjcgMjExOSwxMjI5QzIxMjQsMTIzMSAyMTM4LDEyMzQgMjE0OCwxMjM2QzIxNTIsMTIzNiAyMTU2LDEyMzcgMjE1OCwxMjM4QzIxNjAsMTIzOSAyMTY0LDEyNDAgMjE2NywxMjQxQzIxNjksMTI0MSAyMTc0LDEyNDMgMjE3NywxMjQ0QzIxODEsMTI0NiAyMTg0LDEyNDcgMjE4NywxMjQ3QzIyMDAsMTI0NyAyMjEwLDEyNTEgMjIwNSwxMjU1QzIyMDQsMTI1NiAyMTk0LDEyNTcgMjE5MywxMjU1Wk0zODIsMTE3NEMzODEsMTE3MyAzNzksMTE3MSAzNzgsMTE3MEMzNzcsMTE2NyAzNzgsMTA0MyAzNzksMTAzOUMzODEsMTAzNCAzODIsMTAzNCA0MzUsMTAzNEw0ODQsMTAzNEw0ODYsMTAzNkM0OTAsMTA0MCA0OTAsMTA0MiA0OTAsMTEwOUw0OTAsMTE3MEw0ODcsMTE3M0w0ODQsMTE3NUw0MzQsMTE3NUMzOTYsMTE3NSAzODQsMTE3NSAzODIsMTE3NFpNNTE5LDExNzRDNTE0LDExNzIgNTE1LDExNzQgNTE0LDExMDdDNTE0LDEwNjUgNTE0LDEwNDQgNTE1LDEwNDFDNTE3LDEwMzQgNTE2LDEwMzQgNTcxLDEwMzRMNjIxLDEwMzRMNjIzLDEwMzZDNjI3LDEwNDEgNjI3LDEwNTggNjIzLDEwNjJMNjIxLDEwNjRMNTg5LDEwNjRDNTQyLDEwNjQgNTQ2LDEwNjEgNTQ1LDEwOThDNTQ0LDExMTIgNTQ0LDExMjYgNTQzLDExMzBDNTQyLDExNDQgNTQyLDExNDQgNTg1LDExNDVMNjIxLDExNDZMNjIzLDExNDhMNjI2LDExNTBMNjI2LDExNjBMNjI2LDExNzBMNjIzLDExNzNMNjIwLDExNzVMNTcxLDExNzVDNTQ0LDExNzUgNTIxLDExNzUgNTE5LDExNzRaTTY5NywxMTczTDY5NCwxMTcwTDY5NCwxMTIzTDY5NCwxMDc2TDY5MSwxMDcyQzY4NywxMDY1IDY4NiwxMDY1IDY3MCwxMDY0TDY1NSwxMDY0TDY1MywxMDYxQzY0OCwxMDU2IDY0OSwxMDQ1IDY1NSwxMDM4TDY2MCwxMDM0TDcwOCwxMDM0TDc1NywxMDM0TDc1OSwxMDM3TDc2MiwxMDM5TDc2MiwxMDQ5TDc2MiwxMDU5TDc1OSwxMDYyTDc1NiwxMDY0TDc0NSwxMDY0QzczMiwxMDY0IDcyOSwxMDY1IDcyNCwxMDcxTDcyMCwxMDc1TDcyMCwxMDgzQzcyMCwxMDg5IDcyMSwxMDkzIDcyMiwxMDk2QzcyNSwxMTAzIDcyNSwxMTExIDcyMiwxMTE4QzcxOSwxMTI1IDcxOSwxMTM2IDcyMiwxMTQzQzcyNCwxMTUwIDcyNCwxMTU0IDcyMiwxMTYwQzcyMSwxMTYyIDcyMCwxMTY2IDcyMCwxMTY4QzcxOSwxMTc0IDcxNiwxMTc1IDcwNywxMTc1QzcwMSwxMTc1IDcwMCwxMTc1IDY5NywxMTczWk04NjYsMTE3M0w4NjQsMTE3MUw4NjMsMTE1M0M4NjMsMTE0MyA4NjIsMTEzNCA4NjEsMTEzM0M4NjAsMTEyOSA4NjAsMTEyNCA4NjIsMTExOUM4NjMsMTExNiA4NjMsMTExMyA4NjMsMTExMEM4NjIsMTEwOCA4NjIsMTEwNCA4NjEsMTEwMkw4NjEsMTA5N0w4NjQsMTA5M0w4NjgsMTA5MEw5MDEsMTA4OUM5NDEsMTA4OSA5NDMsMTA4OSA5NDMsMTA3OUM5NDMsMTA2NCA5NDMsMTA2NSA5MDIsMTA2NEw4NjcsMTA2NEw4NjUsMTA2MkM4NjIsMTA1OCA4NjIsMTA0MCA4NjYsMTAzNkw4NjgsMTAzNEw5MTYsMTAzNEw5NjQsMTAzNEw5NjcsMTAzN0M5NjgsMTAzOCA5NzEsMTA0MSA5NzIsMTA0M0w5NzQsMTA0OEw5NzQsMTA4MEw5NzQsMTExM0w5NzIsMTExNUM5NjksMTEyMCA5NjcsMTEyMCA5MzAsMTEyMUM4OTIsMTEyMSA4OTIsMTEyMSA4ODksMTEyNUM4ODYsMTEzMSA4ODgsMTE0MiA4OTMsMTE0NEM4OTQsMTE0NCA5MTAsMTE0NSA5MjksMTE0NUw5NjQsMTE0Nkw5NjYsMTE0OEM5NzMsMTE1MyA5NzUsMTE2MSA5NzMsMTE2OEM5NzEsMTE3NSA5NzIsMTE3NSA5MTcsMTE3NUw4NjgsMTE3NUw4NjYsMTE3M1pNOTk1LDExNzNMOTkyLDExNzBMOTkyLDExMTBDOTkyLDEwNDYgOTkyLDEwMzkgOTk1LDEwMzZMOTk3LDEwMzRMMTA0NiwxMDM0QzExMDYsMTAzNCAxMTAzLDEwMzMgMTEwMywxMDUwQzExMDQsMTA2NSAxMTA1LDEwNjQgMTA2NCwxMDY0QzEwMjcsMTA2NCAxMDI3LDEwNjQgMTAyNCwxMDcwQzEwMTksMTA3OSAxMDIzLDEwODkgMTAzMSwxMDg5QzEwOTQsMTA4OSAxMDk5LDEwODkgMTEwMiwxMDk2QzExMDQsMTEwMCAxMTA0LDExNjUgMTEwMywxMTcwQzExMDEsMTE3NSAxMTAwLDExNzUgMTA0OCwxMTc1TDk5OCwxMTc1TDk5NSwxMTczWk00NTcsMTE0Mkw0NTksMTEzOUw0NTksMTEwNkM0NTksMTA2MiA0NjEsMTA2NCA0MzQsMTA2NEw0MTUsMTA2NEw0MTIsMTA2N0M0MTEsMTA2OCA0MDksMTA3MCA0MDgsMTA3MkM0MDcsMTA3NyA0MDcsMTExOSA0MDgsMTEyOUM0MTEsMTE0NSA0MTEsMTE0NSA0MzYsMTE0NUw0NTQsMTE0NEw0NTcsMTE0MlpNMTA2OSwxMTQzQzEwNzQsMTEzOSAxMDc0LDExMjcgMTA3MCwxMTIzTDEwNjgsMTEyMUwxMDQ5LDExMjFDMTAyMywxMTIxIDEwMjIsMTEyMiAxMDIyLDExMzRDMTAyMiwxMTM4IDEwMjIsMTE0MCAxMDI1LDExNDJMMTAyOCwxMTQ1TDEwNDcsMTE0NUwxMDY3LDExNDVMMTA2OSwxMTQzWk02ODUsOTQzQzY4Myw5NDIgNjgyLDk0MSA2ODEsOTM4QzY4MCw5MzMgNjc4LDkzMCA2NzUsOTI0QzY3NCw5MjIgNjczLDkxOSA2NzMsOTE2QzY3Myw5MDcgNjcwLDg5MSA2NjgsODg3QzY2Niw4ODUgNjY1LDg4MSA2NjUsODc4QzY2NCw4NzQgNjYyLDg2MyA2NTksODUyQzY1OCw4NDggNjU0LDgzNCA2NTIsODI4QzY1MSw4MjYgNjUwLDgyMCA2NDksODE1QzY0Nyw4MDQgNjQ2LDgwMSA2NDIsODAxQzYzNyw4MDEgNjM0LDgwNiA2MzIsODE5QzYzMSw4MjQgNjMwLDgzMCA2MjgsODMyQzYyNyw4MzUgNjI2LDg0MCA2MjUsODQ3QzYyMyw4NjMgNjIyLDg2OCA2MjAsODcxQzYxNyw4NzUgNjE3LDg3NCA2MTQsODkxQzYxMyw4OTkgNjEyLDkwNSA2MTAsOTA5QzYwOSw5MTIgNjA4LDkxNiA2MDcsOTE5QzYwNyw5MjIgNjA2LDkyNyA2MDQsOTMwQzYwMyw5MzIgNjAyLDkzNSA2MDIsOTM2QzYwMiw5MzcgNjAxLDkzOSA2MDAsOTQxTDU5Nyw5NDNMNTY5LDk0M0M1MzUsOTQzIDUzNiw5NDMgNTM3LDkzNEM1MzcsOTI3IDUzOCw5MjQgNTQyLDkyMEM1NDMsOTE4IDU0NCw5MTYgNTQ0LDkxNEM1NDQsOTEwIDU0Nyw4OTQgNTUwLDg4NkM1NTEsODgxIDU1Miw4NzUgNTUzLDg3MkM1NTMsODcwIDU1NCw4NjYgNTU1LDg2NEM1NTcsODYxIDU1OCw4NTUgNTYwLDg0NkM1NjIsODM1IDU2Myw4MzAgNTY1LDgyNkM1NjcsODIzIDU2OCw4MTkgNTY4LDgxN0M1NjgsODE0IDU3Miw3OTkgNTc1LDc5MUM1NzYsNzg4IDU3Nyw3ODQgNTc3LDc4M0M1NzcsNzgxIDU3OCw3NzggNTc5LDc3NkM1ODEsNzcxIDU4NCw3NjAgNTg1LDc1MkM1ODUsNzQ5IDU4Nyw3NDUgNTg4LDc0M0M1OTAsNzQxIDU5MSw3MzcgNTkxLDczNEM1OTIsNzMyIDU5Miw3MjUgNTkzLDcyMEM1OTUsNzA4IDU5Myw2OTYgNTg5LDY4OEM1ODcsNjg1IDU4NSw2NzggNTg0LDY3MkM1ODIsNjY2IDU3OSw2NTcgNTc2LDY1MUM1NzQsNjQ1IDU3MCw2MzcgNTY5LDYzMkM1NjgsNjI3IDU2Niw2MjAgNTY0LDYxN0M1NjIsNjE0IDU2MCw2MDggNTU5LDYwNEM1NTksNTk5IDU1Nyw1OTQgNTU1LDU5MkM1NTQsNTg5IDU1Myw1ODUgNTUyLDU4M0M1NTIsNTgxIDU1MSw1NzYgNTQ5LDU3NEM1NDgsNTcxIDU0Niw1NjQgNTQ1LDU1OEM1NDQsNTUyIDU0Myw1NDYgNTQyLDU0NUM1NDEsNTQ0IDUzOSw1NDIgNTM4LDU0MEM1MzgsNTM5IDUzNyw1MzUgNTM2LDUzMEw1MzYsNTIyTDUzOSw1MjBMNTQxLDUxOEw1NjksNTE4TDU5Niw1MThMNTk5LDUyMUM2MDIsNTI0IDYwNSw1MzEgNjA3LDUzNkM2MDcsNTM4IDYwOSw1NDMgNjEwLDU0NkM2MTIsNTUwIDYxNCw1NTggNjE1LDU2M0M2MTYsNTcwIDYxNyw1NzQgNjE5LDU3NkM2MjIsNTgwIDYyMyw1ODIgNjI0LDU5MkM2MjUsNTk3IDYyNiw2MDMgNjI3LDYwNkM2MjgsNjA4IDYzMCw2MTMgNjMxLDYxN0M2MzQsNjI4IDYzNyw2MzIgNjQyLDYzMkM2NDYsNjMyIDY0OCw2MjkgNjQ5LDYyMUM2NDksNjE3IDY1MSw2MTIgNjUzLDYwOEM2NTQsNjA1IDY1Niw2MDAgNjU3LDU5NkM2NTgsNTkzIDY2MCw1ODcgNjYxLDU4NEM2NjIsNTgwIDY2NCw1NzMgNjY1LDU3MEM2NjUsNTY2IDY2Nyw1NjEgNjY4LDU2MEM2NjksNTU4IDY3MSw1NTQgNjcyLDU0OEM2NzMsNTM3IDY3NCw1MzUgNjc4LDUyOEM2ODAsNTI0IDY4Miw1MjEgNjgyLDUyMUM2ODIsNTE4IDczNiw1MTYgNzQzLDUxOUM3NDgsNTIxIDc0OSw1MjQgNzQ3LDUyOEM3NDYsNTMwIDc0NSw1MzMgNzQ0LDUzNkM3NDMsNTM5IDc0Miw1NDMgNzQxLDU0NUM3NDAsNTQ3IDczOCw1NTIgNzM3LDU1N0M3MzYsNTYyIDczMyw1NjkgNzMyLDU3M0M3MzAsNTc3IDcyOCw1ODMgNzI3LDU4N0M3MjYsNTkyIDcyNCw1OTcgNzIzLDU5OUM3MjEsNjAxIDcyMCw2MDUgNzE5LDYwOEM3MTksNjExIDcxNyw2MTYgNzE1LDYxOUM3MTQsNjIyIDcxMiw2MjcgNzExLDYzMUM3MTEsNjM1IDcwOSw2NDAgNzA4LDY0MkM3MDcsNjQ0IDcwNSw2NTAgNzA0LDY1NkM3MDMsNjYxIDcwMSw2NjcgNjk5LDY3MEM2OTgsNjcyIDY5Niw2NzggNjk1LDY4MkM2OTQsNjg2IDY5Miw2OTIgNjkwLDY5NkM2ODcsNzA1IDY4Niw3MjIgNjkwLDcyOUM2OTIsNzMzIDY5Niw3NDkgNjk2LDc1NEM2OTYsNzU1IDY5Nyw3NTkgNjk5LDc2MkM3MDIsNzY3IDcwNSw3ODAgNzA1LDc5MEM3MDUsNzkyIDcwNiw3OTYgNzA4LDc5OUM3MTAsODAyIDcxMSw4MDYgNzExLDgwN0M3MTEsODA5IDcxMyw4MTcgNzE3LDgzMEM3MTgsODM0IDcxOSw4MzggNzE5LDg0MUM3MjAsODQzIDcyMSw4NDcgNzIyLDg1MEM3MjQsODU0IDcyNyw4NjMgNzI4LDg3M0M3MjksODc2IDczMCw4NzkgNzMxLDg4MUM3MzMsODgzIDczNSw4ODkgNzM2LDg5OEM3MzgsOTA1IDc0MCw5MTMgNzQxLDkxNUM3NDIsOTE3IDc0Myw5MjIgNzQ0LDkyN0M3NDQsOTMyIDc0NSw5MzYgNzQ2LDkzOEM3NDcsOTQyIDc0NCw5NDMgNzE0LDk0M0M2OTksOTQzIDY4Niw5NDMgNjg1LDk0M1pNODA3LDk0M0M4MDUsOTQzIDgwMyw5NDIgODAyLDk0MEw4MDAsOTM4TDgwMCw4MDZDODAwLDczMyA4MDEsNjcyIDgwMSw2NzFDODAzLDY2NiA4MDIsNjY2IDg2MCw2NjVMOTE0LDY2NUw5MTksNjYzQzkyMSw2NjEgOTI1LDY1OSA5MjYsNjU3TDkyOCw2NTRMOTI4LDYyMkM5MjgsNjA0IDkyOCw1OTAgOTI3LDU4OUM5MjUsNTg0IDkyMiw1ODMgODk0LDU4M0w4NjksNTgzTDg2Nyw1ODVMODY0LDU4N0w4NjQsNjEzQzg2Myw2NDAgODYzLDY0MiA4NjAsNjQyQzg1OCw2NDIgODUxLDYzMyA4NDksNjI1Qzg0OCw2MjMgODQ1LDYxOCA4NDQsNjE2Qzg0Miw2MTMgODQxLDYwOSA4NDEsNjA3Qzg0MCw2MDUgODM4LDYwMiA4MzYsNjAwQzgzNSw1OTggODMzLDU5NCA4MzIsNTkyQzgzMSw1OTAgODMwLDU4NyA4MjksNTg2QzgyOCw1ODUgODI2LDU4MSA4MjQsNTc4QzgyMyw1NzQgODIwLDU3MCA4MTksNTY4QzgxOCw1NjUgODE3LDU2MiA4MTYsNTU5QzgxNSw1NTcgODE0LDU1MyA4MTIsNTUyQzgxMCw1NTAgODA4LDU0NiA4MDgsNTQ0QzgwNyw1NDEgODA1LDUzOCA4MDQsNTM2QzgwMCw1MzEgODAwLDUyMyA4MDQsNTIwTDgwNiw1MThMODc5LDUxOEM5NjAsNTE4IDk1NSw1MTggOTY3LDUyNUM5NzUsNTMxIDk4MSw1MzcgOTg1LDU0NUw5ODgsNTUwTDk4Nyw2MjFMOTg3LDY5Mkw5ODUsNjk5Qzk4MSw3MTAgOTc0LDcxNyA5NjIsNzIzTDk1Miw3MjdMOTEyLDcyN0M4NjcsNzI4IDg2Nyw3MjggODY1LDczM0M4NjQsNzM0IDg2NCw3NzQgODY0LDgzNUM4NjQsOTQwIDg2NCw5MzggODYwLDk0MUM4NTgsOTQzIDgxNyw5NDQgODA3LDk0M1pNMzEzLDk0MUMzMDksOTM3IDMwOSw5MzYgMzA5LDcyM0wzMTAsNTI0TDMxMiw1MjFMMzE1LDUxOEwzOTQsNTE4QzQ1Niw1MTggNDczLDUxOCA0NzUsNTE5QzQ4MCw1MjIgNDgwLDUyNiA0ODAsNTUzTDQ4MCw1NzhMNDc3LDU4MUw0NzQsNTgzTDQyNyw1ODNDMzc4LDU4MyAzNzcsNTgzIDM3NSw1ODhDMzc0LDU5MSAzNzQsNjU1IDM3NSw2NjBDMzc3LDY2NiAzNzgsNjY2IDQxNiw2NjZMNDUwLDY2Nkw0NTMsNjY4TDQ1Niw2NzFMNDU2LDY5NkM0NTYsNzA5IDQ1Niw3MjEgNDU2LDcyM0M0NTQsNzI3IDQ1Myw3MjcgNDE1LDcyOEwzNzksNzI4TDM3Nyw3MzFDMzc0LDczNCAzNzQsNzQwIDM3NCw4MDlMMzc0LDg3NUwzNzcsODc4TDM4MCw4ODBMNDI3LDg4MEw0NzUsODgwTDQ3Nyw4ODJMNDgwLDg4NEw0ODAsOTEyTDQ4MCw5MzlMNDc3LDk0MUw0NzUsOTQzTDM5NSw5NDNMMzE1LDk0M0wzMTMsOTQxWk0xMDc0LDk0MkMxMDU5LDkzNCAxMDUwLDkyNSAxMDQ3LDkxNUwxMDQ2LDkxMEwxMDQ2LDcyOUwxMDQ2LDU0OEwxMDQ4LDU0M0MxMDUxLDUzNiAxMDY2LDUyMiAxMDczLDUyMEMxMDgxLDUxNyAxMTk4LDUxNyAxMjA2LDUyMEMxMjE4LDUyMyAxMjI3LDUzNCAxMjMzLDU1MEwxMjM2LDU1OUwxMjM2LDczNEwxMjM2LDkwOEwxMjMzLDkxNEMxMjMyLDkxNiAxMjMwLDkyMCAxMjI5LDkyMUMxMjI3LDkyMiAxMjI1LDkyNSAxMjI0LDkyOEMxMjIyLDkzMiAxMjE4LDkzNSAxMjE1LDkzN0MxMjE0LDkzNyAxMjExLDkzOSAxMjA4LDk0MEwxMjA0LDk0M0wxMTQwLDk0M0MxMDg4LDk0MyAxMDc2LDk0MyAxMDc0LDk0MlpNMTE2Nyw4NzhDMTE2OSw4NzggMTE3MSw4NzYgMTE3MSw4NzVDMTE3Myw4NzIgMTE3NCw1OTUgMTE3Miw1ODlDMTE3MCw1ODMgMTE2OCw1ODMgMTEzOSw1ODNDMTExMSw1ODMgMTEwOCw1ODMgMTEwNSw1ODhDMTEwMyw1OTIgMTEwMyw4NjcgMTEwNSw4NzFDMTEwNyw4NzQgMTExMSw4NzggMTExNCw4NzlDMTExOCw4ODEgMTE2NCw4ODAgMTE2Nyw4NzhaIi8+PC9zdmc+" alt="EXPO DVT"><div><h1>Portal de pedidos</h1><p class="muted" id="sessionText"></p></div></div><div class="toolbar"><button class="btn secondary" onclick="reloadData()">Actualizar</button><button class="btn danger" onclick="logout()">Cerrar sesión</button></div></div></header><main class="wrap"><div id="appNotice" class="notice ok"></div><div id="offlineBanner" class="offlineBanner hidden" role="status" aria-live="polite"></div>
-<div id="providerView" class="grid hidden"><section><div class="card section"><h2>1. Datos del pedido</h2><div class="formgrid"><div><label>Cliente *</label><div class="acWrap"><input id="clientSearch" type="search" autocomplete="off" autocorrect="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-controls="clientAc" aria-expanded="false" placeholder="Escribe nombre, ID o población del cliente"><div id="clientAc" class="acList hidden" role="listbox"></div></div><p id="clientAssignmentHint" class="muted" role="status" aria-live="polite" style="margin-top:6px">Selecciona un cliente de la lista para cargar su vendedor y sucursal.</p></div><div id="clientInsight" class="insight hidden" aria-live="polite"></div><div><label>Vendedor *</label><select id="vendorSelect" disabled aria-describedby="clientAssignmentHint"></select></div><div><label>Forma de pago</label><select id="paymentMethod"><option value="CONTADO">Contado</option></select><p id="creditHint" class="muted" style="margin-top:6px">Selecciona un cliente para ver su crédito.</p></div><div><label>SUCURSAL</label><input id="destination" readonly aria-describedby="clientAssignmentHint" placeholder="Se completa al seleccionar cliente"></div><input id="deliveryDate" type="hidden"><div style="grid-column:1/-1"><label>Observaciones</label><textarea id="notes" placeholder="Promoción, condiciones, comentarios..."></textarea></div><div style="grid-column:1/-1"><label for="buyerNote">Comentarios para tu comprador <span class="muted" style="font-weight:400;text-transform:none;letter-spacing:0">· no se imprime, solo lo ve Compras</span></label><textarea id="buyerNote" placeholder="Ej. acuerdos con el cliente, faltantes, cambios de presentación..."></textarea></div></div></div><div class="card section"><div class="top" style="margin-bottom:12px"><h2>2. Catálogo autorizado</h2><input id="productSearch" type="search" style="max-width:340px" placeholder="🔎 Buscar producto, SKU o marca"><select id="providerFilter" class="hidden" style="max-width:260px"><option value="">Todos los proveedores</option></select><select id="dealFilter" class="hidden" style="max-width:260px"><option value="">Todos los productos</option><option value="deal">Solo con descuento o promoción</option></select></div><div class="catbar"><span id="catalogInfo" class="muted"></span><label class="toggle"><input type="checkbox" id="onlyCartToggle" onchange="renderProducts()"> Ver solo lo que lleva el pedido</label></div><div class="products" id="productGrid"></div></div><div class="card section"><h2>3. Pedido capturado</h2><div id="cartEmpty" class="empty">Agrega productos del catálogo para iniciar el pedido.</div><div id="cartTableWrap" class="hidden"><table><thead><tr><th>SKU</th><th>Producto</th><th>Unidad</th><th class="right">Cantidad</th><th class="right">Precio neto</th><th class="right">Precio final</th><th class="right">Pago NC</th><th class="right">Importe</th><th></th></tr></thead><tbody id="cartBody"></tbody></table></div><div id="giftBox" class="hidden"></div></div></section><aside><div class="card section" id="goalCard"><div class="top" style="margin-bottom:10px"><div><h2>Objetivo Expo</h2><p class="muted" id="goalProviderName">Proveedor</p></div><span class="pill" id="goalPctPill">0.0%</span></div><div class="progressTrack"><div class="progressFill" id="goalProgressFill"></div></div><div class="stats"><div class="stat"><span class="muted">Objetivo</span><b id="goalTarget">$0.00</b></div><div class="stat"><span class="muted">Capturado</span><b id="goalCaptured">$0.00</b></div><div class="stat"><span class="muted">Pedido actual</span><b id="goalCurrentOrder">$0.00</b></div><div class="stat"><span class="muted">Faltante</span><b id="goalRemaining">$0.00</b></div></div><p class="muted" id="goalProjected" style="margin-top:10px">Proyección con pedido actual: $0.00</p></div><div class="card section"><h2>Resumen</h2><div class="stats"><div class="stat"><span class="muted">Productos</span><b id="statProducts">0</b></div><div class="stat"><span class="muted">Unidades</span><b id="statUnits">0</b></div><div class="stat" style="grid-column:1/-1"><span class="muted">Subtotal Neto</span><b id="statSubtotal">$0.00</b></div><div class="stat" style="grid-column:1/-1"><span class="muted">Pago NC</span><b id="statExtraDiscount">$0.00</b></div><div class="stat" style="grid-column:1/-1;background:#ecfdf3"><span class="muted">TOTAL PEDIDO</span><b id="statTotal">$0.00</b></div></div><button class="btn accent" id="saveOrderBtn" style="width:100%;margin-top:14px" onclick="saveOrder()" disabled>Guardar pedido</button></div><div class="card section"><h2>Mis pedidos</h2><div id="history" class="history"></div></div></aside></div>
+<div id="providerView" class="grid hidden"><section><div class="card section"><h2>1. Datos del pedido</h2><div class="formgrid"><div><label>Cliente *</label><div class="acWrap"><input id="clientSearch" type="search" autocomplete="off" autocorrect="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-controls="clientAc" aria-expanded="false" placeholder="Escribe nombre, ID o población del cliente"><div id="clientAc" class="acList hidden" role="listbox"></div></div><p id="clientAssignmentHint" class="muted" role="status" aria-live="polite" style="margin-top:6px">Selecciona un cliente de la lista para cargar su vendedor y sucursal.</p></div><div id="clientInsight" class="insight hidden" aria-live="polite"></div><div><label>Vendedor *</label><select id="vendorSelect" disabled aria-describedby="clientAssignmentHint"></select></div><div><label>Forma de pago</label><select id="paymentMethod"><option value="CONTADO">Contado</option></select><p id="creditHint" class="muted" style="margin-top:6px">Selecciona un cliente para ver su crédito.</p></div><div><label>SUCURSAL</label><input id="destination" readonly aria-describedby="clientAssignmentHint" placeholder="Se completa al seleccionar cliente"></div><input id="deliveryDate" type="hidden"><div style="grid-column:1/-1"><label>Observaciones</label><textarea id="notes" placeholder="Promoción, condiciones, comentarios..."></textarea></div><div style="grid-column:1/-1"><label for="buyerNote">Comentarios para tu comprador <span class="muted" style="font-weight:400;text-transform:none;letter-spacing:0">· no se imprime, solo lo ve Compras</span></label><textarea id="buyerNote" placeholder="Ej. acuerdos con el cliente, faltantes, cambios de presentación..."></textarea></div></div></div><div class="card section"><div class="top" style="margin-bottom:12px"><h2>2. Catálogo autorizado</h2><input id="productSearch" type="search" style="max-width:340px" placeholder="🔎 Buscar producto, SKU o marca"><select id="providerFilter" class="hidden" style="max-width:260px"><option value="">Todos los proveedores</option></select><select id="dealFilter" class="hidden" style="max-width:260px"><option value="">Todos los productos</option><option value="deal">Solo con descuento o promoción</option></select></div><div class="catbar"><span id="catalogInfo" class="muted"></span><label class="toggle"><input type="checkbox" id="onlyCartToggle" onchange="renderProducts()"> Ver solo lo que lleva el pedido</label></div><div class="products" id="productGrid"></div></div><div class="card section"><h2>3. Pedido capturado</h2><p id="ticketHint" class="muted hidden" style="margin:-4px 0 10px">🧾 Captura de pedidos de ticket (Power Street): se guarda un pedido por proveedor y no sale en la lista de impresión.</p><div id="cartEmpty" class="empty">Agrega productos del catálogo para iniciar el pedido.</div><div id="cartTableWrap" class="hidden"><table><thead><tr><th>SKU</th><th>Producto</th><th>Unidad</th><th class="right">Cantidad</th><th class="right">Precio neto</th><th class="right">Precio final</th><th class="right">Pago NC</th><th class="right">Importe</th><th></th></tr></thead><tbody id="cartBody"></tbody></table></div><div id="giftBox" class="hidden"></div></div></section><aside><div class="card section" id="goalCard"><div class="top" style="margin-bottom:10px"><div><h2>Objetivo Expo</h2><p class="muted" id="goalProviderName">Proveedor</p></div><span class="pill" id="goalPctPill">0.0%</span></div><div class="progressTrack"><div class="progressFill" id="goalProgressFill"></div></div><div class="stats"><div class="stat"><span class="muted">Objetivo</span><b id="goalTarget">$0.00</b></div><div class="stat"><span class="muted">Capturado</span><b id="goalCaptured">$0.00</b></div><div class="stat"><span class="muted">Pedido actual</span><b id="goalCurrentOrder">$0.00</b></div><div class="stat"><span class="muted">Faltante</span><b id="goalRemaining">$0.00</b></div></div><p class="muted" id="goalProjected" style="margin-top:10px">Proyección con pedido actual: $0.00</p></div><div class="card section"><h2>Resumen</h2><div class="stats"><div class="stat"><span class="muted">Productos</span><b id="statProducts">0</b></div><div class="stat"><span class="muted">Unidades</span><b id="statUnits">0</b></div><div class="stat" style="grid-column:1/-1"><span class="muted">Subtotal Neto</span><b id="statSubtotal">$0.00</b></div><div class="stat" style="grid-column:1/-1"><span class="muted">Pago NC</span><b id="statExtraDiscount">$0.00</b></div><div class="stat" style="grid-column:1/-1;background:#ecfdf3"><span class="muted">TOTAL PEDIDO</span><b id="statTotal">$0.00</b></div></div><button class="btn accent" id="saveOrderBtn" style="width:100%;margin-top:14px" onclick="saveOrder()" disabled>Guardar pedido</button></div><div class="card section"><h2>Mis pedidos</h2><div id="history" class="history"></div></div></aside></div>
+<div id="printView" class="hidden"><div class="card section">
+  <div class="top" style="flex-wrap:wrap;gap:10px"><div><h2 style="margin:0">Pedidos para imprimir</h2><p class="muted" id="prStamp">—</p></div>
+  <div class="toolbar" style="flex-wrap:wrap"><select id="prFilter" onchange="renderPrintView()"><option value="pend">Pendientes de imprimir</option><option value="done">Ya impresos</option><option value="all">Todos</option></select><input id="prSearch" placeholder="Buscar folio, cliente, proveedor..." oninput="renderPrintView()" style="width:260px"><button class="btn secondary" type="button" onclick="loadPrintView(true)">Actualizar</button></div></div>
+  <div class="stats" style="margin:12px 0"><div class="stat"><span class="muted">Pendientes</span><b id="prPend">0</b></div><div class="stat"><span class="muted">Impresos</span><b id="prDone">0</b></div></div>
+  <div style="overflow:auto"><table><thead><tr><th>Fecha</th><th>Folio</th><th>Proveedor</th><th>Cliente</th><th>Vendedor</th><th class="right">Total</th><th>Impresión</th><th></th></tr></thead><tbody id="prBody"></tbody></table></div>
+  <p class="muted" style="margin-top:10px">No aparecen los pedidos de ticket (Power Street) ni los cancelados. La lista se actualiza sola cada 30 segundos.</p>
+</div></div>
 <div id="ventasView" class="hidden vz">
   <div class="vzHead">
     <div><h1 class="vzTitle">Dashboard de ventas</h1><p class="muted vzSub">Control del evento · Importes en MXN</p></div>
@@ -277,7 +284,7 @@ function fmtFecha(iso){try{return new Date(iso).toLocaleString('es-MX',{day:'2-d
 async function refreshPendingUI(){
   try{pendingCache=(await outboxAll()).sort((a,b)=>String(a.creadoEn).localeCompare(String(b.creadoEn)))}catch(_){pendingCache=[]}
   updateConnectionStatus();
-  if(currentUser&&['proveedor','multimarcas'].includes(currentUser.rol)){renderHistory();renderGoalProgress(typeof totals==='function'&&cart.length?totals().total:0)}
+  if(currentUser&&CAPTURA_ROLES.includes(currentUser.rol)){renderHistory();renderGoalProgress(typeof totals==='function'&&cart.length?totals().total:0)}
   if($('offlineModal')&&!$('offlineModal').classList.contains('hidden'))renderOfflinePanel();
 }
 function pendingForUser(){
@@ -311,7 +318,7 @@ async function syncOutbox({manual=false}={}){
   await refreshPendingUI();
   if(sent){
     showNotice('appNotice',`✅ ${sent} pedido${sent>1?'s':''} pendiente${sent>1?'s':''} enviado${sent>1?'s':''} correctamente.`);
-    if(currentUser&&['proveedor','multimarcas'].includes(currentUser.rol))await refreshMyOrders();
+    if(currentUser&&CAPTURA_ROLES.includes(currentUser.rol))await refreshMyOrders();
   }
   if(failed)showNotice('appNotice',`⚠️ ${failed} pedido${failed>1?'s':''} no se pudo enviar por un error de datos. Revísalo en el botón de conexión.`,'err');
   if(manual&&netDown)showNotice('appNotice','Todavía no hay conexión. Los pedidos siguen guardados en este dispositivo y se enviarán solos.','warn');
@@ -377,6 +384,12 @@ let promoState={promos:[],byId:{},tramosByKey:{},tramosByPromo:{},partsByPromo:{
 let giftChoices={};
 const pkey=(sku,unidad)=>`${String(sku||'').trim()}|${String(unidad||'').trim()}`;
 function isMesa(){return !!(currentUser&&currentUser.rol==='proveedor'&&currentProvider&&currentProvider.canal==='MESA')}
+const CAPTURA_ROLES=['proveedor','multimarcas','maestro','ticket'];
+function isGeneral(){return !!(currentUser&&['multimarcas','maestro','ticket'].includes(currentUser.rol))}
+// Catálogo maestro (stand + multimarcas): al guardar, el pedido se divide en uno por proveedor
+function isMaestro(){return !!(currentUser&&['maestro','ticket'].includes(currentUser.rol))}
+function isTicket(){return !!(currentUser&&currentUser.rol==='ticket')}
+let maestroProvs=[];
 function currentChannel(){return currentUser&&(currentUser.rol==='multimarcas'||isMesa())?'MULTIMARCA':'STAND'}
 async function loadPromotions(){buildPromoState(await fetchPromotionsRaw())}
 // Cantidad que cuenta para una escalonada (combinada = suma del grupo)
@@ -423,12 +436,12 @@ function giftStockLeft(o){
   return Math.max(0,Math.floor(st.restante-pend));
 }
 async function fetchGiftStock(provider){
-  if(!currentUser||currentUser.rol!=='proveedor'||!provider)return [];
-  try{const {data,error}=await sb.from('inventario_regalos_estado').select('sku,unidad,disponible,usado,restante').eq('id_proveedor',provider.id_proveedor);if(error)throw error;return data||[]}
+  if(!currentUser||!((currentUser.rol==='proveedor'&&provider)||isMaestro()))return [];
+  try{let q=sb.from('inventario_regalos_estado').select('sku,unidad,disponible,usado,restante');if(currentUser.rol==='proveedor')q=q.eq('id_proveedor',provider.id_proveedor);const {data,error}=await q;if(error)throw error;return data||[]}
   catch(err){if(isNetErr(err))throw err;console.warn('Inventario de regalos no disponible',err);return []}
 }
 async function refreshGiftStock(){
-  if(!navigator.onLine||!currentUser||currentUser.rol!=='proveedor'||!currentProvider)return;
+  if(!navigator.onLine||!currentUser||!((currentUser.rol==='proveedor'&&currentProvider)||isMaestro()))return;
   try{
     const rows=await fetchGiftStock(currentProvider);setGiftStock(rows);
     const k='datos|'+currentUser.usuario;idbGet(k).then(d=>{if(d){d.inventarioRegalos=rows;return idbSet(k,d)}}).catch(()=>{});
@@ -569,13 +582,13 @@ function readDraft(){try{const raw=localStorage.getItem(draftKey());return raw?J
 function clearDraft(){const key=draftKey();if(key)localStorage.removeItem(key)}
 function draftHasContent(d){return !!(d&&(d.cart&&d.cart.length||d.cliente||d.vendedor||d.sucursal||d.observaciones||d.comentarioComprador||d.fechaEntrega))}
 function saveDraft(){
-  if(!currentUser||!['proveedor','multimarcas'].includes(currentUser.rol))return;
+  if(!currentUser||!CAPTURA_ROLES.includes(currentUser.rol))return;
   const data={version:1,usuario:currentUser.usuario,guardadoEn:new Date().toISOString(),cliente:$('clientSearch').value,vendedor:$('vendorSelect').value,sucursal:$('destination').value,observaciones:$('notes').value,comentarioComprador:$('buyerNote')?$('buyerNote').value:'',formaPago:$('paymentMethod').value,fechaEntrega:$('deliveryDate').value,cart,giftChoices};
   if(draftHasContent(data))localStorage.setItem(draftKey(),JSON.stringify(data));else clearDraft();
 }
 function scheduleDraftSave(){clearTimeout(draftTimer);draftTimer=setTimeout(saveDraft,250)}
 function offerDraftRecovery(){
-  if(!currentUser||draftCheckedUsers.has(currentUser.usuario)||!['proveedor','multimarcas'].includes(currentUser.rol))return;
+  if(!currentUser||draftCheckedUsers.has(currentUser.usuario)||!CAPTURA_ROLES.includes(currentUser.rol))return;
   draftCheckedUsers.add(currentUser.usuario);const draft=readDraft();if(!draftHasContent(draft))return;
   if(confirm('Se encontró un pedido sin guardar. ¿Deseas recuperarlo?\n\nAceptar: Recuperar · Cancelar: Descartar')){
     $('clientSearch').value=draft.cliente||'';$('vendorSelect').value=draft.vendedor||'';$('destination').value=draft.sucursal||'';$('notes').value=draft.observaciones||'';if($('buyerNote'))$('buyerNote').value=draft.comentarioComprador||'';$('paymentMethod').dataset.want=draft.formaPago||'';$('deliveryDate').value=draft.fechaEntrega||'';cart=Array.isArray(draft.cart)?draft.cart:[];giftChoices=draft.giftChoices||{};autofillClientData();renderCart();showNotice('appNotice','Borrador recuperado correctamente.');
@@ -589,7 +602,7 @@ function updateConnectionStatus(){
   const b=$('offlineBanner');
   if(b){
     let msg='';
-    if(currentUser&&!online)msg=['proveedor','multimarcas'].includes(currentUser.rol)
+    if(currentUser&&!online)msg=CAPTURA_ROLES.includes(currentUser.rol)
       ?`📴 <b>Trabajando sin conexión.</b> Puedes seguir capturando: los pedidos se guardan en este dispositivo y se envían solos al volver internet.${dataSavedAt?` Catálogo y precios del ${escapeHtml(fmtFecha(dataSavedAt))}.`:''}`
       :`📴 <b>Sin conexión.</b> Se muestran los pedidos descargados${dataSavedAt?` el ${escapeHtml(fmtFecha(dataSavedAt))}`:''}; se actualizan al volver internet.`;
     else if(currentUser&&dataSavedAt)msg=`🟢 <b>Volvió la conexión.</b> Estás viendo datos guardados el ${escapeHtml(fmtFecha(dataSavedAt))}. <button class="btn secondary" type="button" onclick="reloadData()" style="margin-left:8px;padding:6px 10px">Actualizar datos</button>`;
@@ -690,7 +703,7 @@ function applyRoleVisibility(){
 async function fetchPromotionsRaw(){
   try{
     const canal=currentChannel();
-    const pr=await sb.from('promociones').select('*').eq('activa',true).eq('canal',canal);
+    const pr=isMaestro()?await sb.from('promociones').select('*').eq('activa',true).in('canal',['STAND','MULTIMARCA']):await sb.from('promociones').select('*').eq('activa',true).eq('canal',canal);
     if(pr.error)throw pr.error;
     const promos=pr.data||[];if(!promos.length)return {promos:[],tramos:[],parts:[],regalos:[]};
     const ids=promos.map(p=>p.id_promocion);
@@ -725,6 +738,8 @@ async function fetchCaptureData(){
   const [pr,cl,ve,pe]=await Promise.all([
     currentUser.rol==='proveedor'
       ? fetchAllRows(()=>{let q=sb.from('productos').select('*').eq('id_proveedor',provider.id_proveedor).ilike('grupo_catalogo',provider.grupo_catalogo);if(provider.canal!=='MESA')q=q.eq('tipo','STAND');return q.eq('activo',true).order('descripcion').order('id')})
+      : isMaestro()
+      ? fetchAllRows(()=>sb.from('productos').select('*').eq('activo',true).order('grupo_catalogo').order('descripcion').order('id'))
       : fetchAllRows(()=>sb.from('productos').select('*').eq('tipo','MULTIMARCA').eq('activo',true).order('grupo_catalogo').order('descripcion').order('id')),
     fetchAllRows(()=>sb.from('clientes').select('*').eq('activo',true).order('cliente').order('id')),
     sb.from('vendedores').select('*').eq('activo',true).order('vendedor'),
@@ -735,7 +750,9 @@ async function fetchCaptureData(){
   const historial=await fetchHistorial2025(provider);
   const credito=await fetchCreditoExpo();
   const inventarioRegalos=await fetchGiftStock(provider);
-  return {savedAt:new Date().toISOString(),provider,productos:pr||[],clientes:cl||[],vendedores:ve.data||[],pedidos:pe||[],promos,historial,credito,inventarioRegalos};
+  let proveedores=[];
+  if(isMaestro()){const r=await sb.from('proveedores').select('id_proveedor,proveedor,grupo_catalogo,id_acceso_proveedor,canal,activo').order('proveedor');if(r.error)throw r.error;proveedores=r.data||[]}
+  return {savedAt:new Date().toISOString(),provider,productos:pr||[],clientes:cl||[],vendedores:ve.data||[],pedidos:pe||[],promos,historial,credito,inventarioRegalos,proveedores};
 }
 // Rastreador de crédito: lo usado por cada cliente en pedidos a crédito de TODOS los stands
 let creditoUsado={};
@@ -745,7 +762,7 @@ async function fetchCreditoExpo(){
 }
 function setCreditoUsado(rows){creditoUsado={};(rows||[]).forEach(r=>{creditoUsado[String(r.id_cliente).trim()]=Number(r.usado||0)})}
 async function refreshCreditoExpo(idCliente){
-  if(!navigator.onLine||!currentUser||!['proveedor','multimarcas'].includes(currentUser.rol))return;
+  if(!navigator.onLine||!currentUser||!CAPTURA_ROLES.includes(currentUser.rol))return;
   try{
     let q=sb.from('credito_expo_cliente').select('id_cliente,usado,pedidos');if(idCliente)q=q.eq('id_cliente',idCliente);
     const {data,error}=await q;if(error)throw error;
@@ -785,8 +802,10 @@ async function loadWithFallback(key,fetcher){
 async function loadData(){
   const key='datos|'+currentUser.usuario;
   if(currentUser.rol!=='ventas'){stopVentasAuto();$('ventasView').classList.add('hidden')}
-  if(currentUser.rol==='proveedor' || currentUser.rol==='multimarcas'){
+  if(currentUser.rol!=='impresion'){stopPrintAuto();if($('printView'))$('printView').classList.add('hidden')}
+  if(CAPTURA_ROLES.includes(currentUser.rol)){
     $('providerView').classList.remove('hidden');
+    if($('printView'))$('printView').classList.add('hidden');
     $('adminView').classList.add('hidden');
     const d=await loadWithFallback(key,fetchCaptureData);
     if(d.provider&&currentUser.rol==='proveedor')currentProvider=d.provider;
@@ -796,6 +815,8 @@ async function loadData(){
     clients=d.clientes||[];
     setCreditoUsado(d.credito);
     setGiftStock(d.inventarioRegalos);
+    maestroProvs=d.proveedores||[];
+    if($('ticketHint'))$('ticketHint').classList.toggle('hidden',!isTicket());
     hist2025={};(d.historial||[]).forEach(h=>{const k=String(h.id_cliente).trim();const x=hist2025[k]||(hist2025[k]={total:0,productos:0});x.total+=Number(h.total||0);x.productos+=Number(h.productos||0)});
     vendors=d.vendedores||[];
     orders=d.pedidos||[];
@@ -820,6 +841,12 @@ async function loadData(){
     setAdminTab('vendedores');
     applyRoleVisibility();
     if($('dashboardView')) $('dashboardView').classList.add('hidden');
+  }else if(currentUser.rol==='impresion'){
+    $('providerView').classList.add('hidden');
+    $('adminView').classList.add('hidden');
+    $('printView').classList.remove('hidden');
+    await loadPrintView(false);
+    startPrintAuto();
   }else if(currentUser.rol==='ventas'){
     $('providerView').classList.add('hidden');
     $('adminView').classList.add('hidden');
@@ -860,7 +887,7 @@ function resetOrderScreen(){
   if($('giftBox')){$('giftBox').innerHTML='';$('giftBox').classList.add('hidden')}
   if($('loginPass'))$('loginPass').value='';
 }
-function logout(){clearTimeout(draftTimer);stopVentasAuto();$('ventasView').classList.add('hidden');closeVentasModal();ventasData=null;ventasCalc=null;try{saveDraft()}catch(_){}resetOrderScreen();currentUser=null;currentProvider=null;catalog=[];giftChoices={};promoState={promos:[],byId:{},tramosByKey:{},tramosByPromo:{},partsByPromo:{},regalosByPromo:{},bonByKey:{}};clients=[];vendors=[];orders=[];cart=[];adminOrders=[];$('appScreen').classList.add('hidden');$('loginScreen').classList.remove('hidden')}
+function logout(){clearTimeout(draftTimer);stopVentasAuto();stopPrintAuto();$('ventasView').classList.add('hidden');if($('printView'))$('printView').classList.add('hidden');printOrders=[];maestroProvs=[];giftStock={};closeVentasModal();ventasData=null;ventasCalc=null;try{saveDraft()}catch(_){}resetOrderScreen();currentUser=null;currentProvider=null;catalog=[];giftChoices={};promoState={promos:[],byId:{},tramosByKey:{},tramosByPromo:{},partsByPromo:{},regalosByPromo:{},bonByKey:{}};clients=[];vendors=[];orders=[];cart=[];adminOrders=[];$('appScreen').classList.add('hidden');$('loginScreen').classList.remove('hidden')}
 // Buscador de clientes propio (reemplaza la lista nativa del navegador, que no se abría al escribir)
 let clientIdx=[],acItems=[],acActive=-1;
 function loadClients(){clientIdx=clients.map(c=>{const label=clientLabel(c);return {c,label,key:norm(label),id:norm(c.id_cliente),name:norm(c.cliente)}});closeClientAc();}
@@ -925,11 +952,11 @@ function setPaymentOptions(client){
 }
 function renderClientInsight(currentTotal){
   const box=$('clientInsight');if(!box)return;
-  const c=currentUser&&(currentUser.rol==='proveedor'||currentUser.rol==='multimarcas')?selectedClient():null;
+  const c=currentUser&&CAPTURA_ROLES.includes(currentUser.rol)?selectedClient():null;
   if(!c){box.classList.add('hidden');box.innerHTML='';return}
   if(currentTotal===undefined)currentTotal=cart.length?totals().total:0;
   const id=String(c.id_cliente).trim(),h=hist2025[id]||{total:0,productos:0},label=clientLabel(c);
-  const multi=currentUser.rol==='multimarcas';
+  const multi=isGeneral();
   const guardado=historyList().filter(isActiveOrder).filter(o=>String(o.cliente||'')===label||String(o.cliente||'').startsWith(id+' - ')).reduce((a,o)=>a+Number(o.total||0),0);
   const lleva=guardado+Number(currentTotal||0);
   const pct=h.total>0?lleva/h.total*100:0;
@@ -976,11 +1003,16 @@ function autofillClientData(){
 function loadProviderFilter(){
   const sel=$('providerFilter');
   if(!sel) return;
-  if(currentUser && currentUser.rol==='multimarcas'){
+  if(isGeneral()){
     const current=sel.value;
-    const groups=[...new Set(catalog.map(p=>p.grupo_catalogo).filter(Boolean))].sort();
     sel.innerHTML='<option value="">Todos los proveedores</option>';
-    groups.forEach(g=>{const opt=document.createElement('option');opt.value=g;opt.textContent=g;sel.appendChild(opt);});
+    if(isMaestro()){
+      const groups=[...new Set(catalog.map(p=>(p.tipo||'')+'|'+(p.grupo_catalogo||'')).filter(x=>x.split('|')[1]))].sort((a,b)=>a.split('|')[1].localeCompare(b.split('|')[1])||a.localeCompare(b));
+      groups.forEach(g=>{const [t,n]=g.split('|');const opt=document.createElement('option');opt.value=g;opt.textContent=`${n} · ${t==='STAND'?'Stand':'Multimarcas'}`;sel.appendChild(opt);});
+    }else{
+      const groups=[...new Set(catalog.map(p=>p.grupo_catalogo).filter(Boolean))].sort();
+      groups.forEach(g=>{const opt=document.createElement('option');opt.value=g;opt.textContent=g;sel.appendChild(opt);});
+    }
     sel.value=current;
     sel.classList.remove('hidden');
     if($('dealFilter')){const n=catalog.filter(hasDeal).length;$('dealFilter').options[1].textContent=`Solo con descuento o promoción (${n})`;$('dealFilter').options[0].textContent=`Todos los productos (${catalog.length})`;$('dealFilter').classList.remove('hidden')}
@@ -1086,17 +1118,17 @@ function renderProducts(){
   const onlyCart=$('onlyCartToggle')&&$('onlyCartToggle').checked;
   grid.innerHTML='';
   const list=catalog
-    .filter(p=>!providerFilter || p.grupo_catalogo===providerFilter)
+    .filter(p=>!providerFilter || (providerFilter.includes('|')?((p.tipo||'')+'|'+(p.grupo_catalogo||''))===providerFilter:p.grupo_catalogo===providerFilter))
     .filter(p=>!($('dealFilter')&&$('dealFilter').value==='deal')||hasDeal(p))
     .filter(p=>!onlyCart||cartQtyOf(p.id_producto_app)>0)
     .filter(p=>!q||[p.sku,p.descripcion,p.unidad,p.grupo_catalogo,p.id_proveedor].some(x=>norm(x).includes(q)))
-    .slice(0,1500);
+    .slice(0,isMaestro()?4000:1500);
   if(!list.length){grid.innerHTML='<div class="empty" style="margin:12px">No encontré productos con esa búsqueda.</div>';syncCatalogQty();return}
   const frag=document.createDocumentFragment();
   list.forEach(p=>{
     const row=document.createElement('div');row.className='prow';row.dataset.id=p.id_producto_app;
     const pr=productPrices(p),pieza=pieceCost(pr.offer,p.unidad);
-    const brand=currentUser&&currentUser.rol==='multimarcas'?`<span class="chip brand">${escapeHtml(p.grupo_catalogo||p.id_proveedor||'')}</span>`:'';
+    const brand=isGeneral()?`<span class="chip brand">${escapeHtml(p.grupo_catalogo||p.id_proveedor||'')}${isMaestro()?(String(p.tipo).toUpperCase()==='STAND'?' · Stand':' · Multi'):''}</span>`:'';
     row.innerHTML=`<div class="pinfo"><div class="pname">${escapeHtml(p.descripcion)}</div><div class="pmeta">${brand}${escapeHtml(p.sku)} · ${escapeHtml(p.unidad)}${pieza!=='—'?` · ${pieza}/pza`:''}</div><div class="pchips">${promoChips(p)}</div></div>
       <div class="pprice"><b>${money(pr.offer)}</b>${pr.saving>0.009?`<s>${money(pr.regular)}</s><span class="off">−${pr.pct.toFixed(1)}%</span>`:''}</div>
       <div class="stepper"><button type="button" class="st-minus" aria-label="Quitar uno">−</button><input class="cq" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" data-num="int" placeholder="0" aria-label="Cantidad de ${escapeHtml(p.descripcion)}"><button type="button" class="st-plus" aria-label="Agregar uno">+</button></div>`;
@@ -1152,11 +1184,12 @@ async function saveOrder(){
   const assignment=clientAssignment();
   if(!currentUser || !cart.length || !assignment.ready){showNotice('appNotice','Selecciona un cliente con vendedor activo y sucursal antes de guardar.','err');updateSaveState();return}
   autofillClientData();
-  if(navigator.onLine&&netOK&&currentUser.rol==='proveedor'&&Object.keys(giftStock).length&&giftLines().length){
+  if(navigator.onLine&&netOK&&['proveedor','maestro','ticket'].includes(currentUser.rol)&&Object.keys(giftStock).length&&giftLines().length){
     const antes=JSON.stringify(giftLines().map(g=>[g.sku,g.unidad,g.cantidad]));
     await Promise.race([refreshGiftStock(),new Promise(r=>setTimeout(r,4000))]);
     if(JSON.stringify(giftLines().map(g=>[g.sku,g.unidad,g.cantidad]))!==antes){renderCart();showNotice('appNotice','El inventario para regalo cambió mientras capturabas (se regalaron cajas en otro pedido). Revisa los regalos y vuelve a guardar.','err');return}
   }
+  if(isMaestro()){await saveOrderMaestro(assignment);return}
   const t=totals();
   const now=new Date();
   const tipoCaptura = (currentUser.rol==='multimarcas'||isMesa()) ? 'MULTIMARCAS' : 'PROVEEDOR';
@@ -1250,6 +1283,69 @@ async function saveOrder(){
     }
   }
   finally{$('saveOrderBtn').textContent='Guardar pedido';updateSaveState()}
+}
+// ===== Catálogo maestro / tickets: un pedido por proveedor =====
+function destinoMaestro(p){
+  if(String(p.tipo||'').toUpperCase()==='STAND'){
+    const g=String(p.grupo_catalogo||'').toLowerCase();
+    const pv=maestroProvs.find(v=>v.id_proveedor===p.id_proveedor&&String(v.grupo_catalogo||'').toLowerCase()===g)||maestroProvs.find(v=>v.id_proveedor===p.id_proveedor)||null;
+    return {key:'S|'+p.id_proveedor+'|'+g,multi:false,id_proveedor:p.id_proveedor,proveedor:pv?pv.proveedor:(p.proveedor||p.grupo_catalogo||p.id_proveedor),grupo:pv?pv.grupo_catalogo:(p.grupo_catalogo||''),id_acceso:pv&&pv.id_acceso_proveedor?pv.id_acceso_proveedor:currentUser.usuario};
+  }
+  return {key:'M',multi:true,id_proveedor:'MULTI',proveedor:'MULTIMARCAS',grupo:'MULTIMARCAS',id_acceso:currentUser.usuario};
+}
+async function saveOrderMaestro(assignment){
+  const t=totals();
+  const now=new Date(),iso=now.toISOString();
+  const grupos=new Map();
+  const grupoDe=d=>{if(!grupos.has(d.key))grupos.set(d.key,{d,lineas:[]});return grupos.get(d.key)};
+  cart.forEach(i=>{
+    const d=destinoMaestro(i),qty=Number(i.cantidad||0),base=Number(i.precio_neto||0),final=lineFinalPrice(i),pct=base?((base-final)/base)*100:0;
+    grupoDe(d).lineas.push({id_proveedor:d.multi?(i.id_proveedor||'MULTI'):d.id_proveedor,proveedor:d.multi?(i.proveedor||i.grupo_catalogo||''):d.proveedor,grupo_catalogo:d.multi?(i.grupo_catalogo||''):d.grupo,
+      sku:i.sku,producto:i.descripcion,unidad:i.unidad,cantidad:qty,precio_lista:Number(i.precio_lista||0),descuento_precargado_pct:Number(i.descuento_pct||0),precio_neto_base:base,descuento_extra_pct:pct,precio_final:final,importe_base:qty*base,importe_final:qty*final,es_bonificacion:false,id_promocion:i.id_promocion||null,_cart:i.id_producto_app});
+  });
+  giftLines().forEach(g=>{
+    let prod=catalog.find(p=>pkey(p.sku,p.unidad)===pkey(g.sku,g.unidad));
+    if(!prod){const keys=new Set((promoState.partsByPromo[g.promo.id_promocion]||[]).map(x=>pkey(x.sku,x.unidad)));prod=cart.find(i=>keys.has(pkey(i.sku,i.unidad)))||cart[0]}
+    const d=destinoMaestro(prod);
+    grupoDe(d).lineas.push({id_proveedor:d.multi?'MULTI':d.id_proveedor,proveedor:d.multi?(g.promo.fabricante||''):d.proveedor,grupo_catalogo:d.multi?(g.promo.fabricante||''):d.grupo,
+      sku:g.sku,producto:'[BONIFICACIÓN] '+g.descripcion,unidad:g.unidad,cantidad:g.cantidad,precio_lista:g.precio,descuento_precargado_pct:0,precio_neto_base:g.precio,descuento_extra_pct:0,precio_final:g.precio,importe_base:g.cantidad*g.precio,importe_final:g.cantidad*g.precio,es_bonificacion:true,id_promocion:g.promo.id_promocion});
+  });
+  const items=[...grupos.values()].map(({d,lineas})=>{
+    const folio='EXPO-'+d.id_proveedor+'-'+iso.replace(/[-:.TZ]/g,'').slice(0,14)+'-'+randSuffix();
+    const subtotal=lineas.reduce((a,l)=>a+l.importe_base,0),total=lineas.reduce((a,l)=>a+l.importe_final,0);
+    const tipo=isTicket()?'TICKET':(d.multi?'MULTIMARCAS':'PROVEEDOR');
+    const pedido={folio,fecha_hora:iso,id_acceso_proveedor:d.id_acceso,id_proveedor:d.id_proveedor,proveedor:d.proveedor,grupo_catalogo:d.grupo,usuario:currentUser.usuario,
+      cliente:clientLabel(assignment.client),id_vendedor:assignment.vendor.id_vendedor,vendedor:assignment.vendor.vendedor,forma_pago:$('paymentMethod').value,destino:assignment.destination,
+      fecha_entrega:$('deliveryDate').value||null,observaciones:$('notes').value.trim(),comentario_comprador:($('buyerNote')?$('buyerNote').value.trim():'')||null,
+      subtotal,descuento_extra_productos_importe:subtotal-total,total,estatus:'CAPTURADO',tipo_captura:tipo};
+    const detalle=lineas.map(l=>{const {_cart,...r}=l;return {folio,fecha_hora:iso,cliente:pedido.cliente,id_vendedor:pedido.id_vendedor,vendedor:pedido.vendedor,...r}});
+    return {folio,pedido,detalle,usuario:currentUser.usuario,rol:currentUser.rol,tipoCaptura:tipo,creadoEn:iso,estado:'PENDIENTE',intentos:0,_carts:lineas.map(l=>l._cart).filter(Boolean)};
+  });
+  $('saveOrderBtn').disabled=true;$('saveOrderBtn').textContent='Guardando...';
+  const ok=[],offline=[];let fallo=null;
+  try{
+    for(const it of items){
+      const {_carts,...item}=it;
+      let stored=false;try{await outboxPut(item);stored=true}catch(e){console.error(e)}
+      try{
+        if(!navigator.onLine||!netOK)throw new Error('Sin conexión (sin red)');
+        await enviarPedido(item);if(stored)await outboxDelete(item.folio).catch(()=>{});ok.push(it);
+      }catch(err){
+        if(stored&&isNetErr(err)){item.sinConexion=true;await outboxPut(item).catch(()=>{});offline.push(it)}
+        else{if(stored)await outboxDelete(item.folio).catch(()=>{});fallo={it,err};break}
+      }
+    }
+    if(fallo){
+      const hechos=new Set([...ok,...offline].flatMap(x=>x._carts));
+      cart=cart.filter(i=>!hechos.has(i.id_producto_app));giftChoices={};renderProducts();renderCart();
+      showNotice('appNotice',`${ok.length+offline.length?`Se guardaron ${ok.length+offline.length} pedido(s), pero `:''}no se pudo guardar el pedido de ${fallo.it.pedido.proveedor}. Sus productos siguen en pantalla. Detalle: ${isNetErr(fallo.err)?'sin conexión':fallo.err.message}`,'err');
+    }else{
+      clearOrderForm();clearDraft();
+      const n=items.length,fol=items.map(x=>x.folio).join(', ');
+      showNotice('appNotice',offline.length?`📴 Sin conexión: ${n} pedido(s) quedaron guardados en este dispositivo y se enviarán solos (${fol}).`:`${n>1?`Se guardaron ${n} pedidos, uno por proveedor`:'Pedido guardado'}: ${fol}.`,offline.length?'warn':'ok');
+    }
+    await refreshMyOrders();await refreshPendingUI();
+  }finally{$('saveOrderBtn').textContent='Guardar pedido';updateSaveState()}
 }
 // Guarda encabezado + detalle como una sola operacion.
 // 1) Intenta la funcion guardar_pedido de Supabase (todo o nada).
@@ -1519,6 +1615,7 @@ function renderSellerCapture(){
     tr.innerHTML = `<td><b>${o.id_vendedor||''}</b><br><span class="muted">${o.vendedor||''}</span></td><td>${o.cliente||''}</td><td><b>${o.folio}</b></td><td>${o.proveedor||''}<br><span class="muted">${o.grupo_catalogo||''}</span></td><td><button class="btn secondary" type="button">Ver detalle</button><button class="btn blue" type="button" style="margin-left:6px">PDF</button></td><td class="right"><b>${money(o.total)}</b></td><td><select class="cap-status"><option value="PENDIENTE">PENDIENTE</option><option value="EN CAPTURA">EN CAPTURA</option><option value="CAPTURADO">CAPTURADO</option><option value="ERROR">ERROR</option></select></td><td><input class="dyn-input" placeholder="Ej. SO-000123" value="${o.pedido_dynamics||''}"></td><td><button class="btn accent" type="button">Guardar</button></td>`;
     tr.querySelectorAll('button')[0].onclick=()=>showOrderDetail(o);
     tr.querySelectorAll('button')[1].onclick=()=>openReceiptForOrder(o);
+    if(o.tipo_captura==='TICKET'){const tds=tr.querySelectorAll('td');tds[6].innerHTML='<b>TICKET</b>';tds[7].innerHTML='<span class="muted">Power Street</span>';tds[8].innerHTML='';body.appendChild(tr);return}
     tr.querySelector('.cap-status').value = o.estatus_captura || 'PENDIENTE';
     if(isSoloLectura()){tr.querySelector('.cap-status').disabled=true;tr.querySelector('.dyn-input').readOnly=true;tr.querySelectorAll('button')[2].remove();}
     else tr.querySelectorAll('button')[2].onclick=()=>saveCaptureStatus(o.folio, tr.querySelector('.cap-status').value, tr.querySelector('.dyn-input').value);
@@ -1555,7 +1652,7 @@ async function exportSellerCSV(){
   }catch(err){ showNotice('appNotice',err.message,'err'); }
 }
 
-function renderAdminOrders(){const q=norm($('adminSearch').value);const list=adminOrders.filter(o=>!q||[o.folio,o.proveedor,o.grupo_catalogo,o.cliente,o.vendedor,o.estatus].some(x=>norm(x).includes(q)));$('adminPedidos').textContent=list.length;$('adminTotal').textContent=money(list.reduce((a,o)=>a+Number(o.total||0),0));const body=$('adminOrdersBody');body.innerHTML='';list.forEach(o=>{const tr=document.createElement('tr');tr.innerHTML=`<td><b>${o.folio}</b></td><td>${new Date(o.fecha_hora).toLocaleString('es-MX')}</td><td>${o.proveedor}</td><td>${o.grupo_catalogo}</td><td>${o.cliente}</td><td>${o.vendedor}</td><td class="right"><b>${money(o.total)}</b></td><td>${o.estatus}</td><td><button class="btn secondary" type="button">Ver detalle</button><button class="btn blue" type="button" style="margin-left:6px">PDF</button></td><td>${isSoloLectura()?'':'<button class="btn danger btn-cancel" type="button">Cancelar</button>'}${currentUser && currentUser.rol === 'admin' ? '<button class="btn danger btn-delete" type="button" style="margin-left:6px">Eliminar</button>' : ''}</td>`;tr.querySelectorAll('button')[0].onclick=()=>showOrderDetail(o);tr.querySelectorAll('button')[1].onclick=()=>openReceiptForOrder(o);const cancelBtn=tr.querySelector('.btn-cancel');if(cancelBtn)cancelBtn.onclick=()=>cancelAdminOrder(o.folio);const deleteBtn=tr.querySelector('.btn-delete');if(deleteBtn)deleteBtn.onclick=()=>deleteOrder(o.folio);body.appendChild(tr);});}
+function renderAdminOrders(){const q=norm($('adminSearch').value);const list=adminOrders.filter(o=>!q||[o.folio,o.proveedor,o.grupo_catalogo,o.cliente,o.vendedor,o.estatus].some(x=>norm(x).includes(q)));$('adminPedidos').textContent=list.length;$('adminTotal').textContent=money(list.reduce((a,o)=>a+Number(o.total||0),0));const body=$('adminOrdersBody');body.innerHTML='';list.forEach(o=>{const tr=document.createElement('tr');tr.innerHTML=`<td><b>${o.folio}</b></td><td>${new Date(o.fecha_hora).toLocaleString('es-MX')}</td><td>${o.proveedor}</td><td>${o.grupo_catalogo}</td><td>${o.cliente}</td><td>${o.vendedor}</td><td class="right"><b>${money(o.total)}</b></td><td>${o.estatus}${o.tipo_captura==='TICKET'?`<br><span class="muted">TICKET</span>`:''}${o.impreso_en?'<br><span class="muted">🖨 Impreso</span>':''}</td><td><button class="btn secondary" type="button">Ver detalle</button><button class="btn blue" type="button" style="margin-left:6px">PDF</button></td><td>${isSoloLectura()?'':'<button class="btn danger btn-cancel" type="button">Cancelar</button>'}${currentUser && currentUser.rol === 'admin' ? '<button class="btn danger btn-delete" type="button" style="margin-left:6px">Eliminar</button>' : ''}</td>`;tr.querySelectorAll('button')[0].onclick=()=>showOrderDetail(o);tr.querySelectorAll('button')[1].onclick=()=>openReceiptForOrder(o);const cancelBtn=tr.querySelector('.btn-cancel');if(cancelBtn)cancelBtn.onclick=()=>cancelAdminOrder(o.folio);const deleteBtn=tr.querySelector('.btn-delete');if(deleteBtn)deleteBtn.onclick=()=>deleteOrder(o.folio);body.appendChild(tr);});}
 
 async function showOrderDetail(order){
   try{
@@ -1950,6 +2047,41 @@ async function exportBuyerComments(){
 }
 
 function downloadCSV(filename,rows){const csv=rows.map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(',')).join('\r\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;a.click();URL.revokeObjectURL(a.href)}
+// ===== Vista de impresión (Kari) =====
+let printOrders=[],printTimer=null;
+async function loadPrintView(manual){
+  try{
+    const rows=await fetchAllRows(()=>sb.from('pedidos').select('*').neq('estatus','ELIMINADO').order('fecha_hora',{ascending:true}).order('id',{ascending:true}),1000,100000);
+    printOrders=(rows||[]).filter(o=>o.estatus!=='CANCELADO'&&o.tipo_captura!=='TICKET'&&!/^DEMO/i.test(String(o.usuario||'')));
+    $('prStamp').textContent='Actualizado '+new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    renderPrintView();if(manual)showNotice('appNotice','Lista actualizada.');
+  }catch(err){showNotice('appNotice',isNetErr(err)?'Sin conexión: no se pudo actualizar la lista.':err.message,'err')}
+}
+function renderPrintView(){
+  const body=$('prBody');if(!body)return;
+  const f=$('prFilter').value,q=norm($('prSearch').value);
+  $('prPend').textContent=printOrders.filter(o=>!o.impreso_en).length;$('prDone').textContent=printOrders.filter(o=>o.impreso_en).length;
+  let list=printOrders.filter(o=>f==='all'||(f==='pend'?!o.impreso_en:!!o.impreso_en)).filter(o=>!q||[o.folio,o.cliente,o.proveedor,o.grupo_catalogo,o.vendedor].some(x=>norm(x).includes(q)));
+  if(f==='done')list=[...list].sort((a,b)=>String(b.impreso_en).localeCompare(String(a.impreso_en)));
+  body.innerHTML=list.length?'':`<tr><td colspan="8" class="muted">${f==='pend'?'🎉 No hay pedidos pendientes de imprimir.':'No hay pedidos para este filtro.'}</td></tr>`;
+  list.forEach(o=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${new Date(o.fecha_hora).toLocaleString('es-MX',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</td><td><b>${escapeHtml(o.folio)}</b></td><td>${escapeHtml(o.proveedor||'')}<br><span class="muted">${escapeHtml(o.grupo_catalogo||'')}</span></td><td>${escapeHtml(o.cliente||'')}</td><td>${escapeHtml(o.vendedor||'')}</td><td class="right"><b>${money(o.total)}</b></td><td>${o.impreso_en?`<b style="color:#027a48">✔ Impreso</b><br><span class="muted">${escapeHtml(fmtFecha(o.impreso_en))}${o.impreso_por?' · '+escapeHtml(o.impreso_por):''}</span>`:'<b style="color:#b42318">● Pendiente</b>'}</td><td style="white-space:nowrap"><button class="btn blue" type="button">🖨 Imprimir</button> <button class="btn ${o.impreso_en?'secondary':'accent'}" type="button">${o.impreso_en?'Desmarcar':'✓ Marcar impreso'}</button></td>`;
+    const b=tr.querySelectorAll('button');b[0].onclick=()=>openReceiptForOrder(o);b[1].onclick=()=>marcarImpreso(o,!o.impreso_en);
+    body.appendChild(tr);
+  });
+}
+async function marcarImpreso(o,valor){
+  if(!currentUser||!['impresion','admin','compras'].includes(currentUser.rol))return;
+  const cambio=valor?{impreso_en:new Date().toISOString(),impreso_por:currentUser.usuario}:{impreso_en:null,impreso_por:null};
+  try{
+    const r=await sb.from('pedidos').update(cambio).eq('folio',o.folio);if(r.error)throw r.error;
+    Object.assign(o,cambio);renderPrintView();
+    try{await sb.from('bitacora').insert([{usuario:currentUser.usuario,rol:currentUser.rol,accion:valor?'MARCAR_IMPRESO':'DESMARCAR_IMPRESO',folio:o.folio,detalle:''}])}catch(_){}
+  }catch(err){showNotice('appNotice',isNetErr(err)?'Sin conexión: no se pudo marcar. Intenta de nuevo.':err.message,'err')}
+}
+function startPrintAuto(){stopPrintAuto();printTimer=setInterval(()=>{if(document.visibilityState==='visible'&&navigator.onLine)loadPrintView(false)},30000)}
+function stopPrintAuto(){if(printTimer){clearInterval(printTimer);printTimer=null}}
 async function exportDynamics(){try{const data=await fetchAllRows(()=>sb.from('export_dynamics').select('*').order('folio').order('sku').order('unidad').order('precio_final').order('cantidad').order('importe_final'),1000,200000);const rows=[['Folio','Cliente','Vendedor','IDProveedor','SKU','Unidad','Cantidad','PrecioNetoBase','PagoNCPct','PrecioFinal','ImporteFinal']];(data||[]).forEach(i=>rows.push([i.folio,i.cliente,i.vendedor,i.id_proveedor,i.sku,i.unidad,i.cantidad,i.precio_neto_base,i.desc_extra_pct,i.precio_final,i.importe_final]));downloadCSV('export_dynamics_expo_dvt_2026.csv',rows);}catch(err){showNotice('appNotice',err.message,'err')}}
 init();initEnhancements();
 // Campos de cantidad/precio como texto numérico: la rueda del ratón y las flechas ya no cambian el valor. Solo se aceptan números.
