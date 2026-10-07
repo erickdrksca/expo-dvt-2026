@@ -95,7 +95,7 @@
     <div class="top" style="margin-bottom:12px">
       <div>
         <h2>Dashboard EXPO DVT 2026</h2>
-        <p class="muted">Avance de venta capturada por proveedor, vendedor y estatus de captura.</p>
+        <p class="muted">Avance de venta capturada por proveedor y por vendedor.</p>
       </div>
       <div class="toolbar">
         <button class="btn blue" onclick="loadDashboard()">Actualizar dashboard</button>
@@ -129,7 +129,7 @@
           </table>
         </div>
       </div>
-      <div class="card" style="box-shadow:none">
+      <div class="card hidden" style="box-shadow:none" aria-hidden="true">
         <h2>Avance captura Dynamics</h2>
         <div style="overflow:auto;max-height:300px">
           <table>
@@ -1571,7 +1571,7 @@ function exportDashboardCSV(){
   dashOrigen.forEach(r=>rows.push(['Origen',r.tipo_captura,'',r.pedidos,'',r.venta]));
   dashProveedor.forEach(r=>rows.push(['Proveedor',r.proveedor,r.grupo_catalogo,r.pedidos,r.clientes,r.venta]));
   dashVendedor.forEach(r=>rows.push(['Vendedor',r.id_vendedor,r.vendedor,r.pedidos,r.clientes,r.venta]));
-  dashEstatus.forEach(r=>rows.push(['Estatus',r.estatus_captura,'',r.pedidos,'',r.venta]));
+
   dashCliente.forEach(r=>rows.push(['Cliente',r.cliente,r.vendedor,r.pedidos,'',r.venta]));
   downloadCSV('dashboard_expo_dvt_2026.csv', rows);
 }
