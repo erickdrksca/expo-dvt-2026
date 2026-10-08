@@ -136,7 +136,7 @@
         <h2>Venta por vendedor</h2>
         <div style="overflow:auto;max-height:360px">
           <table>
-            <thead><tr><th>Vendedor</th><th class="right">Pedidos</th><th class="right">Clientes</th><th class="right">Venta</th><th class="right">Capturado Dyn.</th></tr></thead>
+            <thead><tr><th>Vendedor</th><th class="right">Pedidos</th><th class="right">Clientes</th><th class="right">Venta</th></tr></thead>
             <tbody id="dashVendedorBody"></tbody>
           </table>
         </div>
@@ -730,7 +730,9 @@ function applyRoleVisibility(){
       const action = btn.getAttribute('onclick') || '';
       if(isVendedor && (action.includes("setAdminTab('dashboard')") || action.includes("setAdminTab('general')") || action.includes("setAdminTab('cliente')") || action.includes("setAdminTab('credito')") || action.includes("exportDynamics") || action.includes("openVentasDashboard") || action.includes("exportBuyerComments"))) {
         btn.classList.add('hidden');
-      } else if(isSoloLectura() && (action.includes("exportDynamics") || action.includes("exportBuyerComments"))) {
+      } else if(isSoloLectura() && (action.includes("exportDynamics") || action.includes("exportBuyerComments") || action.includes("setAdminTab('general')"))) {
+        btn.classList.add('hidden');
+      } else if(!isVendedor && action.includes("setAdminTab('vendedores')")) {
         btn.classList.add('hidden');
       } else {
         btn.classList.remove('hidden');
@@ -1607,7 +1609,7 @@ function renderDashboard(){
   vendBody.innerHTML = '';
   dashVendedor.forEach(r=>{
     const tr=document.createElement('tr');
-    tr.innerHTML = `<td><b>${r.id_vendedor||''}</b><br><span class="muted">${r.vendedor||''}</span></td><td class="right">${r.pedidos||0}</td><td class="right">${r.clientes||0}</td><td class="right"><b>${money(r.venta)}</b></td><td class="right">${money(r.venta_capturada_dynamics||0)}</td>`;
+    tr.innerHTML = `<td><b>${r.id_vendedor||''}</b><br><span class="muted">${r.vendedor||''}</span></td><td class="right">${r.pedidos||0}</td><td class="right">${r.clientes||0}</td><td class="right"><b>${money(r.venta)}</b></td>`;
     vendBody.appendChild(tr);
   });
 
