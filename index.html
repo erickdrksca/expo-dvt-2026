@@ -71,6 +71,9 @@
       <div class="vzKpi"><span>Falta por vender</span><b id="vzCliMetaFalta">$0</b></div>
       <div class="vzKpi"><span>% de avance</span><b id="vzCliMetaPct">0.0%</b><div class="vzBar big"><i id="vzCliMetaBar"></i></div></div>
     </div>
+    <h3 class="vzSubHead">Por asistencia</h3>
+    <div class="tableScroll"><table class="vzTable"><thead><tr><th>Asistencia</th><th class="right">Clientes</th><th class="right">Con compra</th><th class="right">Vendido al momento</th><th class="right">Meta</th><th class="vzPctCol">% de avance</th></tr></thead><tbody id="vzAsisBody"></tbody></table></div>
+    <p class="muted vzFoot">Toca una fila para ver sus clientes.</p>
     <h3 class="vzSubHead">Meta por cliente</h3>
     <div class="tableScroll" style="max-height:520px;overflow:auto"><table class="vzTable"><thead><tr><th>Cliente</th><th>Vendedor</th><th class="right">Meta</th><th class="right">Vendido al momento</th><th class="right">Falta por vender</th><th class="vzPctCol">% de avance</th></tr></thead><tbody id="vzCliMetaBody"></tbody></table></div>
     <p class="muted vzFoot" id="vzCliMetaFoot"></p>
@@ -2042,7 +2045,9 @@ function exportCurrentDetail(){
 
 async function cancelAdminOrder(folio){if(isSoloLectura()){showNotice('appNotice','Usuario de solo consulta: no puede modificar pedidos.','err');return}if(!confirm(`¿Cancelar pedido ${folio}?`))return;try{const r=await sb.from('pedidos').update({estatus:'CANCELADO'}).eq('folio',folio);if(r.error)throw r.error;await sb.from('bitacora').insert([{usuario:currentUser.usuario,rol:currentUser.rol,accion:'CANCELAR_PEDIDO',folio,detalle:'Cancelado por compras/admin'}]);showNotice('appNotice',`Pedido ${folio} cancelado.`);await loadData();}catch(err){showNotice('appNotice',err.message,'err')}}
 // ================= DASHBOARD DE VENTAS (rol ventas / admin) =================
-let ventasData=null,ventasCalc=null,ventasTimer=null,vzClientFilter='todos';
+let ventasData=null,ventasCalc=null,ventasTimer=null,vzClientFilter='todos',vzAsisFilter='';
+const VZ_ASIS=['CONFIRMADO','LLAMADA','PENDIENTE CONFIRMACIÓN','SIN CONFIRMAR','NO ASISTE'];
+function vzAsis(c){return String(c&&c.asistencia||'SIN CONFIRMAR').toUpperCase()}
 const vzMoney=v=>Number(v||0).toLocaleString('es-MX',{style:'currency',currency:'MXN',maximumFractionDigits:0});
 const vzN=v=>Math.round(Number(v||0)).toLocaleString('es-MX');
 const vzKey=s=>String(s||'').split(' - ')[0].trim();
@@ -2052,7 +2057,7 @@ async function fetchVentasData(){
     fetchAllRows(()=>sb.from('pedidos').select('folio,fecha_hora,id_proveedor,proveedor,grupo_catalogo,usuario,cliente,id_vendedor,vendedor,total,estatus,forma_pago,tipo_captura').not('estatus','in','(ELIMINADO,CANCELADO)').order('id'),1000,100000),
     fetchAllRows(()=>sb.from('proveedores').select('id_proveedor,proveedor,grupo_catalogo,objetivo_venta,canal,activo').order('id')),
     sb.from('vendedores').select('*').eq('activo',true).order('id_vendedor'),
-    fetchAllRows(()=>sb.from('clientes').select('id_cliente,cliente,poblacion,id_vendedor,sucursal,meta_expo').eq('activo',true).order('id')),
+    fetchAllRows(()=>sb.from('clientes').select('id_cliente,cliente,poblacion,id_vendedor,sucursal,meta_expo,asistencia').eq('activo',true).order('id')),
     sb.from('config_expo').select('*')
   ]);
   if(ven.error)throw ven.error;
@@ -2139,6 +2144,11 @@ function renderVentas(){
    $('vzCliMetaBody').innerHTML=cm.map(x=>`<tr><td><b>${escapeHtml(x.c.cliente)}</b><br><span class="vzNo">${escapeHtml(x.k)}</span></td><td>${escapeHtml(v.vendName[x.c.id_vendedor]||x.c.id_vendedor||'')}</td><td class="right">${vzN(x.meta)}</td><td class="right">${vzN(x.vend)}</td><td class="right">${vzN(x.falta)}</td><td>${vzPctHtml(x.pct)}</td></tr>`).join('')||'<tr><td colspan="6" class="muted">No hay clientes con meta cargada.</td></tr>';
    const lleg=cm.filter(x=>x.vend>=x.meta).length;
    $('vzCliMetaFoot').textContent=`${cm.length} clientes con meta · ${cm.filter(x=>x.vend>0).length} ya compraron · ${lleg} ya llegaron a su meta`;}
+  {const g={};VZ_ASIS.forEach(a=>g[a]={n:0,con:0,vend:0,meta:0});
+   (ventasData.clientes||[]).forEach(c=>{const a=vzAsis(c);const r=g[a]||(g[a]={n:0,con:0,vend:0,meta:0});const s=v.porCliente[String(c.id_cliente).trim()];const mt=Number(c.meta_expo||0);r.n++;if(s){r.con++;r.vend+=s.total;if(mt>0)r.vm=(r.vm||0)+s.total}r.meta+=mt});
+   const lab=a=>a.charAt(0)+a.slice(1).toLowerCase();
+   $('vzAsisBody').innerHTML=Object.keys(g).filter(a=>g[a].n>0).map(a=>{const r=g[a];return `<tr data-a="${escapeHtml(a)}"><td><b>${escapeHtml(lab(a))}</b></td><td class="right">${vzN(r.n)}</td><td class="right">${vzN(r.con)}</td><td class="right">${vzN(r.vend)}</td><td class="right">${r.meta>0?vzN(r.meta):'<span class="vzNo">—</span>'}</td><td>${vzPctHtml(r.meta>0?(r.vm||0)/r.meta*100:null)}</td></tr>`}).join('')||'<tr><td colspan="6" class="muted">Sin clientes.</td></tr>';
+   $('vzAsisBody').querySelectorAll('tr[data-a]').forEach(tr=>tr.onclick=()=>{vzAsisFilter=tr.dataset.a;vzClientFilter='todos';ventasDetalle('clientes')});}
   $('vzExpoCount').textContent=v.expos.length;
   $('vzExpoBody').innerHTML=v.expos.map(r=>`<tr data-id="${escapeHtml(r.id)}"><td><b>${escapeHtml(r.nombre)}</b></td><td class="right">${r.objetivo>0?vzN(r.objetivo):'<span class="vzNo">—</span>'}</td><td class="right">${vzN(r.vendido)}</td><td class="right">${r.pedidos}</td><td class="right">${r.objetivo>0?vzN(r.pendiente):'<span class="vzNo">—</span>'}</td><td>${vzPctHtml(r.pct)}</td></tr>`).join('')||'<tr><td colspan="6" class="muted">Sin expositores.</td></tr>';
   $('vzExpoBody').querySelectorAll('tr[data-id]').forEach(tr=>tr.onclick=()=>ventasDetalle('expositor',tr.dataset.id));
@@ -2178,14 +2188,14 @@ function ventasDetalle(tipo,id){
     const build=()=>{
       const q=norm(($('vzCliQ')||{}).value||'');
       const base=(ventasData.clientes||[]).map(c=>{const k=String(c.id_cliente).trim();return {c,k,s:v.porCliente[k]}});
-      const list=base.filter(x=>vzClientFilter==='todos'||(vzClientFilter==='venta'?!!x.s:!x.s)).filter(x=>!q||[x.k,x.c.cliente,x.c.poblacion,x.c.id_vendedor,v.vendName[x.c.id_vendedor]].some(s=>norm(s).includes(q)));
+      const list=base.filter(x=>!vzAsisFilter||vzAsis(x.c)===vzAsisFilter).filter(x=>vzClientFilter==='todos'||(vzClientFilter==='venta'?!!x.s:!x.s)).filter(x=>!q||[x.k,x.c.cliente,x.c.poblacion,x.c.id_vendedor,v.vendName[x.c.id_vendedor]].some(s=>norm(s).includes(q)));
       list.sort((a,b)=>Number(b.c.meta_expo||0)-Number(a.c.meta_expo||0)||(b.s?b.s.total:-1)-(a.s?a.s.total:-1)||String(a.c.cliente).localeCompare(String(b.c.cliente)));
       return list;
     };
-    const paint=()=>{const list=build();$('vzCliRes').innerHTML=vzTable([['Cliente'],['Vendedor'],['Población'],['Pedidos','right'],['Expositores','right'],['Meta','right'],['Comprado','right'],['% meta','vzPctCol'],['Estatus']],list.map(x=>`<tr><td><b>${escapeHtml(x.c.cliente)}</b><br><span class="vzNo">${escapeHtml(x.k)}</span></td><td>${escapeHtml(v.vendName[x.c.id_vendedor]||x.c.id_vendedor||'')}</td><td>${escapeHtml(x.c.poblacion||'')}</td><td class="right">${x.s?x.s.pedidos:0}</td><td class="right">${x.s?x.s.expos.size:0}</td><td class="right">${Number(x.c.meta_expo||0)>0?vzN(Number(x.c.meta_expo||0)):'<span class="vzNo">—</span>'}</td><td class="right">${x.s?vzN(x.s.total):'0'}</td><td>${Number(x.c.meta_expo||0)>0?vzPctHtml((x.s?x.s.total:0)/Number(x.c.meta_expo||0)*100):'<span class="vzNo">—</span>'}</td><td>${x.s?'<span class="tag ok">Con compra</span>':'<span class="tag pend">Pendiente</span>'}</td></tr>`),'Ningún cliente coincide.');$('vzCliN').textContent=list.length+' clientes';document.querySelectorAll('.vzChip').forEach(b=>b.classList.toggle('on',b.dataset.f===vzClientFilter))};
-    const html=`<div class="vzFilters"><button class="vzChip" data-f="todos" type="button">Todos (${v.confirmados})</button><button class="vzChip" data-f="venta" type="button">Con venta (${v.conVenta})</button><button class="vzChip" data-f="pend" type="button">Pendientes (${Math.max(v.confirmados-v.conVenta,0)})</button><input id="vzCliQ" type="search" placeholder="Buscar cliente, población o vendedor"><span class="muted" id="vzCliN"></span></div><div id="vzCliRes"></div>`;
-    vzOpen('Clientes','Clientes confirmados y su compra en la Expo',html,'clientes_expo.csv',()=>[['ID cliente','Cliente','Vendedor','Población','Pedidos','Expositores','Meta','Comprado','% meta','Estatus']].concat(build().map(x=>[x.k,x.c.cliente,v.vendName[x.c.id_vendedor]||x.c.id_vendedor||'',x.c.poblacion||'',x.s?x.s.pedidos:0,x.s?x.s.expos.size:0,Number(x.c.meta_expo||0),x.s?x.s.total.toFixed(2):'0',Number(x.c.meta_expo||0)>0?((x.s?x.s.total:0)/Number(x.c.meta_expo||0)*100).toFixed(1)+'%':'',x.s?'Con compra':'Pendiente'])));
-    document.querySelectorAll('.vzChip').forEach(b=>b.onclick=()=>{vzClientFilter=b.dataset.f;paint()});$('vzCliQ').oninput=paint;paint();
+    const paint=()=>{const list=build();$('vzCliRes').innerHTML=vzTable([['Cliente'],['Vendedor'],['Asistencia'],['Población'],['Pedidos','right'],['Expositores','right'],['Meta','right'],['Comprado','right'],['% meta','vzPctCol'],['Estatus']],list.map(x=>`<tr><td><b>${escapeHtml(x.c.cliente)}</b><br><span class="vzNo">${escapeHtml(x.k)}</span></td><td>${escapeHtml(v.vendName[x.c.id_vendedor]||x.c.id_vendedor||'')}</td><td>${escapeHtml(vzAsis(x.c))}</td><td>${escapeHtml(x.c.poblacion||'')}</td><td class="right">${x.s?x.s.pedidos:0}</td><td class="right">${x.s?x.s.expos.size:0}</td><td class="right">${Number(x.c.meta_expo||0)>0?vzN(Number(x.c.meta_expo||0)):'<span class="vzNo">—</span>'}</td><td class="right">${x.s?vzN(x.s.total):'0'}</td><td>${Number(x.c.meta_expo||0)>0?vzPctHtml((x.s?x.s.total:0)/Number(x.c.meta_expo||0)*100):'<span class="vzNo">—</span>'}</td><td>${x.s?'<span class="tag ok">Con compra</span>':'<span class="tag pend">Pendiente</span>'}</td></tr>`),'Ningún cliente coincide.');$('vzCliN').textContent=list.length+' clientes';document.querySelectorAll('.vzChip').forEach(b=>b.classList.toggle('on',b.dataset.f===vzClientFilter))};
+    const html=`<div class="vzFilters"><button class="vzChip" data-f="todos" type="button">Todos (${v.confirmados})</button><button class="vzChip" data-f="venta" type="button">Con venta (${v.conVenta})</button><button class="vzChip" data-f="pend" type="button">Pendientes (${Math.max(v.confirmados-v.conVenta,0)})</button><select id="vzCliAsis" style="width:auto"><option value="">Toda la asistencia</option>${VZ_ASIS.map(a=>`<option value="${a}" ${a===vzAsisFilter?'selected':''}>${a.charAt(0)+a.slice(1).toLowerCase()}</option>`).join('')}</select><input id="vzCliQ" type="search" placeholder="Buscar cliente, población o vendedor"><span class="muted" id="vzCliN"></span></div><div id="vzCliRes"></div>`;
+    vzOpen('Clientes','Clientes confirmados y su compra en la Expo',html,'clientes_expo.csv',()=>[['ID cliente','Cliente','Vendedor','Asistencia','Población','Pedidos','Expositores','Meta','Comprado','% meta','Estatus']].concat(build().map(x=>[x.k,x.c.cliente,v.vendName[x.c.id_vendedor]||x.c.id_vendedor||'',vzAsis(x.c),x.c.poblacion||'',x.s?x.s.pedidos:0,x.s?x.s.expos.size:0,Number(x.c.meta_expo||0),x.s?x.s.total.toFixed(2):'0',Number(x.c.meta_expo||0)>0?((x.s?x.s.total:0)/Number(x.c.meta_expo||0)*100).toFixed(1)+'%':'',x.s?'Con compra':'Pendiente'])));
+    document.querySelectorAll('.vzChip').forEach(b=>b.onclick=()=>{vzClientFilter=b.dataset.f;paint()});$('vzCliQ').oninput=paint;$('vzCliAsis').onchange=e=>{vzAsisFilter=e.target.value;paint()};paint();
     return;
   }
   if(tipo==='expositor'){
