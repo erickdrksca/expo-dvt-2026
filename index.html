@@ -2032,10 +2032,14 @@ function openReceiptWindow(order, items, targetDoc, parts){
   const fecha = order.fecha_hora ? new Date(order.fecha_hora).toLocaleString('es-MX') : new Date().toLocaleString('es-MX');
   const fechaEntrega = formatDateMX(order.fecha_entrega);
 
+  const esTar = i=>!i.es_bonificacion&&/^TAR_/.test(String(i.id_promocion||''));
+  const tagOf = i=>{const id=String(i.id_promocion||'');if(i.es_bonificacion)return '';
+    if(/^TAR_/.test(id))return '<span class="tag tar">🎁 Precio tarima</span>';
+    if(/^ESC_/.test(id))return '<span class="tag esc">📉 Precio escalonado</span>';return ''};
   const rowOf = i=>`
-    <tr>
+    <tr${esTar(i)?' class="tarRow"':''}>
       <td>${escapeHtml(i.sku)}</td>
-      <td>${escapeHtml(i.producto)}</td>
+      <td>${escapeHtml(i.producto)}${tagOf(i)?'<br>'+tagOf(i):''}</td>
       <td>${escapeHtml(i.unidad)}</td>
       <td class="num">${Number(i.cantidad||0)}</td>
       <td class="num">${money(i.precio_lista)}</td>
@@ -2070,6 +2074,11 @@ function openReceiptWindow(order, items, targetDoc, parts){
       th,td{border-bottom:1px solid #e5e7eb;padding:9px;text-align:left;vertical-align:top}
       th{background:#f9fafb;text-transform:uppercase;font-size:11px;color:#475467}
       .num{text-align:right;white-space:nowrap}
+      .tag{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:6px;margin-top:3px}
+      .tag.tar{background:#fff4e5;color:#b54708;border:1px solid #fec84b}
+      .tag.esc{background:#eff8ff;color:#175cd3;border:1px solid #b2ddff}
+      tr.tarRow td{background:#fffcf5}
+      .tarSum{margin-top:10px;font-size:13px;color:#b54708}
       tr.sec td{background:#fff1f2;border-top:2px solid #e30613;font-size:13px}
       tr.secTot td{background:#f9fafb;font-size:12px}
       .totals{margin-left:auto;width:min(360px,100%);margin-top:18px}
@@ -2137,6 +2146,8 @@ function openReceiptWindow(order, items, targetDoc, parts){
         <div><span>Pago NC</span><b>${money(descuento)}</b></div>
         <div class="total"><span>${multi?'TOTAL TICKET':'TOTAL PEDIDO'}</span><b>${money(total)}</b></div>
       </div>
+      ${(()=>{const t=items.filter(esTar);if(!t.length)return '';const c=t.reduce((a,i)=>a+Number(i.cantidad||0),0),imp=t.reduce((a,i)=>a+Number(i.importe_final||0),0);
+        return `<div class="tarSum">🎁 <b>Incluye tarima:</b> ${c.toLocaleString('es-MX')} cajas/paquetes a precio de tarima por ${money(imp)} (renglones marcados).</div>`})()}
 
       <div class="note">
         Este documento es un comprobante de captura de pedido. La entrega, facturación y disponibilidad quedan sujetas a validación de inventario, condiciones comerciales y captura en sistema.
