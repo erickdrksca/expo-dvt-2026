@@ -2049,10 +2049,13 @@ function openReceiptWindow(order, items, targetDoc, parts){
       <td class="num"><b>${money(i.importe_final)}</b></td>
     </tr>
   `;
+  // Orden: productos normales → bloque de tarima → bonificaciones
+  const bloque = list=>{const n=list.filter(i=>!i.es_bonificacion&&!esTar(i)),t=list.filter(esTar),b=list.filter(i=>i.es_bonificacion);
+    return n.map(rowOf).join('')+(t.length?`<tr class="tarHead"><td colspan="9">🎁 Productos a precio de tarima</td></tr>`+t.map(rowOf).join(''):'')+(b.length&&(n.length||t.length)?`<tr class="bonHead"><td colspan="9">Bonificaciones</td></tr>`:'')+b.map(rowOf).join('')};
   const rows = multi
     ? parts.map(p=>{const st=(p.items||[]).reduce((a,i)=>a+Number(i.importe_final||0),0);
-        return `<tr class="sec"><td colspan="9"><b>${escapeHtml(p.order.proveedor||'')}</b> <span class="muted">· Pedido ${escapeHtml(p.order.folio)}</span></td></tr>`+(p.items||[]).map(rowOf).join('')+`<tr class="secTot"><td colspan="8" class="num">Subtotal ${escapeHtml(p.order.proveedor||'')}</td><td class="num"><b>${money(st)}</b></td></tr>`}).join('')
-    : items.map(rowOf).join('');
+        return `<tr class="sec"><td colspan="9"><b>${escapeHtml(p.order.proveedor||'')}</b> <span class="muted">· Pedido ${escapeHtml(p.order.folio)}</span></td></tr>`+bloque(p.items||[])+`<tr class="secTot"><td colspan="8" class="num">Subtotal ${escapeHtml(p.order.proveedor||'')}</td><td class="num"><b>${money(st)}</b></td></tr>`}).join('')
+    : bloque(items);
 
   const receipt = `<!doctype html>
   <html lang="es">
@@ -2078,6 +2081,8 @@ function openReceiptWindow(order, items, targetDoc, parts){
       .tag.tar{background:#fff4e5;color:#b54708;border:1px solid #fec84b}
       .tag.esc{background:#eff8ff;color:#175cd3;border:1px solid #b2ddff}
       tr.tarRow td{background:#fffcf5}
+      tr.tarHead td{background:#fff4e5;color:#b54708;font-weight:700;font-size:12px;border-top:2px solid #fec84b}
+      tr.bonHead td{background:#f9fafb;color:#475467;font-weight:700;font-size:12px}
       .tarSum{margin-top:10px;font-size:13px;color:#b54708}
       tr.sec td{background:#fff1f2;border-top:2px solid #e30613;font-size:13px}
       tr.secTot td{background:#f9fafb;font-size:12px}
