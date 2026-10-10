@@ -906,6 +906,13 @@ function buildPromoState(raw){
   (raw.parts||[]).forEach(t=>{(promoState.partsByPromo[t.id_promocion]=promoState.partsByPromo[t.id_promocion]||[]).push(t);const k=pkey(t.sku,t.unidad);(promoState.bonByKey[k]=promoState.bonByKey[k]||[]).push(t.id_promocion)});
   (raw.regalos||[]).forEach(t=>{(promoState.regalosByPromo[t.id_promocion]=promoState.regalosByPromo[t.id_promocion]||[]).push(t)});
 }
+// Catálogo maestro limitado: si el usuario trae grupos_stand (ej. "GONAC"), solo ve multimarcas + esos stands
+function filtrarCatalogoUsuario(list){
+  const g=String(currentUser&&currentUser.grupos_stand||'').trim();
+  if(!isMaestro()||!g)return list;
+  const ok=new Set(g.split(',').map(x=>x.trim().toUpperCase()).filter(Boolean));
+  return list.filter(p=>String(p.tipo||'').toUpperCase()!=='STAND'||ok.has(String(p.grupo_catalogo||'').toUpperCase()));
+}
 async function fetchCaptureData(){
   let provider=currentProvider;
   if(currentUser.rol==='proveedor'){
@@ -933,7 +940,7 @@ async function fetchCaptureData(){
   let waFlag=false;try{const r=await sb.from('config_expo').select('valor').eq('clave','whatsapp_activo').maybeSingle();waFlag=!!(r.data&&Number(r.data.valor)===1)}catch(_){}
   let proveedores=[];
   if(isMaestro()){const r=await sb.from('proveedores').select('id_proveedor,proveedor,grupo_catalogo,id_acceso_proveedor,canal,activo').order('proveedor');if(r.error)throw r.error;proveedores=r.data||[]}
-  return {savedAt:new Date().toISOString(),provider,productos:pr||[],clientes:cl||[],vendedores:ve.data||[],pedidos:pe||[],promos,historial,credito,inventarioRegalos,proveedores,ventaExpo,waFlag};
+  return {savedAt:new Date().toISOString(),provider,productos:filtrarCatalogoUsuario(pr||[]),clientes:cl||[],vendedores:ve.data||[],pedidos:pe||[],promos,historial,credito,inventarioRegalos,proveedores,ventaExpo,waFlag};
 }
 // Venta 2026 de cada cliente en TODA la Expo (para el catálogo maestro / tickets)
 let ventaExpoCliente={};
