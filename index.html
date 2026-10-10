@@ -26,6 +26,8 @@
 @media(max-width:760px){.vzKpis{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:10px}.vzKpi:nth-child(3){border-left:0}.vzKpis.three{grid-template-columns:repeat(3,minmax(0,1fr))}.vzKpi{padding:6px 10px}.vzKpi span{font-size:12px}.vzTitle{font-size:24px}.vzPctCol{width:160px}}
 .giftStock{font-size:12px;font-weight:700;color:#027a48}.giftStock.low{color:#b54708}.giftStock.out{color:#b42318}.giftStockOut{background:#fef3f2;border:1px solid #fecdca;color:#b42318;border-radius:10px;padding:8px 10px;margin:8px 0 0}
 .tarBar{height:10px;background:#eceaf0;border-radius:99px;overflow:hidden;margin:8px 0 2px}.tarBar i{display:block;height:100%;background:#e30613;border-radius:99px}
+body.soloConsulta .soloCaptura,body.soloConsulta #providerView>aside,body.soloConsulta #productGrid .stepper,body.soloConsulta .catbar .toggle{display:none!important}
+body.soloConsulta #providerView{grid-template-columns:1fr!important}
 </style>
 </head>
 <body>
@@ -398,10 +400,18 @@ let promoState={promos:[],byId:{},tramosByKey:{},tramosByPromo:{},partsByPromo:{
 let giftChoices={};
 const pkey=(sku,unidad)=>`${String(sku||'').trim()}|${String(unidad||'').trim()}`;
 function isMesa(){return !!(currentUser&&currentUser.rol==='proveedor'&&currentProvider&&currentProvider.canal==='MESA')}
-const CAPTURA_ROLES=['proveedor','multimarcas','maestro','ticket'];
+const CAPTURA_ROLES=['proveedor','multimarcas','maestro','ticket','consulta'];
+// Usuario de solo consulta: ve todo el catálogo con precios y promociones, pero no captura pedidos
+function isConsulta(){return !!(currentUser&&currentUser.rol==='consulta')}
+function applyConsultaMode(){
+  const on=isConsulta();document.body.classList.toggle('soloConsulta',on);
+  document.querySelectorAll('#providerView>section>.card').forEach(c=>{if(!c.querySelector('#productGrid'))c.classList.add('soloCaptura')});
+  const h=document.querySelector('#productGrid')&&document.querySelector('#productGrid').closest('.card').querySelector('h2');
+  if(h){if(!h.dataset.orig)h.dataset.orig=h.textContent;h.textContent=on?'Catálogo de productos · solo consulta':h.dataset.orig}
+}
 function isGeneral(){return !!(currentUser&&['multimarcas','maestro','ticket'].includes(currentUser.rol))}
 // Catálogo maestro (stand + multimarcas): al guardar, el pedido se divide en uno por proveedor
-function isMaestro(){return !!(currentUser&&['maestro','ticket'].includes(currentUser.rol))}
+function isMaestro(){return !!(currentUser&&['maestro','ticket','consulta'].includes(currentUser.rol))}
 function isTicket(){return !!(currentUser&&currentUser.rol==='ticket')}
 let maestroProvs=[];
 function currentChannel(){return currentUser&&(currentUser.rol==='multimarcas'||isMesa())?'MULTIMARCA':'STAND'}
@@ -1010,11 +1020,13 @@ async function loadData(){
     loadVendors();
     autofillClientData();
     loadProviderFilter();
+    applyConsultaMode();
     renderProducts();
     renderCart();
     renderHistory();
-    offerDraftRecovery();
+    if(!isConsulta())offerDraftRecovery();
   }else if(currentUser.rol==='vendedor'){
+    applyConsultaMode();
     $('providerView').classList.add('hidden');
     $('adminView').classList.remove('hidden');
     const vendedorId = currentUser.id_vendedor || currentUser.id_acceso_proveedor || currentUser.usuario.replace('VEND','');
@@ -1345,6 +1357,7 @@ function promoChips(p){
 function cartQtyOf(id){const i=cart.find(x=>x.id_producto_app===id);return i?Number(i.cantidad||0):0}
 // Captura directa desde el catálogo: 0 o vacío = no va en el pedido
 function setCatalogQty(p,value,commit){
+  if(isConsulta())return;
   const raw=String(value??'').trim();
   if(raw===''&&!commit)return;
   let q=Math.max(0,Math.floor(Number(raw.replace(',','.'))||0));
@@ -1457,6 +1470,7 @@ function clearOrderForm(){
 }
 
 async function saveOrder(){
+  if(isConsulta()){showNotice('appNotice','Este usuario es solo de consulta: no puede guardar pedidos.','err');return}
   const assignment=clientAssignment();
   if(!currentUser || !cart.length || !assignment.ready){showNotice('appNotice','Selecciona un cliente con vendedor activo y sucursal antes de guardar.','err');updateSaveState();return}
   autofillClientData();
