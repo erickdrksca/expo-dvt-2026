@@ -25,6 +25,8 @@
 // Quita la copia guardada de la plataforma anterior en este dispositivo
 try{if('serviceWorker' in navigator)navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister()))}catch(e){}
 try{if(window.caches)caches.keys().then(ks=>ks.forEach(k=>caches.delete(k)))}catch(e){}
+try{var r=indexedDB.open('expo_dvt_offline');r.onsuccess=function(){var db=r.result;if(db.objectStoreNames.contains('kv')){var tx=db.transaction('kv','readwrite');tx.objectStore('kv').clear();}};}catch(e){}
+// Los pedidos pendientes de enviar (outbox) NO se borran
 </script>
 </body>
 </html>
